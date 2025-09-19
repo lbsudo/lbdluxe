@@ -1,5 +1,5 @@
 {
-  "name": "dlux-bhvr",
+  "name": "lbdluxe",
   "version": "0.4.0",
   "description": "A monorepo template built with Bun, Hono, Vite, and React",
   "author": "Steve Simkins",
@@ -33,13 +33,14 @@
   ],
   "devDependencies": {
     "bun-types": "latest",
+    "tsx": "^4.20.5",
     "turbo": "^2.5.6"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "hono": "^4.9.7",
-    "tailwind-variants": "^3.1.1"
+    "dotenv": "^17.2.2",
+    "hono": "^4.9.7"
   }
 }
