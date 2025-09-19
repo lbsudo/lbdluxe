@@ -8,7 +8,7 @@ const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 
 const client = hcWithType(SERVER_URL);
 
-type ResponseType = Awaited<ReturnType<typeof client.hello.$get>>;
+type ResponseType = Awaited<ReturnType<typeof client.api.hello.$get>>;
 
 export const HomeHero= () => {
     const [data, setData] = useState<
@@ -18,7 +18,7 @@ export const HomeHero= () => {
     const { mutate: sendRequest } = useMutation({
         mutationFn: async () => {
             try {
-                const res = await client.hello.$get();
+                const res = await client.api.hello.$get();
                 if (!res.ok) {
                     console.log("Error fetching data");
                     return;

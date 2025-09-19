@@ -4,11 +4,12 @@ import {useState} from "react";
 import {useMutation} from "@tanstack/react-query";
 import {hcWithType} from "server/dist/client";
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+// const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000
+export const SERVER_URL = import.meta.env.DEV ? "http://localhost:3000/api" : "/api";
 
 const client = hcWithType(SERVER_URL);
 
-type ResponseType = Awaited<ReturnType<typeof client.hello.$get>>;
+type ResponseType = Awaited<ReturnType<typeof client.api.hello.$get>>;
 
 export const HomeHero = () => {
     const [data, setData] = useState<
@@ -18,7 +19,7 @@ export const HomeHero = () => {
     const {mutate: sendRequest} = useMutation({
         mutationFn: async () => {
             try {
-                const res = await client.hello.$get();
+                const res = await client.api.hello.$get();
                 if (!res.ok) {
                     console.log("Error fetching data");
                     return;
