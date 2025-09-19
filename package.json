@@ -21,7 +21,8 @@
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "test": "turbo test",
-    "postinstall": "turbo build --filter=shared --filter=server"
+    "postinstall": "turbo build --filter=shared --filter=server",
+    "deploy": "turbo build && wrangler deploy --minify"
   },
   "keywords": [
     "bun",
@@ -32,9 +33,11 @@
     "turbo"
   ],
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250919.0",
     "bun-types": "latest",
     "tsx": "^4.20.5",
-    "turbo": "^2.5.6"
+    "turbo": "^2.5.6",
+    "wrangler": "^4.38.0"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"

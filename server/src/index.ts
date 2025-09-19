@@ -4,7 +4,7 @@ import type {ApiResponse} from "shared/dist";
 import {auth} from "@server/lib/auth";
 import {Resend} from "resend";
 
-export const app = new Hono()
+export const app = new Hono().basePath("/api")
 
     .use(cors())
 
