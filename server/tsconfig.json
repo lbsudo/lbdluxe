@@ -6,7 +6,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
+//    "jsxImportSource": "hono/jsx",
+    "jsxImportSource": "react",
 
     // Types
     "types": ["bun-types"],
