@@ -1,4 +1,4 @@
-import {Navbar} from "../components/global/navbar";
+import {ControlBar} from "@/components/global/control-bar.tsx";
 
 export default function DefaultLayout({
                                           children,
@@ -7,7 +7,7 @@ export default function DefaultLayout({
 }) {
     return (
         <div className="flex flex-col justify-start items-center h-screen">
-            <Navbar/>
+            <ControlBar/>
             <main className=" mx-auto h-full max-w-7xl px-6 pt-16">
                 {children}
             </main>
