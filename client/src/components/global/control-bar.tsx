@@ -17,8 +17,8 @@ export function ControlBar() {
 
     return (
         <>
-            <div className="inset-x-0 bottom-0 z-10 mb-12 hidden w-full items-center justify-center md:flex lg:fixed">
-                <div className={"flex w-fit items-center justify-center rounded-md py-1.5 px-1.5 bg-neutral-800 border border-neutral-500 "}>
+            <div className="inset-x-0 bottom-0 z-10 mb-12 hidden w-full items-center justify-center md:flex md:fixed">
+                <div className={"flex  items-center justify-center rounded-md py-1.5 px-1.5 bg-neutral-800 border border-neutral-500 "}>
                     {/* 🔹 Main nav buttons */}
                     {mainRoutes.map(({ label, path }) => (
                         <Button
