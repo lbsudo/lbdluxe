@@ -10,19 +10,19 @@ export default function DefaultLayout({
         <div className="flex flex-col justify-start items-center h-screen">
             <MobileNavigation/>
             <ControlBar/>
-            <main className=" mx-auto h-full max-w-7xl px-6 pt-16">
+            <main className="h-full max-w-7xl pt-16 mb-40">
                 {children}
             </main>
-            <footer className="w-full flex items-end justify-center py-3">
-                <a
-                    className="flex items-center gap-1 text-current"
-                    href="https://heroui.com"
-                    title="heroui.com homepage"
-                >
-                    <span className="text-default-600">Powered by</span>
-                    <p className="text-primary">HeroUI</p>
-                </a>
-            </footer>
+            {/*<footer className="w-full flex items-end justify-center my-3 fixed bottom-0">*/}
+            {/*    <a*/}
+            {/*        className="flex items-center gap-1 text-current"*/}
+            {/*        href="https://heroui.com"*/}
+            {/*        title="heroui.com homepage"*/}
+            {/*    >*/}
+            {/*        <span className="text-default-600">Powered by</span>*/}
+            {/*        <p className="text-primary">HeroUI</p>*/}
+            {/*    </a>*/}
+            {/*</footer>*/}
         </div>
     );
 }
