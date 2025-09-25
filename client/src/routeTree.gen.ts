@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
+import { Route as StackRouteImport } from './routes/stack'
+import { Route as ShelfRouteImport } from './routes/shelf'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as LinksRouteImport } from './routes/links'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -18,6 +20,16 @@ import { Route as IndexRouteImport } from './routes/index'
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
   path: '/works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StackRoute = StackRouteImport.update({
+  id: '/stack',
+  path: '/stack',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShelfRoute = ShelfRouteImport.update({
+  id: '/shelf',
+  path: '/shelf',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -46,6 +58,8 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRoute
   '/links': typeof LinksRoute
   '/products': typeof ProductsRoute
+  '/shelf': typeof ShelfRoute
+  '/stack': typeof StackRoute
   '/works': typeof WorksRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +67,8 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRoute
   '/links': typeof LinksRoute
   '/products': typeof ProductsRoute
+  '/shelf': typeof ShelfRoute
+  '/stack': typeof StackRoute
   '/works': typeof WorksRoute
 }
 export interface FileRoutesById {
@@ -61,14 +77,31 @@ export interface FileRoutesById {
   '/blog': typeof BlogRoute
   '/links': typeof LinksRoute
   '/products': typeof ProductsRoute
+  '/shelf': typeof ShelfRoute
+  '/stack': typeof StackRoute
   '/works': typeof WorksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog' | '/links' | '/products' | '/works'
+  fullPaths:
+    | '/'
+    | '/blog'
+    | '/links'
+    | '/products'
+    | '/shelf'
+    | '/stack'
+    | '/works'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blog' | '/links' | '/products' | '/works'
-  id: '__root__' | '/' | '/blog' | '/links' | '/products' | '/works'
+  to: '/' | '/blog' | '/links' | '/products' | '/shelf' | '/stack' | '/works'
+  id:
+    | '__root__'
+    | '/'
+    | '/blog'
+    | '/links'
+    | '/products'
+    | '/shelf'
+    | '/stack'
+    | '/works'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +109,8 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRoute
   LinksRoute: typeof LinksRoute
   ProductsRoute: typeof ProductsRoute
+  ShelfRoute: typeof ShelfRoute
+  StackRoute: typeof StackRoute
   WorksRoute: typeof WorksRoute
 }
 
@@ -86,6 +121,20 @@ declare module '@tanstack/react-router' {
       path: '/works'
       fullPath: '/works'
       preLoaderRoute: typeof WorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stack': {
+      id: '/stack'
+      path: '/stack'
+      fullPath: '/stack'
+      preLoaderRoute: typeof StackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shelf': {
+      id: '/shelf'
+      path: '/shelf'
+      fullPath: '/shelf'
+      preLoaderRoute: typeof ShelfRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -124,6 +173,8 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRoute,
   LinksRoute: LinksRoute,
   ProductsRoute: ProductsRoute,
+  ShelfRoute: ShelfRoute,
+  StackRoute: StackRoute,
   WorksRoute: WorksRoute,
 }
 export const routeTree = rootRouteImport

@@ -17,7 +17,6 @@ function Index() {
         <>
             <DefaultLayout>
                 <ControlBar/>
-                {/*<HomeHero/>*/}
             </DefaultLayout>
 
         </>
