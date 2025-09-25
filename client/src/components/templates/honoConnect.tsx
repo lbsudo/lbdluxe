@@ -10,12 +10,12 @@ const client = hcWithType(SERVER_URL);
 
 type ResponseType = Awaited<ReturnType<typeof client.api.hello.$get>>;
 
-export const HomeHero= () => {
+export const HonoExample = () => {
     const [data, setData] = useState<
         Awaited<ReturnType<ResponseType["json"]>> | undefined
     >();
 
-    const { mutate: sendRequest } = useMutation({
+    const {mutate: sendRequest} = useMutation({
         mutationFn: async () => {
             try {
                 const res = await client.api.hello.$get();
@@ -30,7 +30,7 @@ export const HomeHero= () => {
             }
         },
     });
-    return(
+    return (
         <>
             <div className={'w-full h-auto flex flex-col items-center justify-center gap-4'}>
 
@@ -59,11 +59,12 @@ export const HomeHero= () => {
                 {data && (
                     <pre className="bg-gray-100 p-4 rounded-md">
 					<code>
-						Message: {data.message} <br />
+						Message: {data.message} <br/>
 						Success: {data.success.toString()}
 					</code>
 				</pre>
                 )}
             </div>
         </>
-    )}
+    )
+}
