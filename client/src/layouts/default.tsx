@@ -11,8 +11,9 @@ export default function DefaultLayout({
         <div className="flex flex-col justify-start items-center h-screen">
             <MobileNavigation/>
             <ControlBar/>
-            <main className="h-full max-w-7xl pt-16 mb-40">
+            <main className=" max-w-7xl pt-16 ">
                 {children}
+                {/*<div className={'h-px bg-gradient-to-r from-transparent via-white to-transparent'}/>*/}
             </main>
             <Footer/>
         </div>

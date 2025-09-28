@@ -16,6 +16,9 @@ import { Route as ProductsRouteImport } from './routes/products'
 import { Route as LinksRouteImport } from './routes/links'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminImagesRouteImport } from './routes/admin/images'
 
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
@@ -52,6 +55,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminImagesRoute = AdminImagesRouteImport.update({
+  id: '/admin/images',
+  path: '/admin/images',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +79,9 @@ export interface FileRoutesByFullPath {
   '/shelf': typeof ShelfRoute
   '/stack': typeof StackRoute
   '/works': typeof WorksRoute
+  '/admin/images': typeof AdminImagesRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +91,9 @@ export interface FileRoutesByTo {
   '/shelf': typeof ShelfRoute
   '/stack': typeof StackRoute
   '/works': typeof WorksRoute
+  '/admin/images': typeof AdminImagesRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +104,9 @@ export interface FileRoutesById {
   '/shelf': typeof ShelfRoute
   '/stack': typeof StackRoute
   '/works': typeof WorksRoute
+  '/admin/images': typeof AdminImagesRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,8 +118,21 @@ export interface FileRouteTypes {
     | '/shelf'
     | '/stack'
     | '/works'
+    | '/admin/images'
+    | '/admin/users'
+    | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blog' | '/links' | '/products' | '/shelf' | '/stack' | '/works'
+  to:
+    | '/'
+    | '/blog'
+    | '/links'
+    | '/products'
+    | '/shelf'
+    | '/stack'
+    | '/works'
+    | '/admin/images'
+    | '/admin/users'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -102,6 +142,9 @@ export interface FileRouteTypes {
     | '/shelf'
     | '/stack'
     | '/works'
+    | '/admin/images'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -112,6 +155,9 @@ export interface RootRouteChildren {
   ShelfRoute: typeof ShelfRoute
   StackRoute: typeof StackRoute
   WorksRoute: typeof WorksRoute
+  AdminImagesRoute: typeof AdminImagesRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -165,6 +211,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/images': {
+      id: '/admin/images'
+      path: '/admin/images'
+      fullPath: '/admin/images'
+      preLoaderRoute: typeof AdminImagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -176,6 +243,9 @@ const rootRouteChildren: RootRouteChildren = {
   ShelfRoute: ShelfRoute,
   StackRoute: StackRoute,
   WorksRoute: WorksRoute,
+  AdminImagesRoute: AdminImagesRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

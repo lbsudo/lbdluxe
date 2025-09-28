@@ -1,61 +1,32 @@
-import {boolean, pgTable, text, timestamp} from "drizzle-orm/pg-core";
+import {pgTable, text, timestamp, varchar, serial, integer} from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
-    id: text("id").primaryKey(),
-    name: text("name").notNull(),
-    email: text("email").notNull().unique(),
-    emailVerified: boolean("email_verified").default(false).notNull(),
-    image: text("image"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+// Blog posts table
+export const blogPosts = pgTable("blog_posts", {
+    id: serial("id").primaryKey(),
+
+    coverImage: text("cover_image").notNull(), // Supabase image URL
+    title: varchar("title", {length: 255}).notNull(),
+    content: text("content").notNull(), // markdown/HTML with image URLs
+    author: varchar("author", {length: 100}).notNull(),
+
+    datePosted: timestamp("date_posted", {withTimezone: true})
         .defaultNow()
-        .$onUpdate(() => /* @__PURE__ */ new Date())
         .notNull(),
 });
 
-export const session = pgTable("session", {
-    id: text("id").primaryKey(),
-    expiresAt: timestamp("expires_at").notNull(),
-    token: text("token").notNull().unique(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-        .$onUpdate(() => /* @__PURE__ */ new Date())
-        .notNull(),
-    ipAddress: text("ip_address"),
-    userAgent: text("user_agent"),
-    userId: text("user_id")
+// Categories table
+export const categories = pgTable("categories", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", {length: 100}).notNull().unique(),
+});
+
+// Join table (many-to-many between posts and categories)
+export const postCategories = pgTable("post_categories", {
+    postId: integer("post_id")
         .notNull()
-        .references(() => user.id, {onDelete: "cascade"}),
-});
+        .references(() => blogPosts.id, {onDelete: "cascade"}),
 
-export const account = pgTable("account", {
-    id: text("id").primaryKey(),
-    accountId: text("account_id").notNull(),
-    providerId: text("provider_id").notNull(),
-    userId: text("user_id")
+    categoryId: integer("category_id")
         .notNull()
-        .references(() => user.id, {onDelete: "cascade"}),
-    accessToken: text("access_token"),
-    refreshToken: text("refresh_token"),
-    idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at"),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-    scope: text("scope"),
-    password: text("password"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-        .$onUpdate(() => /* @__PURE__ */ new Date())
-        .notNull(),
-});
-
-export const verification = pgTable("verification", {
-    id: text("id").primaryKey(),
-    identifier: text("identifier").notNull(),
-    value: text("value").notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-        .defaultNow()
-        .$onUpdate(() => /* @__PURE__ */ new Date())
-        .notNull(),
+        .references(() => categories.id, {onDelete: "cascade"}),
 });

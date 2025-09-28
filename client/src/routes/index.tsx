@@ -62,7 +62,7 @@ function Index() {
 
     return (
         <DefaultLayout>
-            <div className="flex w-full items-center justify-center">
+            <section className="flex w-full items-center justify-center">
                 <Card className="w-80 h-80 flex flex-col items-center justify-center gap-4 border border-neutral-500">
                     <img
                         alt="personal Photo"
@@ -70,7 +70,7 @@ function Index() {
                         className="w-76 h-76 object-cover rounded-xl filter grayscale"
                     />
                 </Card>
-            </div>
+            </section>
 
             <section className="mt-4 flex w-full flex-col items-center justify-center">
                 <h1 className="flex w-full items-center justify-center text-4xl font-bold md:text-6xl">
@@ -106,7 +106,7 @@ function Index() {
 
             <section className="flex w-full items-center justify-center pb-8">
                 <Card
-                    className="mx-4 flex w-full items-center rounded-xl justify-center border border-neutral-500 p-2 md:mx-0 md:w-1/2 lg:w-1/3 xl:w-1/4">
+                    className="mx-4 flex w-full items-center rounded-xl justify-center border border-neutral-500 p-2 md:mx-0 md:w-1/2 ">
                     <Card className="flex w-full items-center justify-center rounded-lg bg-neutral-950 py-6 px-6 gap-2">
                         <p className="text-3xl text-nowrap font-semibold w-full text-center">
                             Subscribe to Newsletter
@@ -133,8 +133,8 @@ function Index() {
                     </Card>
                 </Card>
             </section>
-            <div className={'h-px bg-gradient-to-r from-transparent via-neutral-100 to-transparent '}></div>
-            <div className={'pb-12'}/>
+            {/*<div className={'h-px bg-gradient-to-r from-transparent via-white to-transparent'}/>*/}
+
         </DefaultLayout>
     );
 }
