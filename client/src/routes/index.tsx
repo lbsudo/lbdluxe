@@ -37,7 +37,7 @@ function Index() {
         setLoading(true);
 
         try {
-            const res = await fetch(`${SERVER_URL}/api/resendContact`, {
+            const res = await fetch(`${SERVER_URL}/api/addResendContact`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

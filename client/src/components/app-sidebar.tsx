@@ -33,7 +33,7 @@ const data = {
                 },
                 {
                     title: "Newsletter Subs",
-                    url: "/newsletter-subs",
+                    url: "admin/newsletter-subs",
                 },
             ],
         },
@@ -44,120 +44,20 @@ const data = {
 
                 {
                     title: "Works",
-                    url: "/Works",
+                    url: "/admin/Works",
                 },
 
                 {
                     title: "Products",
-                    url: "/products",
+                    url: "/admin/products",
                 },
                 {
                     title: "Blog",
-                    url: "/blog-post",
-                },
-                {
-                    title: "Data Fetching",
-                    url: "#",
-                    // isActive: true,
-                },
-                {
-                    title: "Rendering",
-                    url: "#",
-                },
-                {
-                    title: "Caching",
-                    url: "#",
-                },
-                {
-                    title: "Styling",
-                    url: "#",
-                },
-                {
-                    title: "Optimizing",
-                    url: "#",
-                },
-                {
-                    title: "Configuring",
-                    url: "#",
-                },
-                {
-                    title: "Testing",
-                    url: "#",
-                },
-                {
-                    title: "Authentication",
-                    url: "#",
-                },
-                {
-                    title: "Deploying",
-                    url: "#",
-                },
-                {
-                    title: "Upgrading",
-                    url: "#",
-                },
-                {
-                    title: "Examples",
-                    url: "#",
+                    url: "/admin/blog-post",
                 },
             ],
         },
-        {
-            title: "API Reference",
-            url: "#",
-            items: [
-                {
-                    title: "Components",
-                    url: "#",
-                },
-                {
-                    title: "File Conventions",
-                    url: "#",
-                },
-                {
-                    title: "Functions",
-                    url: "#",
-                },
-                {
-                    title: "next.config.js Options",
-                    url: "#",
-                },
-                {
-                    title: "CLI",
-                    url: "#",
-                },
-                {
-                    title: "Edge Runtime",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Architecture",
-            url: "#",
-            items: [
-                {
-                    title: "Accessibility",
-                    url: "#",
-                },
-                {
-                    title: "Fast Refresh",
-                    url: "#",
-                },
-                {
-                    title: "Next.js Compiler",
-                    url: "#",
-                },
-                {
-                    title: "Supported Browsers",
-                    url: "#",
-                },
-                {
-                    title: "Turbopack",
-                    url: "#",
-                },
-            ],
-        },
+
     ],
 }
 

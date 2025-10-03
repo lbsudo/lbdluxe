@@ -17,8 +17,9 @@ import { Route as LinksRouteImport } from './routes/links'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminNewsletterSubsRouteImport } from './routes/admin/newsletter-subs'
 import { Route as AdminImagesRouteImport } from './routes/admin/images'
+import { Route as AdminBlogPostRouteImport } from './routes/admin/blog-post'
 
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
@@ -60,14 +61,19 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
+const AdminNewsletterSubsRoute = AdminNewsletterSubsRouteImport.update({
+  id: '/admin/newsletter-subs',
+  path: '/admin/newsletter-subs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminImagesRoute = AdminImagesRouteImport.update({
   id: '/admin/images',
   path: '/admin/images',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogPostRoute = AdminBlogPostRouteImport.update({
+  id: '/admin/blog-post',
+  path: '/admin/blog-post',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -79,8 +85,9 @@ export interface FileRoutesByFullPath {
   '/shelf': typeof ShelfRoute
   '/stack': typeof StackRoute
   '/works': typeof WorksRoute
+  '/admin/blog-post': typeof AdminBlogPostRoute
   '/admin/images': typeof AdminImagesRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/newsletter-subs': typeof AdminNewsletterSubsRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -91,8 +98,9 @@ export interface FileRoutesByTo {
   '/shelf': typeof ShelfRoute
   '/stack': typeof StackRoute
   '/works': typeof WorksRoute
+  '/admin/blog-post': typeof AdminBlogPostRoute
   '/admin/images': typeof AdminImagesRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/newsletter-subs': typeof AdminNewsletterSubsRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -104,8 +112,9 @@ export interface FileRoutesById {
   '/shelf': typeof ShelfRoute
   '/stack': typeof StackRoute
   '/works': typeof WorksRoute
+  '/admin/blog-post': typeof AdminBlogPostRoute
   '/admin/images': typeof AdminImagesRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/newsletter-subs': typeof AdminNewsletterSubsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -118,8 +127,9 @@ export interface FileRouteTypes {
     | '/shelf'
     | '/stack'
     | '/works'
+    | '/admin/blog-post'
     | '/admin/images'
-    | '/admin/users'
+    | '/admin/newsletter-subs'
     | '/admin'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -130,8 +140,9 @@ export interface FileRouteTypes {
     | '/shelf'
     | '/stack'
     | '/works'
+    | '/admin/blog-post'
     | '/admin/images'
-    | '/admin/users'
+    | '/admin/newsletter-subs'
     | '/admin'
   id:
     | '__root__'
@@ -142,8 +153,9 @@ export interface FileRouteTypes {
     | '/shelf'
     | '/stack'
     | '/works'
+    | '/admin/blog-post'
     | '/admin/images'
-    | '/admin/users'
+    | '/admin/newsletter-subs'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -155,8 +167,9 @@ export interface RootRouteChildren {
   ShelfRoute: typeof ShelfRoute
   StackRoute: typeof StackRoute
   WorksRoute: typeof WorksRoute
+  AdminBlogPostRoute: typeof AdminBlogPostRoute
   AdminImagesRoute: typeof AdminImagesRoute
-  AdminUsersRoute: typeof AdminUsersRoute
+  AdminNewsletterSubsRoute: typeof AdminNewsletterSubsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -218,11 +231,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/admin/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
+    '/admin/newsletter-subs': {
+      id: '/admin/newsletter-subs'
+      path: '/admin/newsletter-subs'
+      fullPath: '/admin/newsletter-subs'
+      preLoaderRoute: typeof AdminNewsletterSubsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/images': {
@@ -230,6 +243,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/images'
       fullPath: '/admin/images'
       preLoaderRoute: typeof AdminImagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog-post': {
+      id: '/admin/blog-post'
+      path: '/admin/blog-post'
+      fullPath: '/admin/blog-post'
+      preLoaderRoute: typeof AdminBlogPostRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -243,8 +263,9 @@ const rootRouteChildren: RootRouteChildren = {
   ShelfRoute: ShelfRoute,
   StackRoute: StackRoute,
   WorksRoute: WorksRoute,
+  AdminBlogPostRoute: AdminBlogPostRoute,
   AdminImagesRoute: AdminImagesRoute,
-  AdminUsersRoute: AdminUsersRoute,
+  AdminNewsletterSubsRoute: AdminNewsletterSubsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
