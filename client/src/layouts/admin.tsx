@@ -1,3 +1,4 @@
+
 import {AppSidebar} from "@/components/app-sidebar.tsx";
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
@@ -11,9 +12,37 @@ import {
 
 export default function AdminLayout({
                                         children,
+                                        path,
                                     }: {
     children: React.ReactNode;
+    path?: string;
 }) {
+    // Generate breadcrumb items from path
+    const generateBreadcrumbs = () => {
+        if (!path) return [];
+
+        const segments = path.split('/').filter(Boolean);
+        const breadcrumbs = [];
+
+        for (let i = 0; i < segments.length; i++) {
+            const href = '/' + segments.slice(0, i + 1).join('/');
+            const label = segments[i]
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+
+            breadcrumbs.push({
+                href,
+                label,
+                isLast: i === segments.length - 1
+            });
+        }
+
+        return breadcrumbs;
+    };
+
+    const breadcrumbs = generateBreadcrumbs();
+
     return (
         <>
             <SidebarProvider>
@@ -27,27 +56,26 @@ export default function AdminLayout({
                         />
                         <Breadcrumb>
                             <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        Building Your Application
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block"/>
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                </BreadcrumbItem>
+                                {breadcrumbs.map((crumb, index) => (
+                                    <div key={crumb.href} className="contents">
+                                        <BreadcrumbItem className={index === 0 ? "hidden md:block" : ""}>
+                                            {crumb.isLast ? (
+                                                <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                                            ) : (
+                                                <BreadcrumbLink href={crumb.href}>
+                                                    {crumb.label}
+                                                </BreadcrumbLink>
+                                            )}
+                                        </BreadcrumbItem>
+                                        {!crumb.isLast && (
+                                            <BreadcrumbSeparator className={index === 0 ? "hidden md:block" : ""}/>
+                                        )}
+                                    </div>
+                                ))}
                             </BreadcrumbList>
                         </Breadcrumb>
                     </header>
                     {children}
-                    {/*<div className="flex flex-1 flex-col gap-4 p-4">*/}
-                    {/*    <div className="grid auto-rows-min gap-4 md:grid-cols-3">*/}
-                    {/*        <div className="bg-muted/50 aspect-video rounded-xl"/>*/}
-                    {/*        <div className="bg-muted/50 aspect-video rounded-xl"/>*/}
-                    {/*        <div className="bg-muted/50 aspect-video rounded-xl"/>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min"/>*/}
-                    {/*</div>*/}
                 </SidebarInset>
             </SidebarProvider>
         </>

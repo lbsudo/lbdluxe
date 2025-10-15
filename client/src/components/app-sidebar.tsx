@@ -1,7 +1,7 @@
 import * as React from "react"
+import { Link, useRouterState } from "@tanstack/react-router"
 
-// import {SearchForm} from "@/components/search-form"
-// import {VersionSwitcher} from "@/components/version-switcher"
+import { SearchForm } from "@/components/search-form"
 import {
     Sidebar,
     SidebarContent,
@@ -15,83 +15,68 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
 const data = {
-    versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
     navMain: [
         {
             title: "Base Data",
             url: "/admin",
             items: [
-                {
-                    title: "Home",
-                    url: "/admin",
-                    isActive: true
-                }, {
-                    title: "Images",
-                    url: "/admin/images",
-                },
-                {
-                    title: "Newsletter Subs",
-                    url: "admin/newsletter-subs",
-                },
+                { title: "Home", url: "/admin" },
+                { title: "Images", url: "/admin/images" },
+                { title: "Newsletter Subs", url: "/admin/newsletter-subs" },
             ],
         },
         {
             title: "Site Content",
-            url: "site-content",
+            url: "/admin/site-content",
             items: [
-
-                {
-                    title: "Works",
-                    url: "/admin/Works",
-                },
-
-                {
-                    title: "Products",
-                    url: "/admin/products",
-                },
-                {
-                    title: "Blog",
-                    url: "/admin/blog-post",
-                },
+                { title: "Works", url: "/admin/works" },
+                { title: "Products", url: "/admin/products" },
+                { title: "Blog", url: "/admin/blog" },
             ],
         },
-
     ],
 }
 
-export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const routerState = useRouterState()
+    const currentPath = routerState.location.pathname
+
     return (
         <Sidebar {...props}>
             <SidebarHeader>
-                {/*<VersionSwitcher*/}
-                {/*  versions={data.versions}*/}
-                {/*  defaultVersion={data.versions[0]}*/}
-                {/*/>*/}
-                {/*<SearchForm/>*/}
+                <SearchForm />
                 <h1>Admin Panel</h1>
             </SidebarHeader>
+
             <SidebarContent>
-                {/* We create a SidebarGroup for each parent. */}
-                {data.navMain.map((item) => (
-                    <SidebarGroup key={item.title}>
-                        <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+                {/* Loop through main navigation groups */}
+                {data.navMain.map((section) => (
+                    <SidebarGroup key={section.title}>
+                        <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
-                                {item.items.map((item) => (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton asChild isActive={item.isActive}>
-                                            <a href={item.url}>{item.title}</a>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
+                                {/* Loop through each link item */}
+                                {section.items.map((item) => {
+                                    const isActive =
+                                        currentPath === item.url ||
+                                        (item.url !== "/admin" && currentPath.startsWith(item.url))
+
+                                    return (
+                                        <SidebarMenuItem key={item.title}>
+                                            <SidebarMenuButton asChild isActive={isActive}>
+                                                <Link to={item.url}>{item.title}</Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    )
+                                })}
                             </SidebarMenu>
                         </SidebarGroupContent>
                     </SidebarGroup>
                 ))}
             </SidebarContent>
-            <SidebarRail/>
+
+            <SidebarRail />
         </Sidebar>
     )
 }

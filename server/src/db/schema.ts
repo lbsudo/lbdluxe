@@ -1,4 +1,12 @@
 import {pgTable, text, timestamp, varchar, serial, integer} from "drizzle-orm/pg-core";
+import {sql} from "drizzle-orm";
+
+
+// Authors table
+export const authors = pgTable("authors", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", {length: 100}).notNull(),
+});
 
 // Blog posts table
 export const blogPosts = pgTable("blog_posts", {
@@ -8,6 +16,7 @@ export const blogPosts = pgTable("blog_posts", {
     title: varchar("title", {length: 255}).notNull(),
     content: text("content").notNull(), // markdown/HTML with image URLs
     author: varchar("author", {length: 100}).notNull(),
+    tags: text("tags").array().notNull().default(sql`ARRAY[]::text[]`), // Array of category tags
 
     datePosted: timestamp("date_posted", {withTimezone: true})
         .defaultNow()

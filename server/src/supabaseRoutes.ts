@@ -2,13 +2,192 @@
 import {Hono} from "hono";
 import {Buffer} from "buffer";
 import {createClient} from "@supabase/supabase-js";
+import postgres from "postgres";
+import {drizzle} from "drizzle-orm/postgres-js";
+import {authors, blogPosts, categories, postCategories} from "@server/db/schema";
+import {inArray, sql} from "drizzle-orm";
 
 const supabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+const client = postgres(process.env.DATABASE_URL!);
+const db = drizzle(client);
 
 export const supabaseRoutes = new Hono();
+
+// Get all blog posts route
+supabaseRoutes.get("/getBlogPosts", async (c) => {
+    try {
+        const allPosts = await db.select().from(blogPosts);
+        return c.json({success: true, posts: allPosts}, {status: 200});
+    } catch (err) {
+        console.error("GetBlogPosts route error:", err);
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+
+// Create blog post route
+supabaseRoutes.post("/createBlogPost", async (c) => {
+    try {
+        const body = await c.req.json();
+        const {coverImage, title, content, author, categories: categoryIds} = body;
+
+        // Validate required fields
+        if (!coverImage || !title || !content || !author) {
+            return c.json(
+                {success: false, error: "Missing required fields: coverImage, title, content, author"},
+                {status: 400}
+            );
+        }
+
+        // Get category names from IDs
+        let categoryTags: string[] = [];
+        if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
+            const selectedCategories = await db
+                .select()
+                .from(categories)
+                .where(inArray(categories.id, categoryIds));
+            
+            categoryTags = selectedCategories.map(cat => cat.name);
+        }
+
+        // Insert the blog post with tags
+        const [newPost] = await db
+            .insert(blogPosts)
+            .values({
+                coverImage,
+                title,
+                content,
+                author,
+                tags: categoryTags,
+            })
+            .returning();
+            
+        if (!newPost) {
+            return c.json(
+                {success: false, error: "Failed to create blog post"},
+                {status: 500}
+            );
+        }
+
+        // Also maintain the join table for relationships
+        if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
+            await db.insert(postCategories).values(
+                categoryIds.map((categoryId: number) => ({
+                    postId: newPost.id,
+                    categoryId,
+                }))
+            );
+        }
+
+        return c.json({success: true, post: newPost}, {status: 201});
+    } catch (err) {
+        console.error("CreateBlogPost route error:", err);
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+// Add category route
+supabaseRoutes.post("/addCategory", async (c) => {
+    try {
+        const body = await c.req.json();
+        const {name} = body;
+
+        // Validate required field
+        if (!name || !name.trim()) {
+            return c.json(
+                {success: false, error: "Category name is required"},
+                {status: 400}
+            );
+        }
+
+        // Insert the category
+        const [newCategory] = await db
+            .insert(categories)
+            .values({
+                name: name.trim(),
+            })
+            .returning();
+
+        if (!newCategory) {
+            return c.json(
+                {success: false, error: "Failed to create category"},
+                {status: 500}
+            );
+        }
+
+        return c.json({success: true, category: newCategory}, {status: 201});
+    } catch (err) {
+        console.error("AddCategory route error:", err);
+        // Handle unique constraint violation
+        if ((err as any).code === "23505") {
+            return c.json({success: false, error: "Category already exists"}, {status: 409});
+        }
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+
+// Get all categories route
+supabaseRoutes.get("/categories", async (c) => {
+    try {
+        const allCategories = await db.select().from(categories);
+        return c.json(allCategories, {status: 200});
+    } catch (err) {
+        console.error("GetCategories route error:", err);
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+
+// Add author route
+supabaseRoutes.post("/addAuthor", async (c) => {
+    try {
+        const body = await c.req.json();
+        const {name} = body;
+
+        // Validate required field
+        if (!name || !name.trim()) {
+            return c.json(
+                {success: false, error: "Author name is required"},
+                {status: 400}
+            );
+        }
+
+        // Insert the author
+        const [newAuthor] = await db
+            .insert(authors)
+            .values({
+                name: name.trim(),
+            })
+            .returning();
+
+        if (!newAuthor) {
+            return c.json(
+                {success: false, error: "Failed to create author"},
+                {status: 500}
+            );
+        }
+
+        return c.json({success: true, author: newAuthor}, {status: 201});
+    } catch (err) {
+        console.error("AddAuthor route error:", err);
+        // Handle unique constraint violation if you add one
+        if ((err as any).code === "23505") {
+            return c.json({success: false, error: "Author already exists"}, {status: 409});
+        }
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+
+// Get all authors route
+supabaseRoutes.get("/authors", async (c) => {
+    try {
+        const allAuthors = await db.select().from(authors);
+        return c.json(allAuthors, {status: 200});
+    } catch (err) {
+        console.error("GetAuthors route error:", err);
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
 
 // Upload image route
 supabaseRoutes.post("/uploadCoverImage", async (c) => {
