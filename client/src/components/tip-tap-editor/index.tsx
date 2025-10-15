@@ -3,7 +3,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Button } from "@/components/ui/button";
-import { Undo, Redo } from "lucide-react";
+import {Undo, Redo, Bold, Italic, Underline, Strikethrough, CodeXml, Link, Highlighter} from "lucide-react";
 import HeadingSelect from "@/components/tip-tap-editor/headingSelect.tsx";
 import ListSelect from "@/components/tip-tap-editor/listSelect.tsx";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -124,7 +124,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     className={activeClass(editor.isActive("bold"))}
                 >
-                    Bold
+                    <Bold/>
                 </Button>
                 <Button
                     size="sm"
@@ -132,7 +132,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                     className={activeClass(editor.isActive("italic"))}
                 >
-                    Italic
+                    <Italic/>
                 </Button>
                 <Button
                     size="sm"
@@ -140,7 +140,39 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
                     onClick={() => editor.chain().focus().toggleUnderline().run()}
                     className={activeClass(editor.isActive("underline"))}
                 >
-                    Underline
+                    <Underline/>
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={activeClass(editor.isActive("underline"))}
+                >
+<Strikethrough/>
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={activeClass(editor.isActive("underline"))}
+                >
+<CodeXml/>
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={activeClass(editor.isActive("underline"))}
+                >
+                    <Highlighter/>
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={activeClass(editor.isActive("underline"))}
+                >
+<Link/>
                 </Button>
 
             </div>
