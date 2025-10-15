@@ -1,0 +1,101 @@
+/* TiptapEditor.css */
+
+/* Editor container */
+.tiptap-editor {
+    white-space: pre-wrap;
+    color: #e4e4e7; /* light text for dark background */
+    font-family: system-ui, sans-serif;
+}
+
+/* Paragraphs */
+.tiptap-editor p {
+    margin-bottom: 1em;
+    font-size: 1rem;
+}
+
+/* Headings */
+.tiptap-editor h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f1f5f9;
+}
+
+.tiptap-editor h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #f1f5f9;
+}
+
+.tiptap-editor h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f1f5f9;
+}
+
+.tiptap-editor h4 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #f1f5f9;
+}
+
+/* Lists - FIXED */
+.tiptap-editor ul,
+.tiptap-editor ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1em;
+    list-style-position: outside; /* Ensure markers are visible */
+}
+
+/* Bullet list */
+.tiptap-editor ul {
+    list-style-type: disc;
+}
+
+/* Numbered list */
+.tiptap-editor ol {
+    list-style-type: decimal;
+}
+
+/* List items */
+.tiptap-editor li {
+    display: list-item;
+    margin-bottom: 0.25em;
+}
+
+/* Bullet points */
+.tiptap-editor ul li::marker {
+    color: #ffffff;
+}
+
+/* Numbered list */
+.tiptap-editor ol li::marker {
+    color: #ffffff;
+}
+
+/* Task list */
+.tiptap-editor ul[data-type="taskList"] {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.tiptap-editor ul[data-type="taskList"] li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+/* Task list checkboxes */
+.tiptap-editor input[type="checkbox"] {
+    accent-color: #ffffff;
+    margin-top: 0.25rem;
+    cursor: pointer;
+}
+
+/* Text decorations */
+.tiptap-editor strong {
+    font-weight: 700;
+}
+
+.tiptap-editor em {
+    font-style: italic;
+}

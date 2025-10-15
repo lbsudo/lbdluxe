@@ -3,21 +3,15 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-} from "@/components/ui/select";
-import {
-    Undo,
-    Redo,
-    Heading,
-    Heading1,
-    Heading2,
-    Heading3,
-    Heading4,
-} from "lucide-react";
+import { Undo, Redo } from "lucide-react";
+import HeadingSelect from "@/components/tip-tap-editor/headingSelect.tsx";
+import ListSelect from "@/components/tip-tap-editor/listSelect.tsx";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
+import '../../styles/tiptap.css'
 
 interface TiptapEditorProps {
     placeholder?: string;
@@ -28,21 +22,27 @@ interface TiptapEditorProps {
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
                                                        placeholder,
                                                        content,
-                                                       onUpdate,
                                                    }) => {
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
                 heading: { levels: [1, 2, 3, 4] },
+                bulletList: false,
+                orderedList: false,
+                listItem: false,
             }),
-            Placeholder.configure({
-                placeholder: placeholder || "Start typing...",
+            Placeholder.configure({ placeholder: placeholder || "Start typing..." }),
+            BulletList.extend({
+                content: "listItem+", // <- important
             }),
+            OrderedList.extend({
+                content: "listItem+", // <- important
+            }),
+            ListItem,
+            TaskList,
+            TaskItem.configure({ nested: true }),
         ],
         content: content || "",
-        onUpdate: ({ editor }) => {
-            if (onUpdate) onUpdate(editor.getHTML());
-        },
     });
 
     const [currentHeadingLevel, setCurrentHeadingLevel] = useState(0);
@@ -85,21 +85,10 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         }
     };
 
-    const headingIconMap: Record<number, React.ElementType> = {
-        1: Heading1,
-        2: Heading2,
-        3: Heading3,
-        4: Heading4,
-    };
-
-    const HeadingIcon =
-        currentHeadingLevel === 0 ? Heading : headingIconMap[currentHeadingLevel];
-
     return (
         <div className="tiptap-editor border rounded p-3">
             {/* Toolbar */}
             <div className="mb-2 flex flex-wrap gap-2 items-center">
-                {/* Undo / Redo */}
                 <Button
                     size="sm"
                     variant="outline"
@@ -119,31 +108,16 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
                 <div className="w-px h-6 bg-gray-300 mx-1" />
 
-                {/* Heading dropdown */}
-                <Select
-                    value={currentHeadingLevel === 0 ? undefined : currentHeadingLevel.toString()}
-                >
-                    <SelectTrigger className="w-28 flex items-center justify-center">
-                        <HeadingIcon size={16} className="text-gray-700" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {[1, 2, 3, 4].map((level) => (
-                            <SelectItem
-                                key={level}
-                                value={level.toString()}
-                                // 👇 pointerDown fires even if same value is reselected
-                                onPointerDown={(e) => {
-                                    e.preventDefault();
-                                    handleHeadingToggle(level);
-                                }}
-                            >
-                                H{level}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                {/* ✅ Moved Heading Select here */}
+                <HeadingSelect
+                    editor={editor}
+                    currentHeadingLevel={currentHeadingLevel}
+                    onHeadingChange={handleHeadingToggle}
+                />
+                <ListSelect editor={editor} />
 
-                {/* Text styles */}
+                <div className="w-px h-6 bg-gray-300 mx-1" />
+                {/* Other toolbar buttons */}
                 <Button
                     size="sm"
                     variant="outline"
@@ -169,42 +143,9 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
                     Underline
                 </Button>
 
-                {/* Lists */}
-                <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={activeClass(editor.isActive("bulletList"))}
-                >
-                    Bullet List
-                </Button>
-                <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    className={activeClass(editor.isActive("orderedList"))}
-                >
-                    Numbered List
-                </Button>
             </div>
 
-            {/* Inline styles */}
-            <style>
-                {`
-          .tiptap-editor { white-space: pre-wrap; }
-          .tiptap-editor p { margin-bottom: 1em; }
-          .tiptap-editor h1 { font-size: 2rem; font-weight: bold; }
-          .tiptap-editor h2 { font-size: 1.5rem; font-weight: bold; }
-          .tiptap-editor h3 { font-size: 1.25rem; font-weight: bold; }
-          .tiptap-editor h4 { font-size: 1rem; font-weight: bold; }
-          .tiptap-editor strong { font-weight: bold; }
-          .tiptap-editor em { font-style: italic; }
-          .tiptap-editor ul, .tiptap-editor ol {
-            padding-left: 1.5rem;
-            margin-bottom: 1em;
-          }
-        `}
-            </style>
+
 
             <EditorContent editor={editor} className="tiptap-editor" />
         </div>
