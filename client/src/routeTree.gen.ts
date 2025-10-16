@@ -14,14 +14,18 @@ import { Route as StackRouteImport } from './routes/stack'
 import { Route as ShelfRouteImport } from './routes/shelf'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as LinksRouteImport } from './routes/links'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as BlogPostIdRouteImport } from './routes/blog/$postId'
+import { Route as AdminWorksRouteImport } from './routes/admin/works'
+import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminNewsletterSubsRouteImport } from './routes/admin/newsletter-subs'
 import { Route as AdminImagesRouteImport } from './routes/admin/images'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminBlogCreatePostRouteImport } from './routes/admin/blog/create-post'
-import { Route as AdminBlogEditPostIndexRouteImport } from './routes/admin/blog/edit-post/$index'
+import { Route as AdminBlogPreviewPostPostIdRouteImport } from './routes/admin/blog/preview-post/$postId'
+import { Route as AdminBlogEditPostPostIdRouteImport } from './routes/admin/blog/edit-post/$postId'
 
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
@@ -48,19 +52,34 @@ const LinksRoute = LinksRouteImport.update({
   path: '/links',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogPostIdRoute = BlogPostIdRouteImport.update({
+  id: '/blog/$postId',
+  path: '/blog/$postId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminWorksRoute = AdminWorksRouteImport.update({
+  id: '/admin/works',
+  path: '/admin/works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/admin/products',
+  path: '/admin/products',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNewsletterSubsRoute = AdminNewsletterSubsRouteImport.update({
@@ -83,15 +102,20 @@ const AdminBlogCreatePostRoute = AdminBlogCreatePostRouteImport.update({
   path: '/admin/blog/create-post',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminBlogEditPostIndexRoute = AdminBlogEditPostIndexRouteImport.update({
-  id: '/admin/blog/edit-post/$index',
-  path: '/admin/blog/edit-post/$index',
+const AdminBlogPreviewPostPostIdRoute =
+  AdminBlogPreviewPostPostIdRouteImport.update({
+    id: '/admin/blog/preview-post/$postId',
+    path: '/admin/blog/preview-post/$postId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AdminBlogEditPostPostIdRoute = AdminBlogEditPostPostIdRouteImport.update({
+  id: '/admin/blog/edit-post/$postId',
+  path: '/admin/blog/edit-post/$postId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/links': typeof LinksRoute
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
@@ -99,14 +123,18 @@ export interface FileRoutesByFullPath {
   '/works': typeof WorksRoute
   '/admin/images': typeof AdminImagesRoute
   '/admin/newsletter-subs': typeof AdminNewsletterSubsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/works': typeof AdminWorksRoute
+  '/blog/$postId': typeof BlogPostIdRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/blog/create-post': typeof AdminBlogCreatePostRoute
   '/admin/blog': typeof AdminBlogIndexRoute
-  '/admin/blog/edit-post/$index': typeof AdminBlogEditPostIndexRoute
+  '/admin/blog/edit-post/$postId': typeof AdminBlogEditPostPostIdRoute
+  '/admin/blog/preview-post/$postId': typeof AdminBlogPreviewPostPostIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/links': typeof LinksRoute
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
@@ -114,15 +142,19 @@ export interface FileRoutesByTo {
   '/works': typeof WorksRoute
   '/admin/images': typeof AdminImagesRoute
   '/admin/newsletter-subs': typeof AdminNewsletterSubsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/works': typeof AdminWorksRoute
+  '/blog/$postId': typeof BlogPostIdRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/blog/create-post': typeof AdminBlogCreatePostRoute
   '/admin/blog': typeof AdminBlogIndexRoute
-  '/admin/blog/edit-post/$index': typeof AdminBlogEditPostIndexRoute
+  '/admin/blog/edit-post/$postId': typeof AdminBlogEditPostPostIdRoute
+  '/admin/blog/preview-post/$postId': typeof AdminBlogPreviewPostPostIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
   '/links': typeof LinksRoute
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
@@ -130,16 +162,20 @@ export interface FileRoutesById {
   '/works': typeof WorksRoute
   '/admin/images': typeof AdminImagesRoute
   '/admin/newsletter-subs': typeof AdminNewsletterSubsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/works': typeof AdminWorksRoute
+  '/blog/$postId': typeof BlogPostIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/blog/create-post': typeof AdminBlogCreatePostRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
-  '/admin/blog/edit-post/$index': typeof AdminBlogEditPostIndexRoute
+  '/admin/blog/edit-post/$postId': typeof AdminBlogEditPostPostIdRoute
+  '/admin/blog/preview-post/$postId': typeof AdminBlogPreviewPostPostIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/blog'
     | '/links'
     | '/products'
     | '/shelf'
@@ -147,14 +183,18 @@ export interface FileRouteTypes {
     | '/works'
     | '/admin/images'
     | '/admin/newsletter-subs'
+    | '/admin/products'
+    | '/admin/works'
+    | '/blog/$postId'
     | '/admin'
+    | '/blog'
     | '/admin/blog/create-post'
     | '/admin/blog'
-    | '/admin/blog/edit-post/$index'
+    | '/admin/blog/edit-post/$postId'
+    | '/admin/blog/preview-post/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/blog'
     | '/links'
     | '/products'
     | '/shelf'
@@ -162,14 +202,18 @@ export interface FileRouteTypes {
     | '/works'
     | '/admin/images'
     | '/admin/newsletter-subs'
+    | '/admin/products'
+    | '/admin/works'
+    | '/blog/$postId'
     | '/admin'
+    | '/blog'
     | '/admin/blog/create-post'
     | '/admin/blog'
-    | '/admin/blog/edit-post/$index'
+    | '/admin/blog/edit-post/$postId'
+    | '/admin/blog/preview-post/$postId'
   id:
     | '__root__'
     | '/'
-    | '/blog'
     | '/links'
     | '/products'
     | '/shelf'
@@ -177,15 +221,19 @@ export interface FileRouteTypes {
     | '/works'
     | '/admin/images'
     | '/admin/newsletter-subs'
+    | '/admin/products'
+    | '/admin/works'
+    | '/blog/$postId'
     | '/admin/'
+    | '/blog/'
     | '/admin/blog/create-post'
     | '/admin/blog/'
-    | '/admin/blog/edit-post/$index'
+    | '/admin/blog/edit-post/$postId'
+    | '/admin/blog/preview-post/$postId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BlogRoute: typeof BlogRoute
   LinksRoute: typeof LinksRoute
   ProductsRoute: typeof ProductsRoute
   ShelfRoute: typeof ShelfRoute
@@ -193,10 +241,15 @@ export interface RootRouteChildren {
   WorksRoute: typeof WorksRoute
   AdminImagesRoute: typeof AdminImagesRoute
   AdminNewsletterSubsRoute: typeof AdminNewsletterSubsRoute
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminWorksRoute: typeof AdminWorksRoute
+  BlogPostIdRoute: typeof BlogPostIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   AdminBlogCreatePostRoute: typeof AdminBlogCreatePostRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
-  AdminBlogEditPostIndexRoute: typeof AdminBlogEditPostIndexRoute
+  AdminBlogEditPostPostIdRoute: typeof AdminBlogEditPostPostIdRoute
+  AdminBlogPreviewPostPostIdRoute: typeof AdminBlogPreviewPostPostIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,13 +289,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LinksRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -250,11 +296,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$postId': {
+      id: '/blog/$postId'
+      path: '/blog/$postId'
+      fullPath: '/blog/$postId'
+      preLoaderRoute: typeof BlogPostIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/works': {
+      id: '/admin/works'
+      path: '/admin/works'
+      fullPath: '/admin/works'
+      preLoaderRoute: typeof AdminWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/newsletter-subs': {
@@ -285,11 +359,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogCreatePostRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/blog/edit-post/$index': {
-      id: '/admin/blog/edit-post/$index'
-      path: '/admin/blog/edit-post/$index'
-      fullPath: '/admin/blog/edit-post/$index'
-      preLoaderRoute: typeof AdminBlogEditPostIndexRouteImport
+    '/admin/blog/preview-post/$postId': {
+      id: '/admin/blog/preview-post/$postId'
+      path: '/admin/blog/preview-post/$postId'
+      fullPath: '/admin/blog/preview-post/$postId'
+      preLoaderRoute: typeof AdminBlogPreviewPostPostIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog/edit-post/$postId': {
+      id: '/admin/blog/edit-post/$postId'
+      path: '/admin/blog/edit-post/$postId'
+      fullPath: '/admin/blog/edit-post/$postId'
+      preLoaderRoute: typeof AdminBlogEditPostPostIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -297,7 +378,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BlogRoute: BlogRoute,
   LinksRoute: LinksRoute,
   ProductsRoute: ProductsRoute,
   ShelfRoute: ShelfRoute,
@@ -305,10 +385,15 @@ const rootRouteChildren: RootRouteChildren = {
   WorksRoute: WorksRoute,
   AdminImagesRoute: AdminImagesRoute,
   AdminNewsletterSubsRoute: AdminNewsletterSubsRoute,
+  AdminProductsRoute: AdminProductsRoute,
+  AdminWorksRoute: AdminWorksRoute,
+  BlogPostIdRoute: BlogPostIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
   AdminBlogCreatePostRoute: AdminBlogCreatePostRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
-  AdminBlogEditPostIndexRoute: AdminBlogEditPostIndexRoute,
+  AdminBlogEditPostPostIdRoute: AdminBlogEditPostPostIdRoute,
+  AdminBlogPreviewPostPostIdRoute: AdminBlogPreviewPostPostIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

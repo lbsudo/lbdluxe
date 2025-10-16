@@ -27,6 +27,26 @@ supabaseRoutes.get("/getBlogPosts", async (c) => {
     }
 });
 
+supabaseRoutes.get("/getBlogPost/:id", async (c) => {
+    try {
+        const postId = c.req.param("id");
+        const post = await db
+            .select()
+            .from(blogPosts)
+            .where(sql`${blogPosts.id} = ${postId}`)
+            .limit(1);
+
+        if (!post || post.length === 0) {
+            return c.json({success: false, error: "Blog post not found"}, {status: 404});
+        }
+
+        return c.json({success: true, post: post[0]}, {status: 200});
+    } catch (err) {
+        console.error("GetBlogPost route error:", err);
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+
 // Create blog post route
 supabaseRoutes.post("/createBlogPost", async (c) => {
     try {
@@ -87,6 +107,76 @@ supabaseRoutes.post("/createBlogPost", async (c) => {
         return c.json({success: false, error: (err as Error).message}, {status: 500});
     }
 });
+
+// Update blog post route
+supabaseRoutes.put("/updateBlogPost/:id", async (c) => {
+    try {
+        const postId = c.req.param("id");
+        const body = await c.req.json();
+        const {coverImage, title, content, author, categories: categoryIds} = body;
+
+        // Validate required fields
+        if (!coverImage || !title || !content || !author) {
+            return c.json(
+                {success: false, error: "Missing required fields: coverImage, title, content, author"},
+                {status: 400}
+            );
+        }
+
+        // Get category names from IDs
+        let categoryTags: string[] = [];
+        if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
+            const selectedCategories = await db
+                .select()
+                .from(categories)
+                .where(inArray(categories.id, categoryIds));
+            
+            categoryTags = selectedCategories.map(cat => cat.name);
+        }
+
+        // Update the blog post
+        const [updatedPost] = await db
+            .update(blogPosts)
+            .set({
+                coverImage,
+                title,
+                content,
+                author,
+                tags: categoryTags,
+            })
+            .where(sql`${blogPosts.id} = ${postId}`)
+            .returning();
+            
+        if (!updatedPost) {
+            return c.json(
+                {success: false, error: "Blog post not found or failed to update"},
+                {status: 404}
+            );
+        }
+
+        // Update the join table for relationships
+        // First, delete existing relationships
+        await db
+            .delete(postCategories)
+            .where(sql`${postCategories.postId} = ${postId}`);
+
+        // Then, insert new relationships
+        if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
+            await db.insert(postCategories).values(
+                categoryIds.map((categoryId: number) => ({
+                    postId: updatedPost.id,
+                    categoryId,
+                }))
+            );
+        }
+
+        return c.json({success: true, post: updatedPost}, {status: 200});
+    } catch (err) {
+        console.error("UpdateBlogPost route error:", err);
+        return c.json({success: false, error: (err as Error).message}, {status: 500});
+    }
+});
+
 // Add category route
 supabaseRoutes.post("/addCategory", async (c) => {
     try {
