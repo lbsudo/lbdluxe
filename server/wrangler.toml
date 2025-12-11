@@ -23,10 +23,16 @@ persist = true
 [build]
 command = "bun run build"
 
-# Environment variables
+# Environment variables (non-sensitive)
 [vars]
-# Add your environment variables here
-# EXAMPLE_VAR = "value"
+ENVIRONMENT = "production"
+RESEND_API_KEY="re_gFJJZkDG_HDfX8FpX8rWkrK5q5icJxKgt"
+RESEND_AUDIENCE_ID = "ce05c2d0-c68b-411f-b28c-54316f486d35"
+
+# Secrets (add via CLI):
+# npx wrangler secret put RESEND_API_KEY
+# npx wrangler secret put SUPABASE_URL
+# npx wrangler secret put SUPABASE_ANON_KEY
 
 # KV Namespaces (if needed)
 # [[kv_namespaces]]

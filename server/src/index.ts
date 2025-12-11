@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import type { ApiResponse } from "shared/dist";
+import {resendRoutes} from "@server/resend";
 
-export const app = new Hono()
+export const app = new Hono().basePath("/api")
 
 	// Apply CORS to ALL routes
 	.use('/*', cors({
@@ -10,14 +11,14 @@ export const app = new Hono()
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 		allowHeaders: ['Content-Type', 'Authorization'],
 		exposeHeaders: ['Content-Length', 'Content-Type'],
-		maxAge: 86400,
+		// maxAge: 86400,
 		credentials: true,
 	}))
 
 	// Explicit OPTIONS handler for preflight - ADD THIS
-	.options('/*', (c) => {
+	/*.options('/!*', (c) => {
 		return c.body(null, 204);
-	})
+	})*/
 
 	.get("/", (c) => {
 		return c.text("Hello Hono!");
@@ -30,6 +31,7 @@ export const app = new Hono()
 		};
 
 		return c.json(data, { status: 200 });
-	});
+	})
+app.route("/resend", resendRoutes);
 
 export default app;
