@@ -14,7 +14,7 @@ export const app = new Hono()
 		credentials: true,
 	}))
 
-	// Explicit OPTIONS handler for preflight
+	// Explicit OPTIONS handler for preflight - ADD THIS
 	.options('/*', (c) => {
 		return c.body(null, 204);
 	})
