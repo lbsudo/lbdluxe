@@ -1,44 +1,23 @@
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import type { ApiResponse } from "shared/dist";
+import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import type { ApiResponse } from 'shared/dist'
 
-export const app = new Hono()
+const app = new Hono()
 
-	.use('*', cors({
-		origin: (origin) => {
-			// Allow requests from your client domains
-			const allowedOrigins = [
-				'http://localhost:5173', // Vite dev server
-				'https://lbdluxe.com', // Your production client domain
-				'https://www.lbdluxe.com', // WWW subdomain
-				'https://lbdluxe.pages.dev', // Cloudflare Pages default domain
-			];
+app.use(cors())
 
-			// Also allow preview deployments from Cloudflare Pages
-			if (origin && origin.endsWith('.lbdluxe.pages.dev')) {
-				return origin;
-			}
+app.get('/', (c) => {
+	return c.text('Hello Hono!')
+})
 
-			return allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
-		},
-		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-		allowHeaders: ['Content-Type', 'Authorization'],
-		exposeHeaders: ['Content-Length'],
-		maxAge: 600,
-		credentials: true,
-	}))
+app.get('/hello', async (c) => {
 
-	.get("/", (c) => {
-		return c.text("Hello Hono!");
-	})
+	const data: ApiResponse = {
+		message: "Hello BHVR!",
+		success: true
+	}
 
-	.get("/hello", async (c) => {
-		const data: ApiResponse = {
-			message: "Hello BHVR!",
-			success: true,
-		};
+	return c.json(data, { status: 200 })
+})
 
-		return c.json(data, { status: 200 });
-	});
-
-export default app;
+export default app
