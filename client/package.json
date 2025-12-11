@@ -12,21 +12,26 @@
     "pages:dev": "wrangler pages dev dist --port=8788"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/vite": "^4.1.10",
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-router": "^1.140.5",
     "@tanstack/react-router-devtools": "^1.140.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.26",
     "lucide-react": "^0.507.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
     "server": "workspace:*",
     "shared": "workspace:*",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.10"
+    "tailwindcss": "^4.1.10",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
