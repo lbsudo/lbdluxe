@@ -9,6 +9,7 @@ export const app = new Hono()
 			// Allow requests from your client domains
 			const allowedOrigins = [
 				'http://localhost:5173', // Vite dev server
+				'https://lbdluxe.pages.dev', // Vite dev server
 				'https://lbdluxe.com', // Your production client domain
 				'https://www.lbdluxe.com', // WWW subdomain
 			];
