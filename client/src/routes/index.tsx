@@ -5,6 +5,7 @@ import { hcWithType } from "server/dist/client";
 import { useMutation } from "@tanstack/react-query";
 import DefaultLayout from "@/layouts/default.tsx";
 import {Portrait} from "@/components/global/home/portrait.tsx";
+import {Bio} from "@/components/global/home/bio.tsx";
 
 export const Route = createFileRoute("/")({
 	component: Index,
@@ -42,6 +43,7 @@ function Index() {
 		<div className="max-w-xl mx-auto flex flex-col gap-6 items-center justify-center min-h-screen">
 			<section>
 				<Portrait/>
+				<Bio/>
 			</section>
 
 			<div className="flex items-center gap-4">
