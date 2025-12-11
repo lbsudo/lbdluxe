@@ -1,0 +1,14 @@
+name = "lbdluxe"
+pages_build_output_dir = "dist"
+
+# Custom domain (optional - can also add via dashboard)
+# [[pages.routes]]
+# pattern = "lbdluxe.com"
+# custom_domain = true
+
+# Environment variables for Pages
+[env.production.vars]
+VITE_SERVER_URL = "https://api.lbdluxe.com"
+
+[env.preview.vars]
+VITE_SERVER_URL = "https://api.lbdluxe.com"
