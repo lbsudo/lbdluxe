@@ -13,7 +13,7 @@ export default function DefaultLayout({
             <MobileNavigation/>
             <ControlBar/>
             <main className=" max-w-7xl pt-16 ">
-                <div className="flex justify-center items-center w-fit rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
+                <div className="justify-center items-center w-fit rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
                     <ThemeToggle />
                 </div>
                     {children}

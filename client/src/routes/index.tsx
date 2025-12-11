@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState} from "react";
 import { Button } from "@/components/ui/button";
 import { hcWithType } from "server/dist/client";
 import { useMutation } from "@tanstack/react-query";
 import DefaultLayout from "@/layouts/default.tsx";
+import {Portrait} from "@/components/global/home/portrait.tsx";
 
 export const Route = createFileRoute("/")({
 	component: Index,
@@ -39,11 +40,15 @@ function Index() {
 	return (
 		<DefaultLayout>
 		<div className="max-w-xl mx-auto flex flex-col gap-6 items-center justify-center min-h-screen">
+			<section>
+				<Portrait/>
+			</section>
+
 			<div className="flex items-center gap-4">
 				<Button onClick={() => sendRequest()}>Call API</Button>
 			</div>
 			{data && (
-				<pre className="bg-primary-foreground text-primary p-4 radius-sm">
+				<pre className="bg-primary-fo text-primary p-4 radius-sm">
 					<code>
 						Message: {data.message} <br />
 						Success: {data.success.toString()}
