@@ -1,7 +1,6 @@
 import {resendRoutes} from "@server/resend/index";
 import {resendClient} from "@server/clients/resendClient";
 
-
 resendRoutes.get('/get-resend-contacts', async (c) => {
     try {
         const {data, error} = await resendClient.contacts.list({
