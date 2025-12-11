@@ -8,6 +8,7 @@ const queryClient = new QueryClient();
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
+import {ThemeProvider} from "@/components/global/constants/context/use-themes.tsx";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -32,9 +33,11 @@ if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<QueryClientProvider client={queryClient}>
-				<RouterProvider router={router} />
-			</QueryClientProvider>
+			<ThemeProvider defaultTheme="dark" storageKey="lbdluxe-theme">
+				<QueryClientProvider client={queryClient}>
+					<RouterProvider router={router} />
+				</QueryClientProvider>
+			</ThemeProvider>
 		</StrictMode>,
 	);
 }
