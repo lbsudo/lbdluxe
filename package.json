@@ -18,10 +18,13 @@
     "build": "turbo build",
     "build:client": "turbo build --filter=client",
     "build:server": "turbo build --filter=server",
+    "build:pages": "bun install && cd shared && bun run build && cd ../server && bun run build && cd ../client && bun run build",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "test": "turbo test",
-    "postinstall": "turbo build --filter=shared --filter=server"
+    "postinstall": "turbo build --filter=shared --filter=server",
+    "deploy:server": "cd server && bun run cf:deploy",
+    "deploy:client": "cd client && bun run build && bun run pages:deploy"
   },
   "keywords": [
     "bun",
