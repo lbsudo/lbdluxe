@@ -43,7 +43,7 @@ function Index() {
 				<Button onClick={() => sendRequest()}>Call API</Button>
 			</div>
 			{data && (
-				<pre className="bg-gray-100 p-4 rounded-md">
+				<pre className="bg-primary-foreground text-primary p-4 radius-sm">
 					<code>
 						Message: {data.message} <br />
 						Success: {data.success.toString()}
