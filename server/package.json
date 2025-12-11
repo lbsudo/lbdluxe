@@ -5,13 +5,17 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "bun --watch run src/index.ts & tsc --watch"
+    "dev": "bun --watch run src/index.ts & tsc --watch",
+    "deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy --minify"
   },
   "dependencies": {
     "hono": "^4.7.11",
     "shared": "workspace:*"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "wrangler": "^4.53.0"
   }
 }

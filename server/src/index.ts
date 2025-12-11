@@ -4,19 +4,32 @@ import type { ApiResponse } from "shared/dist";
 
 export const app = new Hono()
 
-.use(cors())
+	.use(cors({
+		origin: (origin) => {
+			// Allow requests from your client domains
+			const allowedOrigins = [
+				'http://localhost:5173', // Vite dev server
+				'https://lbdluxe.com', // Your production client domain
+				'https://www.lbdluxe.com', // WWW subdomain
+			];
+			return allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+		},
+		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+		allowHeaders: ['Content-Type', 'Authorization'],
+		credentials: true,
+	}))
 
-.get("/", (c) => {
-	return c.text("Hello Hono!");
-})
+	.get("/", (c) => {
+		return c.text("Hello Hono!");
+	})
 
-.get("/hello", async (c) => {
-	const data: ApiResponse = {
-		message: "Hello BHVR!",
-		success: true,
-	};
+	.get("/hello", async (c) => {
+		const data: ApiResponse = {
+			message: "Hello BHVR!",
+			success: true,
+		};
 
-	return c.json(data, { status: 200 });
-});
+		return c.json(data, { status: 200 });
+	});
 
 export default app;
