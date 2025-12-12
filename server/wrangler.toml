@@ -10,7 +10,7 @@ preview_urls = true
 
 # Custom domain route
 routes = [
-    { pattern = "api.lbdluxe.com/*", custom_domain = true }
+    { pattern = "api.lbdluxe.com", custom_domain = true }
 ]
 
 [observability]
