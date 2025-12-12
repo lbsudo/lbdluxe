@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import type { ApiResponse } from "shared/dist";
-import {resendRoutes} from "@server/resend";
+import {resendRoutes} from "@server/resendRoutes";
 
 export const app = new Hono().basePath("/api")
 
