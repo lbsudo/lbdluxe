@@ -1,11 +1,12 @@
 // Route to add a contact to Resend
 import { resendRoutes} from "@server/resend/index";
-import {resendClient} from "@server/clients/resendClient";
+import {Resend} from "resend";
 
-resendRoutes.post("/add-resend-contact", async (c) => {
+resendRoutes.post("/add-resend-contact", async (c:any) => {
+    const resend = new Resend(c.env.RESEND_API_KEY)
     try {
         const body = await c.req.json(); // Expect { email, firstName, lastName }
-        const {data, error} = await resendClient.contacts.create({
+        const {data, error} = await resend.contacts.create({
             email: body.email,
             unsubscribed: false,
             audienceId: "ce05c2d0-c68b-411f-b28c-54316f486d35",
