@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+.turbo
+.husky/_
+
+# Client-specific
+client/node_modules
+client/dist
+
+# Server-specific
+server/node_modules
+server/dist
+
+# Shared workspace build output
+shared/node_modules
+shared/dist

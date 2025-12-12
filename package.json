@@ -15,19 +15,18 @@
     "dev": "turbo dev",
     "dev:client": "turbo dev --filter=client",
     "dev:server": "turbo dev --filter=server",
-
     "build": "turbo build",
     "build:client": "turbo build --filter=client",
     "build:server": "turbo build --filter=server",
-
     "deploy:server": "cd server && bun run cf:deploy",
     "deploy:client": "cd client && bun run build && bun run pages:deploy",
-
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "test": "turbo test",
-
-    "postinstall": "turbo build --filter=shared --filter=server"
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "postinstall": "turbo build --filter=shared --filter=server",
+    "prepare": "husky"
   },
   "keywords": [
     "bun",
@@ -39,6 +38,11 @@
   ],
   "devDependencies": {
     "bun-types": "latest",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "prettier": "3.7.4",
+    "prettier-eslint": "^16.4.2",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "turbo": "^2.6.3"
   },
   "peerDependencies": {

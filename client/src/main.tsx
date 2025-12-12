@@ -8,36 +8,36 @@ const queryClient = new QueryClient();
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
-import {ThemeProvider} from "@/components/global/constants/context/use-themes.tsx";
+import { ThemeProvider } from "@/components/global/constants/context/use-themes.tsx";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
-	interface Register {
-		router: typeof router;
-	}
+  interface Register {
+    router: typeof router;
+  }
 }
 
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-	throw new Error(
-		"Root element not found. Check if it's in your index.html or if the id is correct.",
-	);
+  throw new Error(
+    "Root element not found. Check if it's in your index.html or if the id is correct.",
+  );
 }
 
 // Render the app
 if (!rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
-	root.render(
-		<StrictMode>
-			<ThemeProvider defaultTheme="dark" storageKey="lbdluxe-theme">
-				<QueryClientProvider client={queryClient}>
-					<RouterProvider router={router} />
-				</QueryClientProvider>
-			</ThemeProvider>
-		</StrictMode>,
-	);
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <ThemeProvider defaultTheme="dark" storageKey="lbdluxe-theme">
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </StrictMode>,
+  );
 }
