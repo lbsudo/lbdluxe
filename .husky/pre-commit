@@ -1,36 +1,35 @@
-echo '🏗️👷🏽Styling, testing and building your project before committing'
+#!/usr/bin/env sh
+echo "🏗️👷🏽  Styling, testing and building your project before committing"
 
 # Check Prettier Standards
-bun run format:check ||
-(
-    echo '🤮🤢🤮 It's F***ING RAW - That styling looks DISGUSTING. 🤮🤢🤮
-            Styling Check failed. Run pnpm run format, add changes and try commit again.'
-    false;
+bun run format:check || (
+    echo "🧹 Code not formatted. Running Prettier automatically..."
+    bun run format
+    git add .
 )
 
 # Check ESLint Standards
 bun run lint ||
 (
-    echo  '😤🏀👋😤 Get that weak s**t out of here! 😤🏀👋😤
-            ESLint Check failed. Make the required changes listed above, add changes and try to commit again.'
-    false;
+    echo "😤🏀👋😤 Get that weak s**t out of here! 😤🏀👋😤
+    ESLint Check failed. Make the required changes listed above, add changes and try to commit again."
+    false
 )
 
 # Check tsconfig Standards
 bun run type-check ||
 (
-    echo '❌😂 Failed Type Check 😂❌
-            You can't be serious trying to commit that with the types wrong? Make the changes required above'
-    false;
+    echo "❌😂 Failed Type Check 😂❌
+    You can't be serious trying to commit that with the types wrong? Make the changes required above"
+    false
 )
 
 # If all pass.. try to run a build
 bun run build ||
 (
-    echo  '❌👷🏽🔨❌ Better call Bob... Because your build failed ❌👷🏽🔨❌
-            ESLint Check failed. Make the required changes listed above, add changes and try to commit again.'
-    false;
+    echo "❌👷🏽🔨❌ Better call Bob... Because your build failed ❌👷🏽🔨❌
+    Build failed. Fix the issues and try committing again."
+    false
 )
 
-# If it builds commit is not available
-echo '✅⚔️ Congratulations warrior... Your commit has passed. ⚔️✅'
+echo "✅⚔️ Congratulations warrior... Your commit has passed. ⚔️✅"
