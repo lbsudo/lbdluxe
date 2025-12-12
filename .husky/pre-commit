@@ -2,8 +2,8 @@
 echo "🏗️👷🏽  Styling, testing and building your project before committing"
 
 # Check Prettier Standards
-bun run format:check || (
-    echo "🧹 Code not formatted. Running Prettier automatically..."
+bun run format:check >/dev/null 2>&1 || (
+    echo "🧹 Auto-formatting your code..."
     bun run format
     git add .
 )
