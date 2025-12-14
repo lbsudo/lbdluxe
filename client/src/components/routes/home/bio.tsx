@@ -76,10 +76,10 @@ export const Bio = () => {
 
       {/* DESCRIPTION */}
       <p className="text-xl mt-2 leading-relaxed text-foreground/70 dark:text-foreground/60 max-w-sm">
-        Self-taught engineer based in California, focused on developing quality
-        software products ,the system engineering that connects the together,
-        the security that keeps them up and running, and being versatile in
-        software and life.
+        I'm a self-taught engineer based in California, focused on developing
+        quality software products ,the system engineering that connects the
+        together, the security that keeps them up and running, and being
+        versatile in software and life.
       </p>
     </div>
   );

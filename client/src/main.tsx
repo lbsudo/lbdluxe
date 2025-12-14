@@ -4,16 +4,12 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./styles/global.css";
 
-const queryClient = new QueryClient();
-
-// Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { ThemeProvider } from "@/components/global/constants/context/use-themes.tsx";
 
-// Create a new router instance
+const queryClient = new QueryClient();
 const router = createRouter({ routeTree });
 
-// Register the router instance for type safety
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
@@ -23,12 +19,9 @@ declare module "@tanstack/react-router" {
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  throw new Error(
-    "Root element not found. Check if it's in your index.html or if the id is correct.",
-  );
+  throw new Error("Root element #root not found.");
 }
 
-// Render the app
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
@@ -40,4 +33,27 @@ if (!rootElement.innerHTML) {
       </ThemeProvider>
     </StrictMode>,
   );
+}
+
+/* -----------------------------------------------------
+   🌟 SPLASH SCREEN CONTROL (ZERO SNAP, 3s DURATION)
+----------------------------------------------------- */
+const splash = document.getElementById("splash-screen");
+
+if (splash) {
+  // Reveal splash only AFTER the first layout + paint
+  requestAnimationFrame(() => {
+    splash.style.visibility = "visible";
+  });
+
+  // Keep the splash visible for 3 seconds
+  setTimeout(() => {
+    splash.style.transition = "opacity 700ms ease";
+    splash.style.opacity = "0";
+
+    // Remove from DOM after fade-out
+    setTimeout(() => {
+      splash.remove();
+    }, 400);
+  }, 1000);
 }

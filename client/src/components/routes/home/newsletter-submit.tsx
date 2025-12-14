@@ -80,7 +80,7 @@ export function NewsletterSubmit({ serverUrl }: NewsletterSubmitProps) {
           <Button
             type="submit"
             variant="bar"
-            className="w-full bg-primary text-primary-foreground"
+            className="w-full bg-primary text-primary-foreground text-lg mt-4"
             disabled={isPending}
           >
             {isPending ? (
