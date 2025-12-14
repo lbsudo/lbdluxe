@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 import {
   useAddResendContact,
@@ -82,7 +83,14 @@ export function NewsletterSubmit({ serverUrl }: NewsletterSubmitProps) {
             className="w-full bg-primary text-primary-foreground"
             disabled={isPending}
           >
-            {isPending ? "Subscribing..." : "Subscribe"}
+            {isPending ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Subscribing...
+              </>
+            ) : (
+              "Subscribe"
+            )}
           </Button>
         </form>
       </Card>
