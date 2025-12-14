@@ -9,7 +9,7 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col justify-start items-center h-screen">
+    <div className="flex flex-col justify-start items-center w-screen h-screen">
       <MobileNavigation />
       <ControlBar />
       <main className=" max-w-7xl pt-16 ">

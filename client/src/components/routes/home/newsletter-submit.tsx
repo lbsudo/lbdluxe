@@ -1,79 +1,90 @@
-import { useState } from "react";
-import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { toast } from "sonner";
+
+import {
+  useAddResendContact,
+  type AddContactInput,
+} from "@/hooks/resend/useAddResendContact";
 
 interface NewsletterSubmitProps {
   serverUrl: string;
 }
 
 export function NewsletterSubmit({ serverUrl }: NewsletterSubmitProps) {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<AddContactInput>();
 
-  async function addContact(email: string) {
-    if (!email) {
-      toast.error("Please enter an email.");
-      return;
-    }
+  const { mutate, isPending } = useAddResendContact(serverUrl);
 
-    setLoading(true);
-    try {
-      const res = await fetch(`${serverUrl}/api/resend/add-resend-contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        toast.success("Subscribed successfully! 🎉");
-        setEmail("");
-      } else {
-        toast.error(
-          `Error: ${data.error?.message || data.error || "Unknown error"}`,
-        );
-      }
-    } catch (err) {
-      toast.error(`Error: ${(err as Error).message}`);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const onSubmit = (values: AddContactInput) => {
+    mutate(values, {
+      onSuccess: (res) => {
+        if (res.success) {
+          toast.success("Successfully subscribed!");
+          reset();
+        } else {
+          toast.error(res.error ?? "Something went wrong.");
+        }
+      },
+      onError: () => {
+        toast.error("Failed to subscribe. Please try again.");
+      },
+    });
+  };
 
   return (
-    <Card className="mx-4 flex w-full items-center rounded-xl justify-center border border-neutral-500 p-2 md:mx-0 md:w-1/2">
-      <Card className="flex w-full items-center justify-center rounded-lg bg-neutral-950 py-6 px-6 gap-2">
-        <p className="text-3xl text-nowrap font-semibold w-full text-center">
+    <Card className="mx-2 flex w-full items-center rounded-xl justify-center border border-neutral-500 p-2 md:mx-0 md:w-2/3 ">
+      <Card className="flex w-full items-center justify-center rounded-lg bg-background py-6 px-6 gap-2">
+        <p className="text-3xl font-semibold w-full text-center ">
           Subscribe to Newsletter
         </p>
 
-        <p className="text-neutral-300 px-2 mb-2 text-center text-xl">
-          A newsletter for entrepreneurs, developers, and those who want to
-          continuously learn.
+        <p className="px-2 mb-2 text-center text-xl">
+          A newsletter for entrepreneurs, developers, and lifelong learners.
         </p>
 
-        <Input
-          name="email"
-          placeholder="name@example.com"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <Button
-          type="button"
-          variant="bar"
-          className="w-full bg-white text-black"
-          onClick={() => addContact(email)}
-          disabled={loading}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-2 w-full"
         >
-          {loading ? "Subscribing..." : "Subscribe"}
-        </Button>
+          <Input
+            className="border-foreground/75"
+            placeholder="First Name"
+            {...register("firstName")}
+          />
+
+          <Input
+            className="border-foreground/75"
+            placeholder="Last Name"
+            {...register("lastName")}
+          />
+
+          <Input
+            className="border-foreground/75"
+            placeholder="name@example.com"
+            type="email"
+            {...register("email", { required: "Email is required" })}
+          />
+          {errors.email && (
+            <p className="text-red-400">{errors.email.message}</p>
+          )}
+
+          <Button
+            type="submit"
+            variant="bar"
+            className="w-full bg-primary text-primary-foreground"
+            disabled={isPending}
+          >
+            {isPending ? "Subscribing..." : "Subscribe"}
+          </Button>
+        </form>
       </Card>
     </Card>
   );
