@@ -30,9 +30,9 @@ const data = {
       title: "Site Content",
       url: "/admin/site-content",
       items: [
-        { title: "Works", url: "/admin/works" },
-        { title: "Products", url: "/admin/products" },
-        { title: "Blog", url: "/admin/blog" },
+        { title: "Works", url: "/admin/main-content/works" },
+        { title: "Products", url: "/admin/main-content/products" },
+        { title: "Blog", url: "/admin/main-content/blog" },
       ],
     },
   ],

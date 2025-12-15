@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as AdminIndexRouteImport } from "./routes/admin/index";
+import { Route as AdminMainContentWorksRouteImport } from "./routes/admin/main-content/works";
 import { Route as AdminBaseProfileRouteImport } from "./routes/admin/base/profile";
 import { Route as AdminBaseNewsletterSubsRouteImport } from "./routes/admin/base/newsletter-subs";
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: "/admin/",
   path: "/admin/",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const AdminMainContentWorksRoute = AdminMainContentWorksRouteImport.update({
+  id: "/admin/main-content/works",
+  path: "/admin/main-content/works",
   getParentRoute: () => rootRouteImport,
 } as any);
 const AdminBaseProfileRoute = AdminBaseProfileRouteImport.update({
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   "/admin": typeof AdminIndexRoute;
   "/admin/base/newsletter-subs": typeof AdminBaseNewsletterSubsRoute;
   "/admin/base/profile": typeof AdminBaseProfileRoute;
+  "/admin/main-content/works": typeof AdminMainContentWorksRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/admin": typeof AdminIndexRoute;
   "/admin/base/newsletter-subs": typeof AdminBaseNewsletterSubsRoute;
   "/admin/base/profile": typeof AdminBaseProfileRoute;
+  "/admin/main-content/works": typeof AdminMainContentWorksRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -53,6 +61,7 @@ export interface FileRoutesById {
   "/admin/": typeof AdminIndexRoute;
   "/admin/base/newsletter-subs": typeof AdminBaseNewsletterSubsRoute;
   "/admin/base/profile": typeof AdminBaseProfileRoute;
+  "/admin/main-content/works": typeof AdminMainContentWorksRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -60,15 +69,22 @@ export interface FileRouteTypes {
     | "/"
     | "/admin"
     | "/admin/base/newsletter-subs"
-    | "/admin/base/profile";
+    | "/admin/base/profile"
+    | "/admin/main-content/works";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/admin" | "/admin/base/newsletter-subs" | "/admin/base/profile";
+  to:
+    | "/"
+    | "/admin"
+    | "/admin/base/newsletter-subs"
+    | "/admin/base/profile"
+    | "/admin/main-content/works";
   id:
     | "__root__"
     | "/"
     | "/admin/"
     | "/admin/base/newsletter-subs"
-    | "/admin/base/profile";
+    | "/admin/base/profile"
+    | "/admin/main-content/works";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -76,6 +92,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute;
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute;
   AdminBaseProfileRoute: typeof AdminBaseProfileRoute;
+  AdminMainContentWorksRoute: typeof AdminMainContentWorksRoute;
 }
 
 declare module "@tanstack/react-router" {
@@ -92,6 +109,13 @@ declare module "@tanstack/react-router" {
       path: "/admin";
       fullPath: "/admin";
       preLoaderRoute: typeof AdminIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/admin/main-content/works": {
+      id: "/admin/main-content/works";
+      path: "/admin/main-content/works";
+      fullPath: "/admin/main-content/works";
+      preLoaderRoute: typeof AdminMainContentWorksRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/admin/base/profile": {
@@ -116,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
   AdminBaseProfileRoute: AdminBaseProfileRoute,
+  AdminMainContentWorksRoute: AdminMainContentWorksRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

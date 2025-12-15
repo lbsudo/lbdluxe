@@ -4,6 +4,7 @@ import { deleteProfileImage } from "./delete-profile-image";
 import { uploadProfileImage } from "./upload-profile-image";
 import { updateProfile } from "./update-profile";
 import { getProfile } from "./get-profile";
+import { addWork } from "./add-work";
 
 export const supabaseRoutes = new Hono();
 
@@ -17,5 +18,6 @@ supabaseRoutes.route("/get-profile-images", getProfileImages);
 supabaseRoutes.route("/delete-profile-image", deleteProfileImage);
 supabaseRoutes.route("/upload-profile-image", uploadProfileImage);
 supabaseRoutes.route("/update-profile", updateProfile);
-supabaseRoutes.route("get-profile", getProfile);
+supabaseRoutes.route("/get-profile", getProfile);
+supabaseRoutes.route("/add-work", addWork);
 export default supabaseRoutes;
