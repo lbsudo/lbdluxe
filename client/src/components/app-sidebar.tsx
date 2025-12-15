@@ -22,8 +22,8 @@ const data = {
       url: "/admin",
       items: [
         { title: "Data", url: "/admin" },
-        { title: "Profile", url: "/admin/profile" },
-        { title: "Newsletter Subs", url: "/admin/newsletter-subs" },
+        { title: "Profile", url: "/admin/base/profile" },
+        { title: "Newsletter Subs", url: "/admin/base/newsletter-subs" },
       ],
     },
     {

@@ -11,7 +11,7 @@ import { ProfileImageGrid } from "@/components/routes/admin/profile/ProfileImage
    Route
 ---------------------------------------- */
 
-export const Route = createFileRoute("/admin/profile")({
+export const Route = createFileRoute("/admin/base/profile")({
   component: RouteComponent,
 });
 

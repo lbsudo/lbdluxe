@@ -4,8 +4,6 @@ import { addResendContact } from "./add-resend-contact";
 
 export const resendRoutes = new Hono();
 
-// GET /api/resend/get-resend-contacts
-resendRoutes.get("/get-resend-contacts", getResendContacts);
-
-// POST /api/resend/add-resend-contact
-resendRoutes.post("/add-resend-contact", addResendContact);
+// Mount sub-routes
+resendRoutes.route("/get-resend-contacts", getResendContacts);
+resendRoutes.route("/add-resend-contact", addResendContact);
