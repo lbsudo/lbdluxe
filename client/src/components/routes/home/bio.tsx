@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { useGetProfile } from "@/hooks/supabase/useGetProfile";
+
+/* ----------------------------------------
+   Typewriter Hook (unchanged)
+---------------------------------------- */
 
 function useTypewriter(
   words: string[],
@@ -11,14 +17,14 @@ function useTypewriter(
   const [deleting, setDeleting] = useState(false);
   const [blink, setBlink] = useState(true);
 
-  // Blinking cursor
   useEffect(() => {
     const interval = setInterval(() => setBlink((v) => !v), 500);
     return () => clearInterval(interval);
   }, []);
 
-  // Typing + deleting logic
   useEffect(() => {
+    if (words.length === 0) return;
+
     const current = words[index];
 
     if (!deleting && subIndex === current.length) {
@@ -33,54 +39,99 @@ function useTypewriter(
     }
 
     const timeout = setTimeout(
-      () => {
-        setSubIndex((prev) => prev + (deleting ? -1 : 1));
-      },
+      () => setSubIndex((prev) => prev + (deleting ? -1 : 1)),
       deleting ? deleteSpeed : speed,
     );
 
     return () => clearTimeout(timeout);
-  }, [subIndex, deleting, index]);
+  }, [subIndex, deleting, index, words, pause, speed, deleteSpeed]);
 
-  return `${words[index].substring(0, subIndex)}${blink ? "|" : ""}`;
+  return words.length > 0
+    ? `${words[index].substring(0, subIndex)}${blink ? "|" : ""}`
+    : "";
 }
 
+/* ----------------------------------------
+   Bio Component
+---------------------------------------- */
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? "http://localhost:8787";
+
 export const Bio = () => {
-  const roles = [
-    "Systems Engineer",
-    "Web/Mobile Developer",
-    "AppSec Engineer",
-    "BioMaxer",
-  ];
+  const { data: profile, isLoading, error } = useGetProfile(SERVER_URL);
 
-  const typewriter = useTypewriter(roles);
+  // Defensive fallbacks
+  const words = profile?.words ?? [];
+  const description = profile?.description ?? "";
+  const profileImage = profile?.profile_image_url ?? "";
+
+  const typewriter = useTypewriter(words);
+
+  if (isLoading) {
+    return (
+      <p className="text-center text-muted-foreground">Loading profile…</p>
+    );
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">Failed to load profile</p>;
+  }
+
   return (
-    <div
-      className="
-                    mt-6 px-6 py-6 rounded-2xl backdrop-blur-xl
-                    bg-white/10 dark:bg-neutral-900/40
-                    border border-white/20 dark:border-neutral-500/40
-                    shadow-[0_8px_32px_0_rgba(0,0,0,0.25)]
-                    flex flex-col items-center gap-3 text-center
-                "
-    >
-      {/* NAME */}
-      <h1 className="text-4xl font-bold tracking-tight text-foreground drop-shadow-sm">
-        Lawrence Brown
-      </h1>
+    <>
+      {/* Portrait */}
+      <div className="w-full flex flex-col items-center justify-center text-center">
+        <Card
+          className="
+            w-80 h-80 flex flex-col items-center justify-center gap-4
+            border border-neutral-500/40 rounded-2xl
+            backdrop-blur-lg bg-white/5 dark:bg-neutral-900/40
+            shadow-xl
+          "
+        >
+          {profileImage ? (
+            <img
+              alt="Profile photo"
+              src={profileImage}
+              className="w-76 h-76 object-cover rounded-xl filter grayscale"
+            />
+          ) : (
+            <div className="text-muted-foreground text-sm">
+              No profile image
+            </div>
+          )}
+        </Card>
+      </div>
 
-      {/* TYPEWRITER */}
-      <p className="text-2xl font-medium text-[#8F4BD2] dark:text-[#8F4BD2] h-7 tracking-wide select-none">
-        {typewriter}
-      </p>
+      {/* Bio */}
+      <div
+        className="
+          mt-6 px-6 py-6 rounded-2xl backdrop-blur-xl
+          bg-white/10 dark:bg-neutral-900/40
+          border border-white/20 dark:border-neutral-500/40
+          shadow-[0_8px_32px_0_rgba(0,0,0,0.25)]
+          flex flex-col items-center gap-3 text-center
+        "
+      >
+        {/* NAME (still static unless you add it to profile later) */}
+        <h1 className="text-4xl font-bold tracking-tight text-foreground drop-shadow-sm">
+          Lawrence Brown
+        </h1>
 
-      {/* DESCRIPTION */}
-      <p className="text-xl mt-2 leading-relaxed text-foreground/70 dark:text-foreground/60 max-w-sm">
-        I'm a self-taught engineer based in California, focused on developing
-        quality software products ,the system engineering that connects the
-        together, the security that keeps them up and running, and being
-        versatile in software and life.
-      </p>
-    </div>
+        {/* TYPEWRITER */}
+        {words.length > 0 && (
+          <p className="text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
+            {typewriter}
+          </p>
+        )}
+
+        {/* DESCRIPTION */}
+        {description && (
+          <p className="text-xl mt-2 leading-relaxed text-foreground/70 max-w-sm">
+            {description}
+          </p>
+        )}
+      </div>
+    </>
   );
 };

@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
-import { Portrait } from "@/components/routes/home/portrait.tsx";
 import { Bio } from "@/components/routes/home/bio.tsx";
 import { NewsletterSubmit } from "@/components/routes/home/newsletter-submit.tsx";
 
@@ -15,7 +14,6 @@ function Index() {
     <DefaultLayout>
       <div className="max-w-6xl mx-auto flex flex-col gap-6 items-center justify-center min-h-screen">
         <section>
-          <Portrait />
           <Bio />
         </section>
         <section className="flex w-full items-center justify-center pb-8">
