@@ -1,6 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@server/*": ["src/*"]
+    },
     // Environment settings
     "lib": ["ESNext"],
     "target": "ESNext",

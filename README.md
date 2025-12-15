@@ -42,11 +42,11 @@ server
 ├── package.json
 ├── README.md
 ├── src
-│   └── index.ts
+│   └── index.tsx
 └── tsconfig.json
 ```
 
-```typescript src/index.ts
+```typescript src/index.tsx
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import type { ApiResponse } from "shared/dist";
@@ -160,13 +160,13 @@ The Shared package is used for anything you want to share between the Server and
 shared
 ├── package.json
 ├── src
-│   ├── index.ts
+│   ├── index.tsx
 │   └── types
-│       └── index.ts
+│       └── index.tsx
 └── tsconfig.json
 ```
 
-Inside the `src/index.ts` we export any of our code from the folders so it's usable in other parts of the monorepo
+Inside the `src/index.tsx` we export any of our code from the folders so it's usable in other parts of the monorepo
 
 ```typescript
 export * from "./types";

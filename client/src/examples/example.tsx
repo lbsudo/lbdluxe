@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 // import { Button } from "@/components/ui/button";
 // import { hcWithType } from "server/dist/client";
 // import { useMutation } from "@tanstack/react-query";
-import DefaultLayout from "@/layouts/default.tsx";
+import DefaultLayout from "@/layouts/default-layout.tsx";
 
 export const Route = createFileRoute("/")({
   component: Index,

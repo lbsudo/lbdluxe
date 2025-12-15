@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import DefaultLayout from "@/layouts/default.tsx";
+import DefaultLayout from "@/layouts/default-layout.tsx";
 import { Portrait } from "@/components/routes/home/portrait.tsx";
 import { Bio } from "@/components/routes/home/bio.tsx";
 import { NewsletterSubmit } from "@/components/routes/home/newsletter-submit.tsx";
