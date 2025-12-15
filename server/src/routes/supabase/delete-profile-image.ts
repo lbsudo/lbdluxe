@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { getSupabase } from "@server/clients/supabase";
+import { getSupabase } from "../../clients/supabase";
 
 /* ----------------------------------------
    Zod Schemas
