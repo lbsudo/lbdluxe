@@ -1,0 +1,26 @@
+name = "lbdluxe-api"
+main = "dist/server/src/index.js"
+compatibility_date = "2024-12-10"
+
+workers_dev = false
+preview_urls = true
+
+routes = [
+    { pattern = "api.lbdluxe.com", custom_domain = true }
+]
+
+[build]
+command = "bun run build"
+
+
+
+[observability]
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true
+
+# Non-sensitive environment variables only
+[vars]
+ENVIRONMENT = "production"

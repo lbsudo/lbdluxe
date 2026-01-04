@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
+import { Route as AdminContentProductsRouteImport } from './routes/admin/content/products'
+import { Route as AdminBaseProfileRouteImport } from './routes/admin/base/profile'
+import { Route as AdminBaseNewsletterSubsRouteImport } from './routes/admin/base/newsletter-subs'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContentWorksRoute = AdminContentWorksRouteImport.update({
+  id: '/admin/content/works',
+  path: '/admin/content/works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContentProductsRoute = AdminContentProductsRouteImport.update({
+  id: '/admin/content/products',
+  path: '/admin/content/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBaseProfileRoute = AdminBaseProfileRouteImport.update({
+  id: '/admin/base/profile',
+  path: '/admin/base/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
+  id: '/admin/base/newsletter-subs',
+  path: '/admin/base/newsletter-subs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
+  '/admin/base/profile': typeof AdminBaseProfileRoute
+  '/admin/content/products': typeof AdminContentProductsRoute
+  '/admin/content/works': typeof AdminContentWorksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
+  '/admin/base/profile': typeof AdminBaseProfileRoute
+  '/admin/content/products': typeof AdminContentProductsRoute
+  '/admin/content/works': typeof AdminContentWorksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
+  '/admin/base/profile': typeof AdminBaseProfileRoute
+  '/admin/content/products': typeof AdminContentProductsRoute
+  '/admin/content/works': typeof AdminContentWorksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin/base/newsletter-subs'
+    | '/admin/base/profile'
+    | '/admin/content/products'
+    | '/admin/content/works'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/admin/base/newsletter-subs'
+    | '/admin/base/profile'
+    | '/admin/content/products'
+    | '/admin/content/works'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin/'
+    | '/admin/base/newsletter-subs'
+    | '/admin/base/profile'
+    | '/admin/content/products'
+    | '/admin/content/works'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
+  AdminBaseProfileRoute: typeof AdminBaseProfileRoute
+  AdminContentProductsRoute: typeof AdminContentProductsRoute
+  AdminContentWorksRoute: typeof AdminContentWorksRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/content/works': {
+      id: '/admin/content/works'
+      path: '/admin/content/works'
+      fullPath: '/admin/content/works'
+      preLoaderRoute: typeof AdminContentWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/content/products': {
+      id: '/admin/content/products'
+      path: '/admin/content/products'
+      fullPath: '/admin/content/products'
+      preLoaderRoute: typeof AdminContentProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/base/profile': {
+      id: '/admin/base/profile'
+      path: '/admin/base/profile'
+      fullPath: '/admin/base/profile'
+      preLoaderRoute: typeof AdminBaseProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/base/newsletter-subs': {
+      id: '/admin/base/newsletter-subs'
+      path: '/admin/base/newsletter-subs'
+      fullPath: '/admin/base/newsletter-subs'
+      preLoaderRoute: typeof AdminBaseNewsletterSubsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
+  AdminBaseProfileRoute: AdminBaseProfileRoute,
+  AdminContentProductsRoute: AdminContentProductsRoute,
+  AdminContentWorksRoute: AdminContentWorksRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

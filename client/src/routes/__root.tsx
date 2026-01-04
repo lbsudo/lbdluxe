@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@/components/global/constants/theme/use-themes";
+import { AppToaster } from "@/components/global/constants/AppToaster";
 import {
   createRootRoute,
   Outlet,
@@ -17,15 +19,18 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "LBDLUXE",
+        title: "BHVR",
       },
     ],
   }),
   component: () => (
     <>
-      <HeadContent />
-      <Outlet />
-      <TanStackRouterDevtools />
+      <ThemeProvider>
+        <HeadContent />
+        <Outlet />
+        <AppToaster />
+        <TanStackRouterDevtools />
+      </ThemeProvider>
       <Scripts />
     </>
   ),
