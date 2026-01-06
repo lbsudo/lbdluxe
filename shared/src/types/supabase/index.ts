@@ -254,6 +254,106 @@ export const DeleteProductResponseSchema = z.union([
   DeleteProductErrorSchema,
 ]);
 
+export const BlogPostSchema = z.object({
+  id: z.number(),
+  cover_image: z.string(),
+  title: z.string(),
+  content: z.string(),
+  author: z.string(),
+  date_posted: z.string(),
+  tags: z.array(z.string()).default([]),
+});
+
+export const GetAllBlogPostsSuccessSchema = z.object({
+  success: z.literal(true),
+  blogPosts: z.array(BlogPostSchema),
+});
+
+export const GetAllBlogPostsErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string(),
+});
+
+export const GetAllBlogPostsResponseSchema = z.union([
+  GetAllBlogPostsSuccessSchema,
+  GetAllBlogPostsErrorSchema,
+]);
+
+export const GetBlogPostSuccessSchema = z.object({
+  success: z.literal(true),
+  blogPost: BlogPostSchema,
+});
+
+export const GetBlogPostErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string(),
+});
+
+export const GetBlogPostResponseSchema = z.union([
+  GetBlogPostSuccessSchema,
+  GetBlogPostErrorSchema,
+]);
+
+export const CreateBlogPostSuccessSchema = z.object({
+  success: z.literal(true),
+  blogPost: BlogPostSchema,
+});
+
+export const CreateBlogPostErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string(),
+});
+
+export const CreateBlogPostResponseSchema = z.union([
+  CreateBlogPostSuccessSchema,
+  CreateBlogPostErrorSchema,
+]);
+
+export const UpdateBlogPostSuccessSchema = z.object({
+  success: z.literal(true),
+  blogPost: BlogPostSchema,
+});
+
+export const UpdateBlogPostErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string(),
+});
+
+export const UpdateBlogPostResponseSchema = z.union([
+  UpdateBlogPostSuccessSchema,
+  UpdateBlogPostErrorSchema,
+]);
+
+export const DeleteBlogPostSuccessSchema = z.object({
+  success: z.literal(true),
+});
+
+export const DeleteBlogPostErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string(),
+});
+
+export const DeleteBlogPostResponseSchema = z.union([
+  DeleteBlogPostSuccessSchema,
+  DeleteBlogPostErrorSchema,
+]);
+
+export const UploadBlogImageSuccessSchema = z.object({
+  success: z.literal(true),
+  url: z.string(),
+  fileName: z.string(),
+});
+
+export const UploadBlogImageErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string(),
+});
+
+export const UploadBlogImageResponseSchema = z.union([
+  UploadBlogImageSuccessSchema,
+  UploadBlogImageErrorSchema,
+]);
+
 // Shared TS types (used by server + client)
 export type Profile = z.infer<typeof GetProfileSuccessSchema>["profile"];
 export type GetProfileResponse = z.infer<typeof GetProfileResponseSchema>;
@@ -272,3 +372,10 @@ export type GetAllProductsResponse = z.infer<typeof GetAllProductsResponseSchema
 export type CreateProductResponse = z.infer<typeof CreateProductResponseSchema>;
 export type UpdateProductResponse = z.infer<typeof UpdateProductResponseSchema>;
 export type DeleteProductResponse = z.infer<typeof DeleteProductResponseSchema>;
+export type BlogPost = z.infer<typeof BlogPostSchema>;
+export type GetAllBlogPostsResponse = z.infer<typeof GetAllBlogPostsResponseSchema>;
+export type GetBlogPostResponse = z.infer<typeof GetBlogPostResponseSchema>;
+export type CreateBlogPostResponse = z.infer<typeof CreateBlogPostResponseSchema>;
+export type UpdateBlogPostResponse = z.infer<typeof UpdateBlogPostResponseSchema>;
+export type DeleteBlogPostResponse = z.infer<typeof DeleteBlogPostResponseSchema>;
+export type UploadBlogImageResponse = z.infer<typeof UploadBlogImageResponseSchema>;

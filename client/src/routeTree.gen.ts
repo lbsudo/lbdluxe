@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
 import { Route as AdminContentProductsRouteImport } from './routes/admin/content/products'
+import { Route as AdminContentBlogEditRouteImport } from './routes/admin/content/blog-edit'
+import { Route as AdminContentBlogRouteImport } from './routes/admin/content/blog'
 import { Route as AdminBaseProfileRouteImport } from './routes/admin/base/profile'
 import { Route as AdminBaseNewsletterSubsRouteImport } from './routes/admin/base/newsletter-subs'
 
@@ -36,6 +38,16 @@ const AdminContentProductsRoute = AdminContentProductsRouteImport.update({
   path: '/admin/content/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminContentBlogEditRoute = AdminContentBlogEditRouteImport.update({
+  id: '/admin/content/blog-edit',
+  path: '/admin/content/blog-edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContentBlogRoute = AdminContentBlogRouteImport.update({
+  id: '/admin/content/blog',
+  path: '/admin/content/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBaseProfileRoute = AdminBaseProfileRouteImport.update({
   id: '/admin/base/profile',
   path: '/admin/base/profile',
@@ -52,6 +64,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
+  '/admin/content/blog': typeof AdminContentBlogRoute
+  '/admin/content/blog-edit': typeof AdminContentBlogEditRoute
   '/admin/content/products': typeof AdminContentProductsRoute
   '/admin/content/works': typeof AdminContentWorksRoute
 }
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
+  '/admin/content/blog': typeof AdminContentBlogRoute
+  '/admin/content/blog-edit': typeof AdminContentBlogEditRoute
   '/admin/content/products': typeof AdminContentProductsRoute
   '/admin/content/works': typeof AdminContentWorksRoute
 }
@@ -69,6 +85,8 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
+  '/admin/content/blog': typeof AdminContentBlogRoute
+  '/admin/content/blog-edit': typeof AdminContentBlogEditRoute
   '/admin/content/products': typeof AdminContentProductsRoute
   '/admin/content/works': typeof AdminContentWorksRoute
 }
@@ -79,6 +97,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
+    | '/admin/content/blog'
+    | '/admin/content/blog-edit'
     | '/admin/content/products'
     | '/admin/content/works'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +107,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
+    | '/admin/content/blog'
+    | '/admin/content/blog-edit'
     | '/admin/content/products'
     | '/admin/content/works'
   id:
@@ -95,6 +117,8 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
+    | '/admin/content/blog'
+    | '/admin/content/blog-edit'
     | '/admin/content/products'
     | '/admin/content/works'
   fileRoutesById: FileRoutesById
@@ -104,6 +128,8 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
   AdminBaseProfileRoute: typeof AdminBaseProfileRoute
+  AdminContentBlogRoute: typeof AdminContentBlogRoute
+  AdminContentBlogEditRoute: typeof AdminContentBlogEditRoute
   AdminContentProductsRoute: typeof AdminContentProductsRoute
   AdminContentWorksRoute: typeof AdminContentWorksRoute
 }
@@ -138,6 +164,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContentProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/content/blog-edit': {
+      id: '/admin/content/blog-edit'
+      path: '/admin/content/blog-edit'
+      fullPath: '/admin/content/blog-edit'
+      preLoaderRoute: typeof AdminContentBlogEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/content/blog': {
+      id: '/admin/content/blog'
+      path: '/admin/content/blog'
+      fullPath: '/admin/content/blog'
+      preLoaderRoute: typeof AdminContentBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/base/profile': {
       id: '/admin/base/profile'
       path: '/admin/base/profile'
@@ -160,6 +200,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
   AdminBaseProfileRoute: AdminBaseProfileRoute,
+  AdminContentBlogRoute: AdminContentBlogRoute,
+  AdminContentBlogEditRoute: AdminContentBlogEditRoute,
   AdminContentProductsRoute: AdminContentProductsRoute,
   AdminContentWorksRoute: AdminContentWorksRoute,
 }

@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "wrangler dev --local",
+    "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "cf:dev": "wrangler dev",
     "cf:deploy": "wrangler deploy --minify"

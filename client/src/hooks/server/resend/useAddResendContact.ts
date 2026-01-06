@@ -1,6 +1,6 @@
 // client/hooks/resend/useAddResendContact.ts
 import { useMutation } from '@tanstack/react-query'
-import { hcWithType } from 'server/client'
+import { hcWithType, type Client } from "server/client"
 import { z } from 'zod'
 
 // Detect production
@@ -12,7 +12,7 @@ const SERVER_URL = isProd
   : 'http://localhost:8787'
 
 // Typed Hono client
-const client = hcWithType(`${SERVER_URL}/resend`)
+const client: Client = hcWithType(`${SERVER_URL}/resend`)
 
 // Runtime validation schema for API response
 const addContactResponseSchema = z.object({
@@ -37,7 +37,7 @@ export type AddContactInput = {
 export function useAddResendContact() {
   return useMutation({
     mutationFn: async (input: AddContactInput) => {
-      const res = await client['add-resend-contact'].$post({
+      const res = await (client as any)['add-resend-contact'].$post({
         json: input,
       })
 
