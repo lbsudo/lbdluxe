@@ -27,7 +27,7 @@ function useTypewriter(
 
     const current = words[index];
 
-    if (!deleting && subIndex === current.length) {
+    if (!deleting && subIndex === current?.length) {
       setTimeout(() => setDeleting(true), pause);
       return;
     }
@@ -47,7 +47,7 @@ function useTypewriter(
   }, [subIndex, deleting, index, words, pause, speed, deleteSpeed]);
 
   return words.length > 0
-    ? `${words[index].substring(0, subIndex)}${blink ? "|" : ""}`
+    ? `${words[index]?.substring(0, subIndex) ?? ""}${blink ? "|" : ""}`
     : "";
 }
 

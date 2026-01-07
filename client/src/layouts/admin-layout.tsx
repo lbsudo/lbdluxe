@@ -31,9 +31,9 @@ export default function AdminLayout({
     for (let i = 0; i < segments.length; i++) {
       const href = '/' + segments.slice(0, i + 1).join('/')
       const label = segments[i]
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
+        ?.split('-')
+        ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        ?.join(' ')
 
       breadcrumbs.push({
         href,
