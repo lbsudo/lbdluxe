@@ -27502,6 +27502,103 @@ supabaseRoutes.route("/blog", blogRoutes);
 // src/resend/index.ts
 init_modules_watch_stub();
 
+// src/resend/add-resend-contact.ts
+init_modules_watch_stub();
+var addResendContact = /* @__PURE__ */ __name(async (c) => {
+  const { email, firstName, lastName, unsubscribed } = await c.req.json();
+  return c.json({
+    success: true,
+    data: {
+      id: "contact_" + Date.now(),
+      object: "contact"
+    }
+  });
+}, "addResendContact");
+
+// src/resend/get-all-resend-contacts.ts
+init_modules_watch_stub();
+var getResendContacts = /* @__PURE__ */ __name(async (c) => {
+  const resend = c.get("resend");
+  if (!resend) {
+    return c.json(
+      { success: false, error: "Resend client not initialized" },
+      500
+    );
+  }
+  try {
+    const url = new URL(c.req.url);
+    const segmentId = url.searchParams.get("segment_id");
+    console.log("Fetching contacts for segmentId:", segmentId);
+    const { data, error } = segmentId ? await resend.contacts.list({ segmentId }) : await resend.contacts.list();
+    if (error) {
+      console.error("Resend API error:", error);
+      return c.json({ success: false, error: `Resend API error: ${error.message}` }, 400);
+    }
+    const contacts = data?.data || [];
+    console.log("Fetched contacts count:", contacts.length);
+    return c.json({ success: true, contacts }, 200);
+  } catch (err) {
+    console.error("Unexpected error fetching Resend contacts:", err);
+    if (err.response) {
+      console.error("Response status:", err.response.status);
+      try {
+        const responseText = await err.response.text();
+        console.error("Response text:", responseText);
+      } catch (textErr) {
+        console.error("Could not read response text:", textErr);
+      }
+    }
+    return c.json(
+      {
+        success: false,
+        error: "Failed to fetch contacts",
+        details: err.message || "Unknown error"
+      },
+      500
+    );
+  }
+}, "getResendContacts");
+
+// src/resend/get-segments.ts
+init_modules_watch_stub();
+var getSegments = /* @__PURE__ */ __name(async (c) => {
+  const resend = c.get("resend");
+  if (!resend) {
+    return c.json(
+      { success: false, error: "Resend client not initialized" },
+      500
+    );
+  }
+  try {
+    console.log("Fetching segments from Resend API...");
+    const { data, error } = await resend.segments.list();
+    if (error) {
+      console.error("Resend API error:", error);
+      return c.json({ success: false, error: `Resend API error: ${error.message}` }, 400);
+    }
+    const segments = data?.data || [];
+    console.log(`Successfully fetched ${segments.length} segments`);
+    return c.json({ success: true, segments }, 200);
+  } catch (err) {
+    console.error("Unexpected error fetching segments:", err);
+    if (err.response) {
+      console.error("Response status:", err.response.status);
+      console.error("Response text:", await err.response.text());
+    }
+    return c.json(
+      {
+        success: false,
+        error: "Failed to fetch segments",
+        details: err.message || "Unknown error"
+      },
+      500
+    );
+  }
+}, "getSegments");
+
+// src/middleware/resend.ts
+init_modules_watch_stub();
+
 // ../node_modules/resend/dist/index.mjs
 init_modules_watch_stub();
 var import_svix = __toESM(require_dist(), 1);
@@ -28389,123 +28486,32 @@ var Resend = class {
   }
 };
 
-// src/resend/add-resend-contact.ts
-init_modules_watch_stub();
-var addResendContact = /* @__PURE__ */ __name(async (c) => {
-  const { email, firstName, lastName, unsubscribed } = await c.req.json();
-  return c.json({
-    success: true,
-    data: {
-      id: "contact_" + Date.now(),
-      object: "contact"
-    }
-  });
-}, "addResendContact");
-
-// src/resend/get-all-resend-contacts.ts
-init_modules_watch_stub();
-var getResendContacts = /* @__PURE__ */ __name(async (c) => {
-  const resend = c.get("resend");
-  if (!resend) {
-    return c.json(
-      { success: false, error: "Resend client not initialized" },
-      500
-    );
-  }
-  try {
-    const url = new URL(c.req.url);
-    const segmentId = url.searchParams.get("segment_id");
-    console.log("Fetching contacts for segmentId:", segmentId);
-    const { data, error } = segmentId ? await resend.contacts.list({ segmentId }) : await resend.contacts.list();
-    if (error) {
-      console.error("Resend API error:", error);
-      return c.json({ success: false, error: `Resend API error: ${error.message}` }, 400);
-    }
-    const contacts = data?.data || [];
-    console.log("Fetched contacts count:", contacts.length);
-    return c.json({ success: true, contacts }, 200);
-  } catch (err) {
-    console.error("Unexpected error fetching Resend contacts:", err);
-    if (err.response) {
-      console.error("Response status:", err.response.status);
-      try {
-        const responseText = await err.response.text();
-        console.error("Response text:", responseText);
-      } catch (textErr) {
-        console.error("Could not read response text:", textErr);
-      }
-    }
-    return c.json(
-      {
-        success: false,
-        error: "Failed to fetch contacts",
-        details: err.message || "Unknown error"
-      },
-      500
-    );
-  }
-}, "getResendContacts");
-
-// src/resend/get-segments.ts
-init_modules_watch_stub();
-var getSegments = /* @__PURE__ */ __name(async (c) => {
-  const resend = c.get("resend");
-  if (!resend) {
-    return c.json(
-      { success: false, error: "Resend client not initialized" },
-      500
-    );
-  }
-  try {
-    console.log("Fetching segments from Resend API...");
-    const { data, error } = await resend.segments.list();
-    if (error) {
-      console.error("Resend API error:", error);
-      return c.json({ success: false, error: `Resend API error: ${error.message}` }, 400);
-    }
-    const segments = data?.data || [];
-    console.log(`Successfully fetched ${segments.length} segments`);
-    return c.json({ success: true, segments }, 200);
-  } catch (err) {
-    console.error("Unexpected error fetching segments:", err);
-    if (err.response) {
-      console.error("Response status:", err.response.status);
-      console.error("Response text:", await err.response.text());
-    }
-    return c.json(
-      {
-        success: false,
-        error: "Failed to fetch segments",
-        details: err.message || "Unknown error"
-      },
-      500
-    );
-  }
-}, "getSegments");
-
-// src/resend/index.ts
-var resendRoutes = new Hono2();
-resendRoutes.use("*", async (c, next) => {
-  const apiKey = c.env.RESEND_API_KEY;
-  const audienceId = c.env.RESEND_AUDIENCE_ID;
-  if (!apiKey) {
+// src/middleware/resend.ts
+var resendMiddleware = /* @__PURE__ */ __name(async (c, next) => {
+  const { RESEND_API_KEY, RESEND_AUDIENCE_ID } = c.env;
+  if (!RESEND_API_KEY) {
     console.error("Missing RESEND_API_KEY environment variable");
     return c.json(
       { success: false, error: "Missing RESEND_API_KEY environment variable" },
       500
     );
   }
-  if (!audienceId) {
+  if (!RESEND_AUDIENCE_ID) {
     console.error("Missing RESEND_AUDIENCE_ID environment variable");
     return c.json(
       { success: false, error: "Missing RESEND_AUDIENCE_ID environment variable" },
       500
     );
   }
-  c.set("resend", new Resend(apiKey));
-  c.set("audienceId", audienceId);
+  const resend = new Resend(RESEND_API_KEY);
+  c.set("resend", resend);
+  c.set("audienceId", RESEND_AUDIENCE_ID);
   await next();
-});
+}, "resendMiddleware");
+
+// src/resend/index.ts
+var resendRoutes = new Hono2();
+resendRoutes.use("*", resendMiddleware);
 resendRoutes.post("/add-resend-contact", addResendContact);
 resendRoutes.get("/get-resend-contacts", getResendContacts);
 resendRoutes.get("/segments", getSegments);

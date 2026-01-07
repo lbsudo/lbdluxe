@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { addResendContact } from "./add-resend-contact";
 import { getResendContacts } from "./get-all-resend-contacts";
 import { getSegments } from "./get-segments";
+import { resendMiddleware } from "../middleware/resend";
 
 type Env = {
   Variables: {
@@ -18,32 +19,8 @@ type Env = {
 
 export const resendRoutes = new Hono<Env>();
 
-// Inline resend middleware
-resendRoutes.use("*", async (c, next) => {
-  const apiKey = c.env.RESEND_API_KEY;
-  const audienceId = c.env.RESEND_AUDIENCE_ID;
-
-  if (!apiKey) {
-    console.error("Missing RESEND_API_KEY environment variable");
-    return c.json(
-      { success: false, error: "Missing RESEND_API_KEY environment variable" },
-      500,
-    );
-  }
-  
-  if (!audienceId) {
-    console.error("Missing RESEND_AUDIENCE_ID environment variable");
-    return c.json(
-      { success: false, error: "Missing RESEND_AUDIENCE_ID environment variable" },
-      500,
-    );
-  }
-
-  c.set("resend", new Resend(apiKey));
-  c.set("audienceId", audienceId);
-
-  await next();
-});
+// Apply Resend middleware to all routes
+resendRoutes.use("*", resendMiddleware);
 
 // Mount routes
 resendRoutes.post("/add-resend-contact", addResendContact);
