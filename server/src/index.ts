@@ -13,7 +13,7 @@ app.use(cors({
     ) {
       return origin;
     }
-    if (origin === "https://lbdluxe.com") {
+    if (origin === "https://lbdluxe.com" || "https://www.lbdluxe.com") {
       return origin;
     }
     return "http://localhost:5173";
