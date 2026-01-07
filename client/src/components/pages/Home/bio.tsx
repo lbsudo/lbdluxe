@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useGetProfile } from "@/hooks/server/supabase/profile/GET/useGetProfile.ts";
+import { Skeleton } from '@/components/ui/skeleton';
+import { useGetProfile } from '@/hooks/server/supabase/profile/GET/useGetProfile';
+
 
 /* ----------------------------------------
    Typewriter Hook (unchanged)
@@ -66,10 +68,20 @@ export const Bio = () => {
   const typewriter = useTypewriter(words);
 
   if (isLoading) {
-    return (
-      <p className="text-center text-muted-foreground">Loading profile…</p>
-    );
-  }
+  return (
+    <div className="flex flex-col items-center gap-6">
+      {/* Card‑size image placeholder */}
+      <Skeleton className="w-80 h-80 rounded-2xl" />
+      {/* Name placeholder */}
+      <Skeleton className="h-6 w-48" />
+      {/* Description placeholders */}
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-4 w-64" />
+        <Skeleton className="h-4 w-56" />
+      </div>
+    </div>
+  );
+}
 
   if (error) {
     return <p className="text-center text-red-500">Failed to load profile</p>;
