@@ -19,13 +19,12 @@ import AdminLayout from "@/layouts/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useGetBlogPost } from "@/hooks/server/supabase/useGetBlogPost";
-import { useCreateBlogPost } from "@/hooks/server/supabase/useCreateBlogPost";
-import { useUpdateBlogPost } from "@/hooks/server/supabase/useUpdateBlogPost";
-import { useUploadBlogImage } from "@/hooks/server/supabase/useUploadBlogImage";
-import { useUploadBlogCoverImage } from "@/hooks/server/supabase/useUploadBlogCoverImage";
-import { useMoveBlogCoverImage } from "@/hooks/server/supabase/useMoveBlogCoverImage";
-import { useAuthors, useCategories } from "@/hooks/server/resend/useGetAllResendContacts";
+import { useGetBlogPost } from "@/hooks/server/supabase/blog/GET/useGetBlogPost.ts";
+import { useCreateBlogPost } from "@/hooks/server/supabase/blog/POST/useCreateBlogPost.ts";
+import { useUpdateBlogPost } from "@/hooks/server/supabase/blog/PUT/useUpdateBlogPost.ts";
+import { useUploadBlogImage } from "@/hooks/server/supabase/blog/POST/useUploadBlogImage.ts";
+import { useUploadBlogCoverImage } from "@/hooks/server/supabase/blog/POST/useUploadBlogCoverImage.ts";
+import { useMoveBlogCoverImage } from "@/hooks/server/supabase/blog/POST/useMoveBlogCoverImage.ts";
 import {
   Select,
   SelectContent,
@@ -42,6 +41,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {useAuthors} from "@/hooks/server/supabase/blog/GET/useAuthors.ts";
+import {useCategories} from "@/hooks/server/supabase/blog/GET/useCategories.ts";
 
 export const Route = createFileRoute("/admin/content/blog-edit")({
   component: RouteComponent,

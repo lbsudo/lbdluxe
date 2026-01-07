@@ -30,12 +30,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useGetAllWorks } from "@/hooks/server/supabase/useGetAllWorks";
-import { useCreateWork } from "@/hooks/server/supabase/useCreateWork";
-import { useUpdateWork } from "@/hooks/server/supabase/useUpdateWork";
-import { useUploadWorkImage } from "@/hooks/server/supabase/useUploadWorkImage";
-import { useDeleteWorkImage } from "@/hooks/server/supabase/useDeleteWorkImage";
-import { useDeleteWork } from "@/hooks/server/supabase/useDeleteWork";
+import { useGetAllWorks } from "@/hooks/server/supabase/works/GET/useGetAllWorks.ts";
+import { useCreateWork } from "@/hooks/server/supabase/works/POST/useCreateWork.ts";
+import { useUpdateWork } from "@/hooks/server/supabase/works/PUT/useUpdateWork.ts";
+import { useUploadWorkImage } from "@/hooks/server/supabase/works/POST/useUploadWorkImage.ts";
+import { useDeleteWorkImage } from "@/hooks/server/supabase/works/DELETE/useDeleteWorkImage.ts";
+import { useDeleteWork } from "@/hooks/server/supabase/works/DELETE/useDeleteWork.ts";
 import { toast } from "sonner";
 import type { Work } from "shared";
 
@@ -310,15 +310,17 @@ function RouteComponent() {
             open={imageManagementOpen}
             onOpenChange={setImageManagementOpen}
           >
-            <DialogTrigger>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openImageManagement(work)}
-              >
-                {imageCount} image{imageCount !== 1 ? "s" : ""}
-              </Button>
-            </DialogTrigger>
+            <DialogTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openImageManagement(work)}
+                >
+                  {imageCount} image{imageCount !== 1 ? "s" : ""}
+                </Button>
+              }
+            />
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>
@@ -433,11 +435,9 @@ function RouteComponent() {
               Edit
             </Button>
             <AlertDialog>
-              <AlertDialogTrigger>
-                <Button variant="destructive" size="sm">
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
+              <AlertDialogTrigger
+                render={<Button variant="destructive" size="sm">Delete</Button>}
+              />
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Work</AlertDialogTitle>

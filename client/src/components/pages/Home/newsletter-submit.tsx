@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import type { AddContactInput } from "@/hooks/server/resend/useAddResendContact.ts";
+import type { AddContactInput } from "@/hooks/server/resend/POST/useAddResendContact.ts";
 import { Card } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useAddResendContact } from "@/hooks/server/resend/useAddResendContact.ts";
+import { useAddResendContact } from "@/hooks/server/resend/POST/useAddResendContact.ts";
 
 export function NewsletterSubmit() {
   const {

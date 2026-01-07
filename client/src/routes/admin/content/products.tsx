@@ -30,12 +30,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useGetAllProducts } from "@/hooks/server/supabase/useGetAllProducts";
-import { useCreateProduct } from "@/hooks/server/supabase/useCreateProduct";
-import { useUpdateProduct } from "@/hooks/server/supabase/useUpdateProduct";
-import { useDeleteProduct } from "@/hooks/server/supabase/useDeleteProduct";
-import { useDeleteProductImage } from "@/hooks/server/supabase/useDeleteProductImage";
-import { useUploadProductImage } from "@/hooks/server/supabase/useUploadProductImage";
+import { useGetAllProducts } from "@/hooks/server/supabase/products/GET/useGetAllProducts.ts";
+import { useCreateProduct } from "@/hooks/server/supabase/products/POST/useCreateProduct.ts";
+import { useUpdateProduct } from "@/hooks/server/supabase/products/PUT/useUpdateProduct.ts";
+import { useDeleteProduct } from "@/hooks/server/supabase/products/DELETE/useDeleteProduct.ts";
+import { useDeleteProductImage } from "@/hooks/server/supabase/products/DELETE/useDeleteProductImage.ts";
+import { useUploadProductImage } from "@/hooks/server/supabase/products/PUT/useUploadProductImage.ts";
 import { toast } from "sonner";
 import type { Product } from "shared";
 
@@ -227,15 +227,17 @@ function RouteComponent() {
             open={imageManagementOpen}
             onOpenChange={setImageManagementOpen}
           >
-            <DialogTrigger>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openImageManagement(product)}
-              >
-                {imageCount} image{imageCount !== 1 ? "s" : ""}
-              </Button>
-            </DialogTrigger>
+            <DialogTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openImageManagement(product)}
+                >
+                  {imageCount} image{imageCount !== 1 ? "s" : ""}
+                </Button>
+              }
+            />
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>
@@ -356,11 +358,9 @@ function RouteComponent() {
               Edit
             </Button>
             <AlertDialog>
-              <AlertDialogTrigger>
-                <Button variant="destructive" size="sm">
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
+              <AlertDialogTrigger
+                render={<Button variant="destructive" size="sm">Delete</Button>}
+              />
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Product</AlertDialogTitle>

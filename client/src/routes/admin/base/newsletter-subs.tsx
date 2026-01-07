@@ -8,7 +8,8 @@ import {
 } from "@tanstack/react-table";
 import type { Contact } from "resend";
 import AdminLayout from "@/layouts/admin-layout";
-import { useSegments, useContacts } from "@/hooks/server/resend/useGetAllResendContacts";
+import {  useContacts } from "@/hooks/server/resend/GET/useContacts";
+import { useSegments} from "@/hooks/server/resend/GET/useSegments";
 import {
   Select,
   SelectContent,

@@ -19,8 +19,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useGetAllBlogPosts } from "@/hooks/server/supabase/useGetAllBlogPosts";
-import { useDeleteBlogPost } from "@/hooks/server/supabase/useDeleteBlogPost";
+import { useGetAllBlogPosts } from "@/hooks/server/supabase/blog/GET/useGetAllBlogPosts.ts";
+import { useDeleteBlogPost } from "@/hooks/server/supabase/blog/DELETE/useDeleteBlogPost.ts";
 import { toast } from "sonner";
 import type { BlogPost } from "shared";
 import { Badge } from "@/components/ui/badge";
@@ -94,11 +94,9 @@ function RouteComponent() {
               Edit
             </Button>
             <AlertDialog>
-              <AlertDialogTrigger>
-                <Button variant="destructive" size="sm">
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
+              <AlertDialogTrigger
+                render={<Button variant="destructive" size="sm">Delete</Button>}
+              />
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Blog Post</AlertDialogTitle>

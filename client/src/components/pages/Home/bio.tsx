@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useGetProfile } from "@/hooks/server/supabase/useGetProfile.ts";
+import { useGetProfile } from "@/hooks/server/supabase/profile/GET/useGetProfile.ts";
 
 /* ----------------------------------------
    Typewriter Hook (unchanged)
