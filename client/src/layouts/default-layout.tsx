@@ -2,6 +2,7 @@ import { Footer } from '@/components/Footer.tsx'
 import { ThemeToggle } from '@/components/global/constants/theme/theme-toggle.tsx'
 import { ControlBar } from '@/components/global/navigation/ControlBar.tsx'
 import { MobileNavigation } from '@/components/global/navigation/MobileNavigation.tsx'
+import MatrixBackground from "@/components/pages/matrix.tsx";
 
 export default function DefaultLayout({
   children,
@@ -9,11 +10,13 @@ export default function DefaultLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col justify-start items-center w-screen h-screen">
+    <div className="flex flex-col justify-start items-center relative">
       <MobileNavigation />
       <ControlBar />
       <main className=" max-w-7xl pt-16 ">
-        <div className="justify-center items-center w-fit rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
+          <MatrixBackground/>
+          <div className="fixed inset-0 bg-black/70 pointer-events-none z-0"></div>
+        <div className="justify-center items-center rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
           <ThemeToggle />
         </div>
         {children}

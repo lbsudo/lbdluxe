@@ -78,7 +78,7 @@ export const Bio = () => {
   return (
     <>
       {/* Portrait */}
-      <div className="w-full flex flex-col items-center justify-center text-center">
+      <div className="w-full flex flex-col items-center justify-center text-center z-2">
         <Card
           className="
             w-80 h-80 flex flex-col items-center justify-center gap-4

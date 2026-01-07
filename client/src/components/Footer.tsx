@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button.tsx'
 export function Footer() {
   return (
     <>
-      <footer className="w-full flex flex-col items-end justify-center mt-3 static inset-x-0 bottom-0 ">
+      <footer className="w-full flex flex-col items-end justify-center mt-3 static inset-x-0 bottom-0 z-1 ">
         <div
           className={
             'h-px bg-linear-to-r from-transparent via-foreground to-transparent w-full mb-24 '
