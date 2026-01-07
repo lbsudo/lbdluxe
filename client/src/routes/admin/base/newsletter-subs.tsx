@@ -87,7 +87,9 @@ function RouteComponent() {
               disabled={segmentsLoading}
             >
               <SelectTrigger className="w-full">
-                <SelectValue>Choose a segment...</SelectValue>
+                <SelectValue>
+                  {segments?.find((segment: any) => segment.id === selectedSegment)?.name || "Choose a segment..."}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {segments?.map((segment: any) => (
