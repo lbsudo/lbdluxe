@@ -18,7 +18,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "cf:dev": "wrangler dev",
-    "cf:deploy": "wrangler deploy --minify"
+    "cf:deploy": "wrangler deploy --minify --env-file .vars"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.6",

@@ -23,9 +23,18 @@ resendRoutes.use("*", async (c, next) => {
   const apiKey = c.env.RESEND_API_KEY;
   const audienceId = c.env.RESEND_AUDIENCE_ID;
 
-  if (!apiKey || !audienceId) {
+  if (!apiKey) {
+    console.error("Missing RESEND_API_KEY environment variable");
     return c.json(
-      { success: false, error: "Missing RESEND API credentials" },
+      { success: false, error: "Missing RESEND_API_KEY environment variable" },
+      500,
+    );
+  }
+  
+  if (!audienceId) {
+    console.error("Missing RESEND_AUDIENCE_ID environment variable");
+    return c.json(
+      { success: false, error: "Missing RESEND_AUDIENCE_ID environment variable" },
       500,
     );
   }
