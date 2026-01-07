@@ -18,13 +18,13 @@ export function ControlBar() {
 
   return (
     <>
-      <div className="inset-x-0 bottom-0 z-10 mb-12 hidden w-full items-center justify-center md:flex md:fixed">
+      <div className="inset-x-0 bottom-0 z-10 mb-4 hidden w-full items-center justify-center md:flex md:fixed">
         <div
           className={
-            "flex  items-center justify-center rounded-md py-1.5 px-1.5 bg-neutral-700/50 backdrop-blur-xl border border-neutral-500 "
+            "flex items-center justify-center rounded-md py-1 px-1 bg-neutral-700/50 backdrop-blur-xl border-1 border-neutral-500 "
           }
         >
-          <ButtonGroup>
+          <ButtonGroup className={'gap-2 font-switzer'}>
             {/* 🔹 Main nav buttons */}
             {mainRoutes.map(({ label, path }) => (
               <Button
@@ -32,17 +32,18 @@ export function ControlBar() {
                 onClick={() => router.navigate({ to: path })}
                 className={
                   pathname === path
-                    ? "bg-white text-xl text-black rounded-md"
-                    : "bg-transparent text-xl rounded-md "
+                    ? "bg-white text-base font-semibold text-black px-4 py-1 !rounded-md "
+                    : "bg-transparent text-base font-normal px-4  py-1 !rounded-md "
                 }
                 variant="bar"
               >
                 {label}
               </Button>
             ))}
+            <ControlBarModal />
           </ButtonGroup>
           {/* 🔹 Keyboard dialog */}
-          <ControlBarModal />
+          {/*<ControlBarModal />*/}
         </div>
       </div>
     </>

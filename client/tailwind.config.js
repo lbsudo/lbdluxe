@@ -5,7 +5,7 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: { fontFamily: { bebas: ['"Bebas Neue"', 'system-ui', 'sans-serif'], switzer: ['"Switzer-Regular"', 'system-ui', 'sans-serif'] } },
   },
   plugins: [
     require('@tailwindcss/typography'),

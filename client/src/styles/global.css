@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import "tailwindcss";
+@import "./switzer.css";
+
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -117,4 +120,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes loadingBar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+.animate-loading-bar {
+  animation: loadingBar var(--loading-duration, 2500ms) linear forwards;
 }

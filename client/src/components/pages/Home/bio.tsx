@@ -78,20 +78,20 @@ export const Bio = () => {
   return (
     <>
       {/* Portrait */}
-      <div className="w-full flex flex-col items-center justify-center text-center z-2">
+      <div className="w-full flex flex-col items-center justify-center text-center">
         <Card
           className="
             w-80 h-80 flex flex-col items-center justify-center gap-4
             border border-neutral-500/40 rounded-2xl
-            backdrop-blur-lg bg-white/5 dark:bg-neutral-900/40
-            shadow-xl
+            backdrop-blur-lg bg-background/5 dark:bg-background/40
+            shadow-xl p-0
           "
         >
           {profileImage ? (
             <img
               alt="Profile photo"
               src={profileImage}
-              className="w-76 h-76 object-cover rounded-xl filter grayscale"
+              className="w-76 h-76 object-cover rounded-xl filter grayscale dark:filter-none"
             />
           ) : (
             <div className="text-muted-foreground text-sm">
@@ -104,9 +104,10 @@ export const Bio = () => {
       {/* Bio */}
       <div
         className="
-          mt-6 px-6 py-6 rounded-2xl backdrop-blur-xl
-          bg-white/10 dark:bg-neutral-900/40
-          border border-white/20 dark:border-neutral-500/40
+          mt-6 px-6 py-6 rounded-2xl backdrop-blur-sm
+          bg-background/10
+          dark:bg-neutral-400/10
+          border dark:border-neutral-300/25 border-neutral-800/25
           shadow-[0_8px_32px_0_rgba(0,0,0,0.25)]
           flex flex-col items-center gap-3 text-center
         "

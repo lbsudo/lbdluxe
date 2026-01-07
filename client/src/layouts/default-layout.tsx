@@ -10,13 +10,13 @@ export default function DefaultLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col justify-start items-center relative">
+    <div className="flex flex-col justify-start items-center  h-screen relative">
       <MobileNavigation />
       <ControlBar />
       <main className=" max-w-7xl pt-16 ">
           <MatrixBackground/>
-          <div className="fixed inset-0 bg-black/70 pointer-events-none z-0"></div>
-        <div className="justify-center items-center rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
+          <div className="fixed inset-0 bg-transparent   dark:bg-black/75 pointer-events-none z-0"></div>
+        <div className="justify-center items-center w-fit rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
           <ThemeToggle />
         </div>
         {children}

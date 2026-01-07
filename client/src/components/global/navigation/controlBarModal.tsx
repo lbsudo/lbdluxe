@@ -32,14 +32,14 @@ export function ControlBarModal() {
   }, [])
 
   const dialogRoutes = [
-    { label: 'Shelf', path: '/shelf', icon: <LibraryBig className="size-5" /> },
-    { label: 'Stack', path: '/stack', icon: <Layers className="size-5" /> },
+    { label: 'Shelf', path: '/shelf', icon: <LibraryBig className="size-5 ml-2" /> },
+    { label: 'Stack', path: '/stack', icon: <Layers className="size-5 ml-2" /> },
   ]
 
   const subdomains = [
     {
       label: 'links.lbdluxe.com',
-      icon: <SquareArrowOutUpRight className="size-5" />,
+      icon: <SquareArrowOutUpRight className="size-5 ml-2" />,
       onClick: () => window.open('https://links.lbdluxe.com', '_blank'),
     },
   ]
@@ -47,12 +47,12 @@ export function ControlBarModal() {
   const links = [
     {
       label: 'Github',
-      icon: <LuGithub className="size-5" />,
+      icon: <LuGithub className="size-5 ml-2" />,
       onClick: () => window.open('https://github.com/your-handle', '_blank'),
     },
     {
       label: 'LinkedIn',
-      icon: <LuLinkedin className="size-5" />,
+      icon: <LuLinkedin className="size-5 ml-2" />,
       onClick: () =>
         window.open('https://linkedin.com/in/your-handle', '_blank'),
     },
@@ -60,70 +60,86 @@ export function ControlBarModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>⌥K</DialogTrigger>
+      <DialogTrigger className={'px-2'}>⌥K</DialogTrigger>
 
-      <DialogContent className="bg-neutral-700/50 backdrop-blur-xl flex flex-col rounded-xl w-full max-w-lg">
+        <DialogContent className="bg-neutral-700/50 font-switzer backdrop-blur-xl gap-0 p-0 flex flex-col items-start justify-start rounded-md w-full max-w-lg control-bar-modal">
         <DialogTitle className="sr-only">Navigation Control Bar</DialogTitle>
         <DialogDescription className="sr-only">
           Website Navigation
         </DialogDescription>
 
-        <Input id="search" type="text" placeholder="Search..." />
-        <Separator className="bg-white my-2" />
+        <div className="relative w-full ">
+          <Input
+            id="search"
+            type="text"
+            placeholder="Search..."
+            className="w-full rounded-b-none backdrop-blur-none border-none outline-none focus-visible:border-none focus-visible:ring-transparent pb-2 bg-neutral-700/20"
+          />
+        </div>
+        <Separator className="bg-white mb-2" />
 
         {/* Routes */}
-        <div className="flex flex-col px-2">
-          <p className="text-xl font-semibold">Routes</p>
-          {dialogRoutes.map(({ label, path, icon }) => (
-            <Button
-              key={path}
-              variant="bar"
-              size="bar"
-              className="flex flex-row items-center text-lg"
-              onClick={() => router.navigate({ to: path })}
-            >
-              {icon}
-              {label}
-            </Button>
-          ))}
+        <p className="text-sm font-light px-2 ">Routes</p>
+        <div className="flex flex-col justify-around items-start w-full text-left ">
+{dialogRoutes.map(({ label, path, icon }) => (
+              <Button
+                key={path}
+                variant="bar"
+                size="bar"
+                className="flex flex-row gap-2 rounded-md items-center justify-start text-md hover:bg-background w-full px-12"
+                onClick={() => {
+                  router.navigate({ to: path })
+                  setOpen(false)
+                }}
+              >
+                {icon}
+                {label}
+              </Button>
+            ))}
         </div>
 
         <Separator className="bg-white my-2" />
 
         {/* Subdomains */}
-        <div className="flex flex-col px-2">
-          <p className="text-xl font-semibold">Subdomains</p>
-          {subdomains.map(({ label, icon, onClick }) => (
-            <Button
-              key={label}
-              variant="bar"
-              size="bar"
-              className="flex flex-row items-center text-lg"
-              onClick={onClick}
-            >
-              {icon}
-              {label}
-            </Button>
-          ))}
+          <p className="text-sm font-light px-2">Subdomains</p>
+          <div className="flex flex-col justify-around items-start w-full text-left ">
+{subdomains.map(({ label, icon, onClick: handleClick }) => (
+                <Button
+                  key={label}
+                  variant="bar"
+                  size="bar"
+                  className="flex flex-row gap-2 rounded-md items-center justify-start text-md hover:bg-background w-full px-12"
+                  onClick={() => {
+                    handleClick()
+                    setOpen(false)
+                  }}
+                >
+                  {icon}
+                  {label}
+                </Button>
+              ))}
         </div>
 
         <Separator className="bg-white my-2" />
 
         {/* Links */}
-        <div className="flex flex-col px-2">
-          <p className="text-xl font-semibold">Links</p>
-          {links.map(({ label, icon, onClick }) => (
-            <Button
-              key={label}
-              variant="bar"
-              size="bar"
-              className="flex flex-row items-center text-lg"
-              onClick={onClick}
-            >
-              {icon}
-              {label}
-            </Button>
-          ))}
+          <p className="text-sm font-light px-2">Links</p>
+          <div className="flex flex-col justify-around items-start w-full text-left">
+{links.map(({ label, icon, onClick: handleClick }) => (
+                <Button
+                  key={label}
+                  variant="bar"
+                  size="bar"
+                  className="flex flex-row gap-2 rounded-md items-center justify-start text-md hover:bg-background w-full px-12"
+                  onClick={() => {
+                    handleClick()
+                    setOpen(false)
+                  }}
+                >
+                  {icon}
+                  {label}
+                </Button>
+              ))}
         </div>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useTheme } from "@/components/global/constants/theme/use-themes";
 
 interface MatrixBackgroundProps {
     color?: string;
@@ -8,11 +9,13 @@ interface MatrixBackgroundProps {
 }
 
 const MatrixBackground: React.FC<MatrixBackgroundProps> = ({
-                                                               color = "#EBEBEB",
-                                                               fontSize = 14,
-                                                               className = "",
-                                                               speed = 1,
-                                                           }) => {
+    color,
+    fontSize = 14,
+    className = "",
+    speed = 1,
+}) => {
+    const { theme } = useTheme();
+    const effectiveColor = color ?? (theme === "dark" ? "#ffffff" : "#1F1F1F");
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -47,10 +50,12 @@ const MatrixBackground: React.FC<MatrixBackgroundProps> = ({
             if (currentTime - lastTime < interval) return;
             lastTime = currentTime;
 
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            // ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            // ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+            ctx.fillStyle =(theme === "dark" ? "rgba(0, 0, 0, 0.05)" :"rgba(31, 31, 31, 0.05)")
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = color;
+            ctx.fillStyle = effectiveColor;
             ctx.font = `${fontSize}px monospace`;
 
             for (let i = 0; i < drops.length; i++) {
@@ -70,7 +75,7 @@ const MatrixBackground: React.FC<MatrixBackgroundProps> = ({
             window.removeEventListener("resize", resizeCanvas);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [color, fontSize, speed]);
+    }, [effectiveColor, fontSize, speed, theme]);
 
     return (
         <canvas

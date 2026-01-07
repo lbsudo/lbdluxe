@@ -1,9 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="font-bebas">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      /* Prevent white flash before the splash loads and ensure exact background match */
+      html, body, #root {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background-color: #000;
+      }
+      #root {
+        background-color: #000;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

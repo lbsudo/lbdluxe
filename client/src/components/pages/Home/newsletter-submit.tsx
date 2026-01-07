@@ -35,8 +35,8 @@ export function NewsletterSubmit() {
   };
 
   return (
-    <Card className="mx-2 z-2 flex w-full items-center rounded-xl justify-center border border-neutral-500 p-2 md:mx-0 md:w-2/3">
-      <Card className="flex w-full items-center justify-center rounded-lg bg-background py-6 px-6 gap-2">
+    <Card className="mx-2 z-2 flex w-full items-center rounded-xl justify-center border dark:border-neutral-300/25 bg-transparent p-2 md:mx-0 md:w-2/3">
+      <Card className="flex w-full items-center justify-center rounded-lg dark:bg-neutral-700/20 backdrop-blur-sm py-6 px-6 gap-2 ">
         <p className="text-3xl font-semibold w-full text-center">
           Subscribe to Newsletter
         </p>
