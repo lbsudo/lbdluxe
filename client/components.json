@@ -10,6 +10,9 @@
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "lucide",
+  "menuColor": "default",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
@@ -17,9 +20,7 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "menuColor": "default",
-  "menuAccent": "subtle",
-  "iconLibrary": "lucide",
-  "registries": {}
+  "registries": {
+    "@magicui": "https://magicui.design/r/{name}.json"
+  }
 }
-

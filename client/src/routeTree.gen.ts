@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
@@ -22,6 +23,11 @@ import { Route as AdminBaseNewsletterSubsRouteImport } from './routes/admin/base
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
   path: '/works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -67,6 +73,7 @@ const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
   '/admin': typeof AdminIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
   '/admin': typeof AdminIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/products'
     | '/works'
     | '/admin'
     | '/admin/base/newsletter-subs'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/products'
     | '/works'
     | '/admin'
     | '/admin/base/newsletter-subs'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/products'
     | '/works'
     | '/admin/'
     | '/admin/base/newsletter-subs'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProductsRoute: typeof ProductsRoute
   WorksRoute: typeof WorksRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/works'
       fullPath: '/works'
       preLoaderRoute: typeof WorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -217,6 +237,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProductsRoute: ProductsRoute,
   WorksRoute: WorksRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
