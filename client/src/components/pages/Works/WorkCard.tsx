@@ -92,7 +92,7 @@ export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
           href={work.project_link!}
           target="_blank"
           rel="noopener noreferrer"
-          className="relative block border rounded-lg pb-6 flex flex-col h-full bg-card hover:shadow-lg transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="relative border rounded-lg pb-6 flex flex-col h-full bg-card hover:shadow-lg transition-shadow focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           {work.directory && (
             <ArrowUpRight className="absolute top-2 right-2 w-5 h-5 text-foreground" />

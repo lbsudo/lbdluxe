@@ -38,7 +38,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       href={product.project_link!}
       target="_blank"
       rel="noopener noreferrer"
-      className="relative block w-full border rounded-lg p-4 flex flex-col bg-neutral-900/50 backdrop-blur-sm hover:shadow-lg transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="relative  w-full border rounded-lg p-4 flex flex-col bg-neutral-900/50 backdrop-blur-sm hover:shadow-lg transition-shadow focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       <ArrowUpRight className="absolute top-2 right-2 w-5 h-5 text-foreground" />
       {CardContent}
