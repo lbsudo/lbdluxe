@@ -4,7 +4,7 @@
   "author": "Steve Simkins",
   "devDependencies": {
     "bun-types": "latest",
-    "turbo": "^2.7.3"
+    "turbo": "^2.7.4"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
