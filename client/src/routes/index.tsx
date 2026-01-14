@@ -37,7 +37,7 @@ function Index() {
   if (!isClient) return null;
 
   return (
-    <>
+    <div className={'pt-16'}>
       <DefaultLayout>
         <motion.div
           className="max-w-6xl mx-auto flex flex-col gap-6 items-center justify-center min-h-screen"
@@ -53,6 +53,6 @@ function Index() {
           </motion.section>
         </motion.div>
       </DefaultLayout>
-    </>
+    </div>
   );
 }

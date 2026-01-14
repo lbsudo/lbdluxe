@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
     fontFamily: {
-      bebas: ['"Bebas Neue"', 'system-ui', 'sans-serif'],
-      switzer: ['"Switzer-Regular"', 'system-ui', 'sans-serif'],
+      bebas: ['Bebas Neue', 'system-ui', 'sans-serif'],
+      switzer: ['Switzer-Regular', 'system-ui', 'sans-serif'],
     },
     keyframes: {
       shimmer: {
