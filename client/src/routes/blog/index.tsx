@@ -10,9 +10,11 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import type { BlogPost } from "shared";
 import { Badge } from "@/components/ui/badge";
+type BlogPostWithDesc = BlogPost & { description?: string };
 
-export const Route = createFileRoute("/blog/" as any)({
+export const Route = createFileRoute("/blog/")({
   component: BlogList,
 });
 
@@ -23,7 +25,7 @@ const headerData = {
     "A collection of articles where I share ideas, tutorials, and updates. Click a post to read the full content.",
 };
 
-function BlogList() {
+function BlogList(): React.ReactElement {
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetAllBlogPosts();
 
@@ -31,7 +33,7 @@ function BlogList() {
     return <p className="text-muted-foreground">Loading blog posts…</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
 
-  const posts = data?.success ? data.blogPosts : [];
+  const posts: BlogPostWithDesc[] = data?.success ? data.blogPosts : [];
 
   return (
     <DefaultLayout>
@@ -41,7 +43,7 @@ function BlogList() {
         description={headerData.description}
       />
 
-      <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4">
+      <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4 z-2">
         {posts.map((post) => (
           <Card
             key={post.id}
@@ -75,9 +77,9 @@ function BlogList() {
                 )}
               </div>
               {/* Description – fallback to snippet if not provided */}
-              {(post as any).description ? (
+              {post.description ? (
                 <CardDescription className="mt-2 line-clamp-3">
-                  {(post as any).description}
+                  {post.description}
                 </CardDescription>
               ) : (
                 <CardDescription className="mt-2 line-clamp-3">

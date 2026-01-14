@@ -2,27 +2,26 @@
 <html lang="en" class="font-bebas">
   <head>
     <meta charset="UTF-8" />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       /* Prevent white flash before the splash loads and ensure exact background match */
-      html, body, #root {
+      html,
+      body,
+      #root {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
         overflow-y: auto;
       }
-      body {
-        background-color: #000;
-      }
-      #root {
-        background-color: #000;
-      }
     </style>
   </head>
-  <body>
+  <body className="bg-background">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

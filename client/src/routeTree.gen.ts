@@ -12,7 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as BlogPostIdRouteImport } from './routes/blog/$postId'
 import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
 import { Route as AdminContentProductsRouteImport } from './routes/admin/content/products'
 import { Route as AdminContentBlogEditRouteImport } from './routes/admin/content/blog-edit'
@@ -35,10 +38,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogPostIdRoute = BlogPostIdRouteImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AdminContentWorksRoute = AdminContentWorksRouteImport.update({
   id: '/admin/content/works',
@@ -75,7 +93,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
+  '/blog/$postId': typeof BlogPostIdRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
   '/admin/content/blog': typeof AdminContentBlogRoute
@@ -87,7 +108,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
+  '/blog/$postId': typeof BlogPostIdRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
   '/admin/content/blog': typeof AdminContentBlogRoute
@@ -100,7 +124,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
+  '/blog/$postId': typeof BlogPostIdRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
   '/admin/content/blog': typeof AdminContentBlogRoute
@@ -114,7 +141,10 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/works'
+    | '/blog/$postId'
+    | '/blog/$slug'
     | '/admin'
+    | '/blog'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
     | '/admin/content/blog'
@@ -126,7 +156,10 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/works'
+    | '/blog/$postId'
+    | '/blog/$slug'
     | '/admin'
+    | '/blog'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
     | '/admin/content/blog'
@@ -138,7 +171,10 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/works'
+    | '/blog/$postId'
+    | '/blog/$slug'
     | '/admin/'
+    | '/blog/'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
     | '/admin/content/blog'
@@ -151,7 +187,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProductsRoute: typeof ProductsRoute
   WorksRoute: typeof WorksRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
   AdminBaseProfileRoute: typeof AdminBaseProfileRoute
   AdminContentBlogRoute: typeof AdminContentBlogRoute
@@ -183,12 +221,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$postId': {
+      id: '/blog/$postId'
+      path: '/$postId'
+      fullPath: '/blog/$postId'
+      preLoaderRoute: typeof BlogPostIdRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/admin/content/works': {
       id: '/admin/content/works'
@@ -239,7 +298,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProductsRoute: ProductsRoute,
   WorksRoute: WorksRoute,
+  BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
   AdminBaseProfileRoute: AdminBaseProfileRoute,
   AdminContentBlogRoute: AdminContentBlogRoute,

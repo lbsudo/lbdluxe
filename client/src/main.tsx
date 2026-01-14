@@ -30,7 +30,7 @@ function AppWrapper() {
       const alreadyShown = sessionStorage.getItem("splashShown");
       if (!alreadyShown) {
         setShowSplash(true);
-        // Show splash for 2.5 s, then start fade‑out (0.5 s)
+        // Show splash for 2.5s, then start fade‑out (0.5s)
         timer = setTimeout(() => {
           setShowSplash(false);
           sessionStorage.setItem("splashShown", "true");
@@ -53,14 +53,17 @@ function AppWrapper() {
 
   return (
     <>
-      <SplashScreen visible={showSplash} onHidden={() => {
-        setAppVisible(true);
-      }} />
-{appVisible && (
-  <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
-  </QueryClientProvider>
-)}
+      <SplashScreen
+        visible={showSplash}
+        onHidden={() => {
+          setAppVisible(true);
+        }}
+      />
+      {appVisible && (
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      )}
     </>
   );
 }
@@ -69,7 +72,7 @@ const rootElement = document.getElementById("root");
 
 if (!rootElement) {
   throw new Error(
-    "Root element not found. Check if it's in your index.html or if the id is correct."
+    "Root element not found. Check if it's in your index.html or if the id is correct.",
   );
 }
 

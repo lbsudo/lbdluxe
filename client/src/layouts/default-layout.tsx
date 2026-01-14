@@ -13,7 +13,7 @@ export default function DefaultLayout({
     <div className="flex flex-col justify-center items-center min-h-screen relative w-full">
       <MobileNavigation />
       <div className="relative z-20"><ControlBar /></div>
-      <main className="flex-1 max-w-7xl  flex flex-col items-center justify-center">
+      <main className="flex-1 max-w-7xl flex flex-col items-center justify-center bg-background">
           <MatrixBackground/>
           <div className="fixed inset-0 bg-transparent dark:bg-black/75 pointer-events-none z-0"></div>
         <div className="justify-center items-center w-fit rounded-2xl bg-background/80 backdrop-blur-sm p-1 shadow-lg border hidden md:block fixed top-4 right-4">
