@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout";
+import PageHeader from "@/components/global/page-header";
 import { useGetAllBlogPosts } from "@/hooks/server/supabase/blog/GET/useGetAllBlogPosts";
 import { slugify } from "@/lib/slugify";
 import {
@@ -15,6 +16,13 @@ export const Route = createFileRoute("/blog/" as any)({
   component: BlogList,
 });
 
+const headerData = {
+  buttonText: "Read Blog",
+  title: "BLOG",
+  description:
+    "A collection of articles where I share ideas, tutorials, and updates. Click a post to read the full content.",
+};
+
 function BlogList() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetAllBlogPosts();
@@ -27,6 +35,12 @@ function BlogList() {
 
   return (
     <DefaultLayout>
+      <PageHeader
+        buttonText={headerData.buttonText}
+        title={headerData.title}
+        description={headerData.description}
+      />
+
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4">
         {posts.map((post) => (
           <Card
@@ -47,8 +61,8 @@ function BlogList() {
               </CardHeader>
               <div className="flex items-center text-sm text-muted-foreground mt-1">
                 <time>{new Date(post.date_posted).toLocaleDateString()}</time>
-                {post.tags?.length && (<>
-
+                {post.tags?.length && (
+                  <>
                     <span className="mx-2">·</span>
                     <div className="flex gap-1">
                       {post.tags.map((t) => (
@@ -57,8 +71,8 @@ function BlogList() {
                         </Badge>
                       ))}
                     </div>
-
-</>)}
+                  </>
+                )}
               </div>
               {/* Description – fallback to snippet if not provided */}
               {(post as any).description ? (
@@ -75,5 +89,5 @@ function BlogList() {
         ))}
       </section>
     </DefaultLayout>
-  )
+  );
 }
