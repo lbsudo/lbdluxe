@@ -1,8 +1,9 @@
 import React from "react";
 import type { Work } from "shared";
+import { LuExternalLink } from "react-icons/lu";
 import { ArrowUpRight } from "lucide-react";
 
-interface WorksCardProps {
+interface WorkCardProps {
   work: Work;
 }
 
@@ -10,7 +11,7 @@ interface WorksCardProps {
  * Presentation component that renders a single work card.
  * The parent route handles data fetching and mapping.
  */
-export const WorksCard: React.FC<WorksCardProps> = ({ work }) => {
+export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
   const isClickable = work.directory && !!work.project_link;
 
   const CardContent = (
@@ -39,7 +40,7 @@ export const WorksCard: React.FC<WorksCardProps> = ({ work }) => {
           <div className="w-12 h-12 mb-3 bg-muted rounded" />
         ))}
 
-      <div className="px-2">
+      <div className="px-4">
         {/* Title */}
         <h2 className="font-bold text-xl">{work.name}</h2>
 
@@ -48,21 +49,37 @@ export const WorksCard: React.FC<WorksCardProps> = ({ work }) => {
 
         {/* Beta badge */}
         {work.beta && (
-          <span className="mt-2 inline-block bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded">
+          <span className="mt-2 inline-block w-1/3 bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded text-center">
             Beta
           </span>
         )}
 
-        {/* "View project" link – only for non‑directory works */}
-        {!work.directory && work.project_link && (
-          <a
-            href={work.project_link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 text-primary hover:underline text-sm"
-          >
-            View project →
-          </a>
+        {/* Action buttons – view project & repo (if available) */}
+        {!work.directory && (
+          <div className="flex justify-between mt-3">
+            {work.project_link && (
+              <a
+                href={work.project_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 border border-primary text-primary hover:bg-foreground hover:text-background px-3 py-1 rounded-md transition-colors text-sm"
+              >
+                <LuExternalLink size={14} />
+                View project →
+              </a>
+            )}
+            {work.repo_link && (
+              <a
+                href={work.repo_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 border border-primary text-primary hover:bg-foreground hover:text-background px-3 py-1 rounded-md transition-colors text-sm"
+              >
+                <LuExternalLink size={14} />
+                Repo →
+              </a>
+            )}
+          </div>
         )}
       </div>
     </>

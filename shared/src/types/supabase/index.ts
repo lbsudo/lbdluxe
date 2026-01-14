@@ -99,6 +99,7 @@ export const WorkSchema = z.object({
   name: z.string(),
   description: z.string(),
   project_link: z.string().nullable(),
+  repo_link: z.string().nullable(),
   directory: z.boolean(),
   beta: z.boolean(),
   icon_image_url: z.string().nullable(),

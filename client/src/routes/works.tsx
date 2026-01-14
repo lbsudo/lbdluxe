@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import PageHeader from "@/components/global/page-header.tsx";
 import { LuGithub } from "react-icons/lu";
-import { WorksCard } from "@/components/pages/Works/WorksCard.tsx";
+import { WorkCard } from "@/components/pages/Works/WorkCard";
 import { useGetAllWorks } from "@/hooks/server/supabase/works/GET/useGetAllWorks.ts";
 import type { Work } from "shared";
 
@@ -39,7 +39,7 @@ function RouteComponent() {
         {works.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-3">
             {works.map((work) => (
-              <WorksCard key={work.id} work={work} />
+              <WorkCard key={work.id} work={work} />
             ))}
           </div>
         )}
