@@ -15,7 +15,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
-import { Route as BlogPostIdRouteImport } from './routes/blog/$postId'
 import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
 import { Route as AdminContentProductsRouteImport } from './routes/admin/content/products'
 import { Route as AdminContentBlogEditRouteImport } from './routes/admin/content/blog-edit'
@@ -53,11 +52,6 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogPostIdRoute = BlogPostIdRouteImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => BlogRoute,
-} as any)
 const AdminContentWorksRoute = AdminContentWorksRouteImport.update({
   id: '/admin/content/works',
   path: '/admin/content/works',
@@ -93,7 +87,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
-  '/blog/$postId': typeof BlogPostIdRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
@@ -108,7 +101,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
-  '/blog/$postId': typeof BlogPostIdRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
@@ -124,7 +116,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
   '/works': typeof WorksRoute
-  '/blog/$postId': typeof BlogPostIdRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -141,7 +132,6 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/works'
-    | '/blog/$postId'
     | '/blog/$slug'
     | '/admin'
     | '/blog'
@@ -156,7 +146,6 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/works'
-    | '/blog/$postId'
     | '/blog/$slug'
     | '/admin'
     | '/blog'
@@ -171,7 +160,6 @@ export interface FileRouteTypes {
     | '/'
     | '/products'
     | '/works'
-    | '/blog/$postId'
     | '/blog/$slug'
     | '/admin/'
     | '/blog/'
@@ -241,13 +229,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/blog/$postId': {
-      id: '/blog/$postId'
-      path: '/$postId'
-      fullPath: '/blog/$postId'
-      preLoaderRoute: typeof BlogPostIdRouteImport
-      parentRoute: typeof BlogRoute
     }
     '/admin/content/works': {
       id: '/admin/content/works'

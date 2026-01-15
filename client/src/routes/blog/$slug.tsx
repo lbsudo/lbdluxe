@@ -6,7 +6,8 @@ import {
 import { useGetAllBlogPosts } from "@/hooks/server/supabase/blog/GET/useGetAllBlogPosts";
 import { slugify } from "@/lib/slugify";
 import "@/styles/tiptap.css"; // bring in the same styles as the editor
-import { ThemeToggle } from "@/components/global/constants/theme/theme-toggle";
+
+import { Skeleton } from "@/components/ui/skeleton";
 import { ControlBar } from "@/components/global/navigation/ControlBar";
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -19,8 +20,21 @@ function BlogPost() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetAllBlogPosts();
 
-  if (isLoading)
-    return <p className="text-muted-foreground">Loading blog post…</p>;
+  if (isLoading) {
+    return (
+      <div className="relative flex justify-center items-center flex-col bg-background">
+        <Skeleton className="w-screen h-[75vh]" />
+        <div className="max-w-4xl mx-auto p-4 space-y-4 mt-8">
+          <Skeleton className="h-12 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+        <ControlBar />
+      </div>
+    );
+  }
+
   if (error) return <p className="text-red-500">{error.message}</p>;
 
   const posts = data?.success ? data.blogPosts : [];
@@ -61,9 +75,6 @@ function BlogPost() {
             }}
           />
           {/* Title + author/date overlay */}
-          <div className="absolute top-4 right-4 z-20 dark:bg-neutral-600 bg-neutral-300 rounded-md">
-            <ThemeToggle />
-          </div>
           <div className=" absolute left-0 right-0 bottom-0 mx-auto max-w-4xl px-4 text-left">
             <h1 className="text-6xl font-medium text-foreground drop-shadow-lg">
               {post.title}
