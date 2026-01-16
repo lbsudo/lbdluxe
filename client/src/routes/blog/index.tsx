@@ -27,10 +27,8 @@ const headerData = {
 
 function BlogList(): React.ReactElement {
   const navigate = useNavigate();
-  const { data, isLoading, error } = useGetAllBlogPosts();
+  const { data, error } = useGetAllBlogPosts();
 
-  if (isLoading)
-    return <p className="text-muted-foreground">Loading blog posts…</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
 
   const posts: BlogPostWithDesc[] = data?.success ? data.blogPosts : [];
@@ -47,7 +45,7 @@ function BlogList(): React.ReactElement {
         {posts.map((post) => (
           <Card
             key={post.id}
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+            className="cursor-pointer hover:shadow-lg transition-shadow pt-0"
             onClick={() => navigate({ to: `/blog/${slugify(post.title)}` })}
           >
             <figure className="overflow-hidden rounded-t-2xl">
