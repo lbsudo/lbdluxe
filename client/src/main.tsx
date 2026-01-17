@@ -26,14 +26,34 @@ function AppWrapper() {
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let timerDone = false;
+    let contentReady = false;
+
+    const maybeHide = () => {
+      if (timerDone && contentReady) {
+        setShowSplash(false);
+        setAppVisible(true);
+        try {
+          sessionStorage.setItem("splashShown", "true");
+        } catch {}
+      }
+    };
+
+    const onContentReady = () => {
+      contentReady = true;
+      maybeHide();
+    };
+
     try {
       const alreadyShown = sessionStorage.getItem("splashShown");
       if (!alreadyShown) {
         setShowSplash(true);
-        // Show splash for 2.5s, then start fade‑out (0.5s)
+        // Listen for the signal that the home route is ready
+        window.addEventListener("appReady", onContentReady, { once: true });
+        // Minimum splash duration (2.5 s)
         timer = setTimeout(() => {
-          setShowSplash(false);
-          sessionStorage.setItem("splashShown", "true");
+          timerDone = true;
+          maybeHide();
         }, 2500);
       } else {
         // Splash already shown this session – show app immediately
@@ -44,10 +64,12 @@ function AppWrapper() {
       setShowSplash(true);
       timer = setTimeout(() => {
         setShowSplash(false);
+        setAppVisible(true);
       }, 2500);
     }
     return () => {
       if (timer) clearTimeout(timer);
+      window.removeEventListener("appReady", onContentReady);
     };
   }, []);
 

@@ -34,6 +34,13 @@ function Index() {
     setIsClient(true);
   }, []);
 
+  // Notify the splash screen when the home route has finished mounting
+  useEffect(() => {
+    if (isClient) {
+      window.dispatchEvent(new Event("appReady"));
+    }
+  }, [isClient]);
+
   if (!isClient) return null;
 
   return (
