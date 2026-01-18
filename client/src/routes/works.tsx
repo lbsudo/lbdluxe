@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/default-layout.tsx";
 import PageHeader from "@/components/global/page-header.tsx";
 import { LuGithub } from "react-icons/lu";
 import { WorkCard } from "@/components/pages/Works/WorkCard";
+import { LoaderCircle } from "lucide-react";
 import { useGetAllWorks } from "@/hooks/server/supabase/works/GET/useGetAllWorks.ts";
 import type { Work } from "shared";
 
@@ -31,18 +32,22 @@ function RouteComponent() {
           icon={<LuGithub size={16} />}
           iconSize={16}
         />
-        {isLoading && <p className="text-muted-foreground">Loading works…</p>}
-        {error && <p className="text-red-500">{error.message}</p>}
-        {!isLoading && works.length === 0 && (
-          <p className="text-muted-foreground">No works found.</p>
-        )}
-        {works.length > 0 && (
+          {/* Content wrapper – always present */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-3">
-            {works.map((work) => (
-              <WorkCard key={work.id} work={work} />
-            ))}
+            {isLoading ? (
+              <div className="col-span-full flex justify-center items-center py-8">
+                <LoaderCircle className="animate-spin text-muted-foreground" size={48} />
+              </div>
+            ) : error ? (
+              <p className="col-span-full text-red-500">{error.message}</p>
+            ) : works.length === 0 ? (
+              <p className="col-span-full text-muted-foreground">No works found.</p>
+            ) : (
+              works.map((work) => (
+                <WorkCard key={work.id} work={work} />
+              ))
+            )}
           </div>
-        )}
       </DefaultLayout>
     </>
   );

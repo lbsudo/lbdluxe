@@ -20,11 +20,12 @@ export default function PageHeader({
 }: PageHeaderProps) {
   return (
     <div
-      className={`
-       relative w-2/3 mx-auto
-       w-2/3 flex flex-col items-center
-       text-center z-20 pt-12
-     `}
+        className={`
+          relative mx-auto
+          max-w-2xl w-full flex flex-col items-center
+          text-center z-20 pt-12
+        `}
+
     >
       {/*<div className={'z-2 flex flex-col items-center justify-start w-2/3 text-center font-witzer'}>*/}
       {/*    <ShimmerButton className={'py-0 text-lg flex flex-row justify-center items-center gap-1 mb-4 font-switzer'}><LuGithub size={16}/>{buttonText}</ShimmerButton>*/}
