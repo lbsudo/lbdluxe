@@ -35,7 +35,9 @@ function AppWrapper() {
         setAppVisible(true);
         try {
           sessionStorage.setItem("splashShown", "true");
-        } catch {}
+        } catch (err) {
+          console.error(err);
+        }
       }
     };
 
@@ -50,7 +52,7 @@ function AppWrapper() {
         setShowSplash(true);
         // Listen for the signal that the home route is ready
         window.addEventListener("appReady", onContentReady, { once: true });
-        // Minimum splash duration (2.5 s)
+        // Minimum splash duration (2.5 s)
         timer = setTimeout(() => {
           timerDone = true;
           maybeHide();
@@ -59,7 +61,7 @@ function AppWrapper() {
         // Splash already shown this session – show app immediately
         setAppVisible(true);
       }
-    } catch (e) {
+    } catch {
       // Fallback: if sessionStorage is unavailable, just show splash once
       setShowSplash(true);
       timer = setTimeout(() => {
@@ -89,6 +91,8 @@ function AppWrapper() {
     </>
   );
 }
+
+export default AppWrapper;
 
 const rootElement = document.getElementById("root");
 
