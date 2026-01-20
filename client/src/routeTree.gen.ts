@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LinksIndexRouteImport } from './routes/links/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as LinksYtLinksIndexRouteImport } from './routes/links/yt-links/index'
+import { Route as LinksRumbleLinksIndexRouteImport } from './routes/links/rumble-links/index'
 import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
 import { Route as AdminContentProductsRouteImport } from './routes/admin/content/products'
 import { Route as AdminContentBlogEditRouteImport } from './routes/admin/content/blog-edit'
@@ -37,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LinksIndexRoute = LinksIndexRouteImport.update({
+  id: '/links/',
+  path: '/links/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -50,6 +58,16 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinksYtLinksIndexRoute = LinksYtLinksIndexRouteImport.update({
+  id: '/links/yt-links/',
+  path: '/links/yt-links/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinksRumbleLinksIndexRoute = LinksRumbleLinksIndexRouteImport.update({
+  id: '/links/rumble-links/',
+  path: '/links/rumble-links/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminContentWorksRoute = AdminContentWorksRouteImport.update({
@@ -90,12 +108,15 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/links': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
   '/admin/content/blog': typeof AdminContentBlogRoute
   '/admin/content/blog-edit': typeof AdminContentBlogEditRoute
   '/admin/content/products': typeof AdminContentProductsRoute
   '/admin/content/works': typeof AdminContentWorksRoute
+  '/links/rumble-links': typeof LinksRumbleLinksIndexRoute
+  '/links/yt-links': typeof LinksYtLinksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -104,12 +125,15 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/links': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
   '/admin/content/blog': typeof AdminContentBlogRoute
   '/admin/content/blog-edit': typeof AdminContentBlogEditRoute
   '/admin/content/products': typeof AdminContentProductsRoute
   '/admin/content/works': typeof AdminContentWorksRoute
+  '/links/rumble-links': typeof LinksRumbleLinksIndexRoute
+  '/links/yt-links': typeof LinksYtLinksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -119,12 +143,15 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/admin/base/profile': typeof AdminBaseProfileRoute
   '/admin/content/blog': typeof AdminContentBlogRoute
   '/admin/content/blog-edit': typeof AdminContentBlogEditRoute
   '/admin/content/products': typeof AdminContentProductsRoute
   '/admin/content/works': typeof AdminContentWorksRoute
+  '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
+  '/links/yt-links/': typeof LinksYtLinksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -135,12 +162,15 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/admin'
     | '/blog'
+    | '/links'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
     | '/admin/content/blog'
     | '/admin/content/blog-edit'
     | '/admin/content/products'
     | '/admin/content/works'
+    | '/links/rumble-links'
+    | '/links/yt-links'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -149,12 +179,15 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/admin'
     | '/blog'
+    | '/links'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
     | '/admin/content/blog'
     | '/admin/content/blog-edit'
     | '/admin/content/products'
     | '/admin/content/works'
+    | '/links/rumble-links'
+    | '/links/yt-links'
   id:
     | '__root__'
     | '/'
@@ -163,12 +196,15 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/admin/'
     | '/blog/'
+    | '/links/'
     | '/admin/base/newsletter-subs'
     | '/admin/base/profile'
     | '/admin/content/blog'
     | '/admin/content/blog-edit'
     | '/admin/content/products'
     | '/admin/content/works'
+    | '/links/rumble-links/'
+    | '/links/yt-links/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -178,12 +214,15 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  LinksIndexRoute: typeof LinksIndexRoute
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
   AdminBaseProfileRoute: typeof AdminBaseProfileRoute
   AdminContentBlogRoute: typeof AdminContentBlogRoute
   AdminContentBlogEditRoute: typeof AdminContentBlogEditRoute
   AdminContentProductsRoute: typeof AdminContentProductsRoute
   AdminContentWorksRoute: typeof AdminContentWorksRoute
+  LinksRumbleLinksIndexRoute: typeof LinksRumbleLinksIndexRoute
+  LinksYtLinksIndexRoute: typeof LinksYtLinksIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -209,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/links/': {
+      id: '/links/'
+      path: '/links'
+      fullPath: '/links'
+      preLoaderRoute: typeof LinksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -228,6 +274,20 @@ declare module '@tanstack/react-router' {
       path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/links/yt-links/': {
+      id: '/links/yt-links/'
+      path: '/links/yt-links'
+      fullPath: '/links/yt-links'
+      preLoaderRoute: typeof LinksYtLinksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/links/rumble-links/': {
+      id: '/links/rumble-links/'
+      path: '/links/rumble-links'
+      fullPath: '/links/rumble-links'
+      preLoaderRoute: typeof LinksRumbleLinksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/content/works': {
@@ -282,12 +342,15 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  LinksIndexRoute: LinksIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
   AdminBaseProfileRoute: AdminBaseProfileRoute,
   AdminContentBlogRoute: AdminContentBlogRoute,
   AdminContentBlogEditRoute: AdminContentBlogEditRoute,
   AdminContentProductsRoute: AdminContentProductsRoute,
   AdminContentWorksRoute: AdminContentWorksRoute,
+  LinksRumbleLinksIndexRoute: LinksRumbleLinksIndexRoute,
+  LinksYtLinksIndexRoute: LinksYtLinksIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
