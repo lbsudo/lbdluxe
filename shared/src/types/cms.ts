@@ -1,0 +1,72 @@
+export interface CMSLink {
+  type?: "reference" | "custom" | null
+  newTab?: boolean | null
+  url?: string | null
+  label: string
+  appearance?: "default" | "outline" | null
+}
+
+export interface CMSContentColumn {
+  size: "oneThird" | "half" | "twoThirds" | "full"
+  richText: string
+  enableLink?: boolean
+  link?: CMSLink | null
+}
+
+export interface CMSContentBlock {
+  blockType: "content"
+  columns: CMSContentColumn[]
+}
+
+export interface CMSCTALink {
+  link: CMSLink
+  id?: string | null
+}
+
+export interface CMSCTABlock {
+  blockType: "cta"
+  richText: string
+  links?: CMSCTALink[] | null
+}
+
+export interface CMSProfileBlock {
+  blockType: "profile"
+  name: string
+  words: { word: string; id?: string | null }[]
+  description?: string | null
+  profileImage?: CMSMedia | null
+}
+
+export type CMSBlock = CMSContentBlock | CMSCTABlock | CMSProfileBlock
+
+export interface CMSMedia {
+  url?: string | null
+  alt?: string | null
+  width?: number | null
+  height?: number | null
+}
+
+export interface CMSHero {
+  type: "none" | "highImpact" | "mediumImpact" | "lowImpact"
+  richText?: string | null
+  links?: CMSCTALink[] | null
+  media?: CMSMedia | null
+}
+
+export interface CMSMeta {
+  title?: string | null
+  description?: string | null
+  image?: string | null
+}
+
+export interface CMSPage {
+  id: number
+  title: string
+  slug?: string | null
+  hero?: CMSHero | null
+  layout: CMSBlock[]
+  meta?: CMSMeta | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+}

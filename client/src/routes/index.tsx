@@ -6,8 +6,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import { Bio } from "@/components/pages/Home/bio.tsx";
 import { NewsletterSubmit } from "@/components/pages/Home/newsletter-submit.tsx";
+import { RenderBlock } from "@/components/cms/render-block";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
+import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 
 const container = {
   hidden: {},
@@ -29,6 +31,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [isClient, setIsClient] = useState(false);
+  const { data: cmsPage } = useCMSPage("home");
 
   useEffect(() => {
     setIsClient(true);
@@ -42,6 +45,32 @@ function Index() {
   }, [isClient]);
 
   if (!isClient) return null;
+
+  const hasCMSContent = cmsPage && cmsPage.layout?.length > 0;
+
+  if (hasCMSContent) {
+    return (
+      <div className="pt-16">
+        <DefaultLayout>
+          <motion.div
+            className="max-w-6xl mx-auto flex flex-col gap-6 items-center justify-center min-h-screen"
+            variants={container}
+            initial="hidden"
+            animate="visible"
+          >
+            {cmsPage.layout.map((block, i) => (
+              <motion.section key={i} variants={fadeUp} className="w-full">
+                <RenderBlock block={block} />
+              </motion.section>
+            ))}
+            <motion.section className="flex w-full items-center justify-center pb-8" variants={fadeUp}>
+              <NewsletterSubmit />
+            </motion.section>
+          </motion.div>
+        </DefaultLayout>
+      </div>
+    );
+  }
 
   return (
     <div className={'pt-16'}>

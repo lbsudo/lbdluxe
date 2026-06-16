@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { supabaseRoutes } from "./supabase";
 import { resendRoutes } from "./resend";
+import { cmsRoutes } from "./cms";
 
 const app = new Hono();
 
@@ -28,5 +29,6 @@ app.get("/", (c) => c.text("🚀 Local Blog API Server is running!"));
 // Mount group routers
 app.route("/supabase", supabaseRoutes);
 app.route("/resend", resendRoutes);
+app.route("/cms", cmsRoutes);
 
 export default app;
