@@ -8,7 +8,7 @@ export default function SocialLinks() {
           href={"https://www.linkedin.com/in/lbsudo"}
           target={"_blank"}
           ariaLabel={"Visit my LinkedIn"}
-          iconName={"SiLinkedin"}
+          iconName={"SiLinkerd"}
           hex={"#0e76a8"}
         />
         <SocialLink

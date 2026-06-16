@@ -1,5 +1,5 @@
 import { FaRegCopyright, FaRegEnvelope } from 'react-icons/fa'
-import { SiGithub, SiLinkedin } from 'react-icons/si'
+import { SiGithub, SiLinkerd } from 'react-icons/si'
 import { BriefcaseBusiness } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
@@ -63,7 +63,7 @@ export function Footer() {
                   window.open('https://linkedin.com/in/lbsudo', '_blank')
                 }
               >
-                <SiLinkedin size={20} className={'size-6'} />
+                <SiLinkerd size={20} className={'size-6'} />
               </button>
             </li>
           </ul>
