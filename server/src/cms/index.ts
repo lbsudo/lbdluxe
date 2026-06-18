@@ -27,7 +27,7 @@ function convertRichTextFields(
     const result: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(obj)) {
       if (
-        key === "richText" &&
+        (key === "richText" || key === "content") &&
         value &&
         typeof value === "object" &&
         "root" in (value as Record<string, unknown>)
@@ -76,6 +76,67 @@ cmsRoutes.get("/pages/:slug", async (c) => {
   }
 
   const url = `${cmsUrl}/api/pages?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const doc = json.docs?.[0]
+  if (!doc) {
+    return c.json(null)
+  }
+
+  const converted = convertRichTextFields(doc, cmsUrl)
+  return c.json(converted)
+})
+
+cmsRoutes.get("/posts", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/posts?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-publishedAt&limit=50`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const docs = json.docs ?? []
+  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
+  return c.json(converted)
+})
+
+cmsRoutes.get("/posts/:slug", async (c) => {
+  const slug = c.req.param("slug")
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/posts?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
 
   let res: Response
   try {

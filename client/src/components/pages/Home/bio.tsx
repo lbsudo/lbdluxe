@@ -1,41 +1,20 @@
 import { Card } from "@/components/ui/card";
-import { Skeleton } from '@/components/ui/skeleton';
-import { useGetProfile } from '@/hooks/server/supabase/profile/GET/useGetProfile';
 import { useTypewriter } from "@/hooks/use-typewriter";
 
+const STATIC_WORDS = [
+  "Full Stack Developer",
+  "React Enthusiast",
+  "Open Source Contributor",
+];
+const STATIC_DESCRIPTION =
+  "I build modern web applications with a focus on performance, accessibility, and developer experience.";
+const STATIC_NAME = "Lawrence Brown";
+
 export const Bio = () => {
-  const { data: profile, isLoading, error } = useGetProfile();
-
-  // Defensive fallbacks
-  const words = profile?.words ?? [];
-  const description = profile?.description ?? "";
-  const profileImage = profile?.profile_image_url ?? "";
-
-  const typewriter = useTypewriter(words);
-
-  if (isLoading) {
-  return (
-    <div className="flex flex-col items-center gap-6">
-      {/* Card‑size image placeholder */}
-      <Skeleton className="w-80 h-80 rounded-2xl" />
-      {/* Name placeholder */}
-      <Skeleton className="h-6 w-48" />
-      {/* Description placeholders */}
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-4 w-64" />
-        <Skeleton className="h-4 w-56" />
-      </div>
-    </div>
-  );
-}
-
-  if (error) {
-    return <p className="text-center text-red-500">Failed to load profile</p>;
-  }
+  const typewriter = useTypewriter(STATIC_WORDS);
 
   return (
     <>
-      {/* Portrait */}
       <div className="w-full flex flex-col items-center justify-center text-center">
         <Card
           className="
@@ -45,21 +24,12 @@ export const Bio = () => {
             shadow-xl p-0
           "
         >
-          {profileImage ? (
-            <img
-              alt="Profile photo"
-              src={profileImage}
-              className="w-76 h-76 object-cover rounded-xl filter grayscale dark:filter-none"
-            />
-          ) : (
-            <div className="text-muted-foreground text-sm">
-              No profile image
-            </div>
-          )}
+          <div className="text-muted-foreground text-sm">
+            No profile image
+          </div>
         </Card>
       </div>
 
-      {/* Bio */}
       <div
         className="
           mt-6 px-6 py-6 rounded-2xl backdrop-blur-sm
@@ -70,22 +40,19 @@ export const Bio = () => {
           flex flex-col items-center gap-3 text-center
         "
       >
-        {/* NAME (still static unless you add it to profile later) */}
         <h1 className="text-4xl font-bold tracking-tight text-foreground drop-shadow-sm">
-          Lawrence Brown
+          {STATIC_NAME}
         </h1>
 
-        {/* TYPEWRITER */}
-        {words.length > 0 && (
+        {STATIC_WORDS.length > 0 && (
           <p className="text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
             {typewriter}
           </p>
         )}
 
-        {/* DESCRIPTION */}
-        {description && (
+        {STATIC_DESCRIPTION && (
           <p className="text-xl mt-2 leading-relaxed text-foreground/70 max-w-sm">
-            {description}
+            {STATIC_DESCRIPTION}
           </p>
         )}
       </div>

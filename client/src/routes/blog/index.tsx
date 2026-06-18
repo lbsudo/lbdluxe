@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout";
 import PageHeader from "@/components/global/page-header";
-import { useGetAllBlogPosts } from "@/hooks/server/supabase/blog/GET/useGetAllBlogPosts";
-import { slugify } from "@/lib/slugify";
+import { useCMSPosts } from "@/hooks/server/cms/GET/useCMSPosts";
 import {
   Card,
   CardContent,
@@ -10,9 +9,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import type { BlogPost } from "shared";
-import { Badge } from "@/components/ui/badge";
-type BlogPostWithDesc = BlogPost & { description?: string };
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/blog/")({
   component: BlogList,
@@ -27,11 +24,34 @@ const headerData = {
 
 function BlogList(): React.ReactElement {
   const navigate = useNavigate();
-  const { data, error } = useGetAllBlogPosts();
+  const { data: posts, isLoading, error } = useCMSPosts();
 
   if (error) return <p className="text-red-500">{error.message}</p>;
 
-  const posts: BlogPostWithDesc[] = data?.success ? data.blogPosts : [];
+  if (isLoading) {
+    return (
+      <DefaultLayout>
+        <PageHeader
+          buttonText={headerData.buttonText}
+          title={headerData.title}
+          description={headerData.description}
+        />
+        <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4 z-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i} className="pt-0">
+              <Skeleton className="h-48 w-full rounded-t-2xl rounded-b-none" />
+              <CardContent>
+                <CardHeader>
+                  <Skeleton className="h-6 w-3/4" />
+                </CardHeader>
+                <Skeleton className="h-4 w-full mt-2" />
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+      </DefaultLayout>
+    );
+  }
 
   return (
     <DefaultLayout>
@@ -42,48 +62,35 @@ function BlogList(): React.ReactElement {
       />
 
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4 z-2">
-        {posts.map((post) => (
+        {posts?.map((post) => (
           <Card
             key={post.id}
             className="cursor-pointer hover:shadow-lg transition-shadow pt-0"
-            onClick={() => navigate({ to: `/blog/${slugify(post.title)}` })}
+            onClick={() => navigate({ to: `/blog/${post.slug ?? post.id}` })}
           >
-            <figure className="overflow-hidden rounded-t-2xl">
-              <img
-                src={post.cover_image}
-                alt={post.title}
-                className="w-full h-48 object-cover"
-              />
-            </figure>
+            {post.heroImage?.url && (
+              <figure className="overflow-hidden rounded-t-2xl">
+                <img
+                  src={post.heroImage.url}
+                  alt={post.heroImage.alt ?? post.title}
+                  className="w-full h-48 object-cover"
+                />
+              </figure>
+            )}
             <CardContent>
               <CardHeader>
                 <CardTitle>{post.title}</CardTitle>
               </CardHeader>
               <div className="flex items-center text-sm text-muted-foreground mt-1">
-                <time>{new Date(post.date_posted).toLocaleDateString()}</time>
-                {post.tags?.length && (
-                  <>
-                    <span className="mx-2">·</span>
-                    <div className="flex gap-1">
-                      {post.tags.map((t) => (
-                        <Badge key={t} variant="secondary" className="text-xs">
-                          {t}
-                        </Badge>
-                      ))}
-                    </div>
-                  </>
+                {post.publishedAt && (
+                  <time>
+                    {new Date(post.publishedAt).toLocaleDateString()}
+                  </time>
                 )}
               </div>
-              {/* Description – fallback to snippet if not provided */}
-              {post.description ? (
-                <CardDescription className="mt-2 line-clamp-3">
-                  {post.description}
-                </CardDescription>
-              ) : (
-                <CardDescription className="mt-2 line-clamp-3">
-                  {post.content.replace(/<[^>]*>/g, "").slice(0, 150)}…
-                </CardDescription>
-              )}
+              <CardDescription className="mt-2 line-clamp-3">
+                {post.content.replace(/<[^>]*>/g, "").slice(0, 150)}…
+              </CardDescription>
             </CardContent>
           </Card>
         ))}

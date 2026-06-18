@@ -46,6 +46,20 @@ export interface CMSMedia {
   height?: number | null
 }
 
+export interface CMSPost {
+  id: number
+  title: string
+  slug?: string | null
+  heroImage?: CMSMedia | null
+  content: string
+  categories?: { id: number; title: string }[]
+  authors?: { id: number; name: string }[]
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
 export interface CMSHero {
   type: "none" | "highImpact" | "mediumImpact" | "lowImpact"
   richText?: string | null
