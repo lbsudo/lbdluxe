@@ -423,7 +423,7 @@ cmsRoutes.get("/links-profile", async (c) => {
   }
 
   const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const doc = json.docs?.[0] ?? null
+  const doc = json.docs?.[0]
   if (!doc) return c.json(null)
 
   const converted = convertRichTextFields(doc, cmsUrl)

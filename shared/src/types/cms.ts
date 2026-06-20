@@ -149,7 +149,7 @@ export interface CMSLinksProfile {
   socialLinks?: {
     title: string
     url: string
-    iconType?: 'auto' | 'custom' | null
+    iconType?: "auto" | "custom" | null
     icon?: CMSMedia | null
     id?: string | null
   }[] | null
