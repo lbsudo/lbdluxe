@@ -27,7 +27,7 @@ function convertRichTextFields(
     const result: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(obj)) {
       if (
-        (key === "richText" || key === "content") &&
+        (key === "richText" || key === "content" || key === "review") &&
         value &&
         typeof value === "object" &&
         "root" in (value as Record<string, unknown>)
@@ -137,6 +137,245 @@ cmsRoutes.get("/posts/:slug", async (c) => {
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
   const url = `${cmsUrl}/api/posts?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const doc = json.docs?.[0]
+  if (!doc) {
+    return c.json(null)
+  }
+
+  const converted = convertRichTextFields(doc, cmsUrl)
+  return c.json(converted)
+})
+
+cmsRoutes.get("/products", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/products?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-updatedAt&limit=50`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const docs = json.docs ?? []
+  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
+  return c.json(converted)
+})
+
+cmsRoutes.get("/products/:slug", async (c) => {
+  const slug = c.req.param("slug")
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/products?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const doc = json.docs?.[0]
+  if (!doc) {
+    return c.json(null)
+  }
+
+  const converted = convertRichTextFields(doc, cmsUrl)
+  return c.json(converted)
+})
+
+cmsRoutes.get("/works", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/works?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-updatedAt&limit=50`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const docs = json.docs ?? []
+  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
+  return c.json(converted)
+})
+
+cmsRoutes.get("/works/:slug", async (c) => {
+  const slug = c.req.param("slug")
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/works?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const doc = json.docs?.[0]
+  if (!doc) {
+    return c.json(null)
+  }
+
+  const converted = convertRichTextFields(doc, cmsUrl)
+  return c.json(converted)
+})
+
+cmsRoutes.get("/authors", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/authors?depth=0&limit=100&sort=title&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  return c.json(json.docs ?? [])
+})
+
+cmsRoutes.get("/shelf-categories", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/shelf-categories?depth=0&limit=100&sort=title&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  return c.json(json.docs ?? [])
+})
+
+cmsRoutes.get("/shelf-items", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+  const categoryId = c.req.query("categoryId")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  let url = `${cmsUrl}/api/shelf-items?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-updatedAt&limit=50`
+  if (categoryId) {
+    url += `&where[shelfCategories][in]=${encodeURIComponent(categoryId)}`
+  }
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const docs = json.docs ?? []
+  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
+  return c.json(converted)
+})
+
+cmsRoutes.get("/shelf-items/:slug", async (c) => {
+  const slug = c.req.param("slug")
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/shelf-items?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
 
   let res: Response
   try {

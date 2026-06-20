@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const Route = createFileRoute("/admin/base/newsletter-subs" as any)({
+export const Route = createFileRoute("/admin/base/newsletter-subs")({
   component: RouteComponent,
   ssr: false,
 });

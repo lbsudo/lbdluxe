@@ -73,6 +73,73 @@ export interface CMSMeta {
   image?: string | null
 }
 
+export interface CMSWork {
+  id: number
+  name: string
+  slug?: string | null
+  description: string
+  projectLink?: string | null
+  repoLink?: string | null
+  directory: boolean
+  beta: boolean
+  iconImage?: CMSMedia | null
+  images?: { image: CMSMedia; id?: string | null }[] | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
+export interface CMSProduct {
+  id: number
+  name: string
+  slug?: string | null
+  description: string
+  projectLink?: string | null
+  directory: boolean
+  beta: boolean
+  iconImage?: CMSMedia | null
+  images?: { image: CMSMedia; id?: string | null }[] | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
+export interface CMSShelfCategory {
+  id: number
+  title: string
+  slug?: string | null
+}
+
+export interface CMSShelfItemLink {
+  label: string
+  url: string
+  id?: string | null
+}
+
+export interface CMSShelfAuthor {
+  id: number
+  title: string
+}
+
+export interface CMSShelfItem {
+  id: number
+  title: string
+  slug?: string | null
+  description?: string | null
+  coverImage?: CMSMedia | null
+  rating?: number | null
+  review: string
+  links?: CMSShelfItemLink[] | null
+  shelfCategories?: CMSShelfCategory[] | null
+  authors?: CMSShelfAuthor[] | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
 export interface CMSPage {
   id: number
   title: string

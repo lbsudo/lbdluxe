@@ -10,21 +10,32 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorksRouteImport } from './routes/works'
+import { Route as ShelfItemsRouteImport } from './routes/shelf-items'
+import { Route as ShelfRouteImport } from './routes/shelf'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LinksIndexRouteImport } from './routes/links/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as ShelfItemsSlugRouteImport } from './routes/shelf-items.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as LinksYtLinksIndexRouteImport } from './routes/links/yt-links/index'
 import { Route as LinksRumbleLinksIndexRouteImport } from './routes/links/rumble-links/index'
-import { Route as AdminContentWorksRouteImport } from './routes/admin/content/works'
-import { Route as AdminContentProductsRouteImport } from './routes/admin/content/products'
 import { Route as AdminBaseNewsletterSubsRouteImport } from './routes/admin/base/newsletter-subs'
 
 const WorksRoute = WorksRouteImport.update({
   id: '/works',
   path: '/works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShelfItemsRoute = ShelfItemsRouteImport.update({
+  id: '/shelf-items',
+  path: '/shelf-items',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShelfRoute = ShelfRouteImport.update({
+  id: '/shelf',
+  path: '/shelf',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -52,6 +63,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShelfItemsSlugRoute = ShelfItemsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ShelfItemsRoute,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -67,16 +83,6 @@ const LinksRumbleLinksIndexRoute = LinksRumbleLinksIndexRouteImport.update({
   path: '/links/rumble-links/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminContentWorksRoute = AdminContentWorksRouteImport.update({
-  id: '/admin/content/works',
-  path: '/admin/content/works',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminContentProductsRoute = AdminContentProductsRouteImport.update({
-  id: '/admin/content/products',
-  path: '/admin/content/products',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
   id: '/admin/base/newsletter-subs',
   path: '/admin/base/newsletter-subs',
@@ -86,28 +92,30 @@ const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
+  '/shelf': typeof ShelfRoute
+  '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/admin': typeof AdminIndexRoute
-  '/blog': typeof BlogIndexRoute
-  '/links': typeof LinksIndexRoute
+  '/shelf-items/$slug': typeof ShelfItemsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
+  '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
-  '/admin/content/products': typeof AdminContentProductsRoute
-  '/admin/content/works': typeof AdminContentWorksRoute
-  '/links/rumble-links': typeof LinksRumbleLinksIndexRoute
-  '/links/yt-links': typeof LinksYtLinksIndexRoute
+  '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
+  '/links/yt-links/': typeof LinksYtLinksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
+  '/shelf': typeof ShelfRoute
+  '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/links': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
-  '/admin/content/products': typeof AdminContentProductsRoute
-  '/admin/content/works': typeof AdminContentWorksRoute
   '/links/rumble-links': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links': typeof LinksYtLinksIndexRoute
 }
@@ -115,14 +123,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
+  '/shelf': typeof ShelfRoute
+  '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
-  '/admin/content/products': typeof AdminContentProductsRoute
-  '/admin/content/works': typeof AdminContentWorksRoute
   '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links/': typeof LinksYtLinksIndexRoute
 }
@@ -131,42 +140,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/products'
+    | '/shelf'
+    | '/shelf-items'
     | '/works'
     | '/blog/$slug'
-    | '/admin'
-    | '/blog'
-    | '/links'
+    | '/shelf-items/$slug'
+    | '/admin/'
+    | '/blog/'
+    | '/links/'
     | '/admin/base/newsletter-subs'
-    | '/admin/content/products'
-    | '/admin/content/works'
-    | '/links/rumble-links'
-    | '/links/yt-links'
+    | '/links/rumble-links/'
+    | '/links/yt-links/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/products'
+    | '/shelf'
+    | '/shelf-items'
     | '/works'
     | '/blog/$slug'
+    | '/shelf-items/$slug'
     | '/admin'
     | '/blog'
     | '/links'
     | '/admin/base/newsletter-subs'
-    | '/admin/content/products'
-    | '/admin/content/works'
     | '/links/rumble-links'
     | '/links/yt-links'
   id:
     | '__root__'
     | '/'
     | '/products'
+    | '/shelf'
+    | '/shelf-items'
     | '/works'
     | '/blog/$slug'
+    | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
     | '/links/'
     | '/admin/base/newsletter-subs'
-    | '/admin/content/products'
-    | '/admin/content/works'
     | '/links/rumble-links/'
     | '/links/yt-links/'
   fileRoutesById: FileRoutesById
@@ -174,14 +186,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProductsRoute: typeof ProductsRoute
+  ShelfRoute: typeof ShelfRoute
+  ShelfItemsRoute: typeof ShelfItemsRouteWithChildren
   WorksRoute: typeof WorksRoute
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   LinksIndexRoute: typeof LinksIndexRoute
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
-  AdminContentProductsRoute: typeof AdminContentProductsRoute
-  AdminContentWorksRoute: typeof AdminContentWorksRoute
   LinksRumbleLinksIndexRoute: typeof LinksRumbleLinksIndexRoute
   LinksYtLinksIndexRoute: typeof LinksYtLinksIndexRoute
 }
@@ -193,6 +205,20 @@ declare module '@tanstack/react-router' {
       path: '/works'
       fullPath: '/works'
       preLoaderRoute: typeof WorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shelf-items': {
+      id: '/shelf-items'
+      path: '/shelf-items'
+      fullPath: '/shelf-items'
+      preLoaderRoute: typeof ShelfItemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shelf': {
+      id: '/shelf'
+      path: '/shelf'
+      fullPath: '/shelf'
+      preLoaderRoute: typeof ShelfRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -212,23 +238,30 @@ declare module '@tanstack/react-router' {
     '/links/': {
       id: '/links/'
       path: '/links'
-      fullPath: '/links'
+      fullPath: '/links/'
       preLoaderRoute: typeof LinksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
-      fullPath: '/blog'
+      fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
-      fullPath: '/admin'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/shelf-items/$slug': {
+      id: '/shelf-items/$slug'
+      path: '/$slug'
+      fullPath: '/shelf-items/$slug'
+      preLoaderRoute: typeof ShelfItemsSlugRouteImport
+      parentRoute: typeof ShelfItemsRoute
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -240,29 +273,15 @@ declare module '@tanstack/react-router' {
     '/links/yt-links/': {
       id: '/links/yt-links/'
       path: '/links/yt-links'
-      fullPath: '/links/yt-links'
+      fullPath: '/links/yt-links/'
       preLoaderRoute: typeof LinksYtLinksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/links/rumble-links/': {
       id: '/links/rumble-links/'
       path: '/links/rumble-links'
-      fullPath: '/links/rumble-links'
+      fullPath: '/links/rumble-links/'
       preLoaderRoute: typeof LinksRumbleLinksIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/content/works': {
-      id: '/admin/content/works'
-      path: '/admin/content/works'
-      fullPath: '/admin/content/works'
-      preLoaderRoute: typeof AdminContentWorksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/content/products': {
-      id: '/admin/content/products'
-      path: '/admin/content/products'
-      fullPath: '/admin/content/products'
-      preLoaderRoute: typeof AdminContentProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/base/newsletter-subs': {
@@ -275,17 +294,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ShelfItemsRouteChildren {
+  ShelfItemsSlugRoute: typeof ShelfItemsSlugRoute
+}
+
+const ShelfItemsRouteChildren: ShelfItemsRouteChildren = {
+  ShelfItemsSlugRoute: ShelfItemsSlugRoute,
+}
+
+const ShelfItemsRouteWithChildren = ShelfItemsRoute._addFileChildren(
+  ShelfItemsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProductsRoute: ProductsRoute,
+  ShelfRoute: ShelfRoute,
+  ShelfItemsRoute: ShelfItemsRouteWithChildren,
   WorksRoute: WorksRoute,
   BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   LinksIndexRoute: LinksIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
-  AdminContentProductsRoute: AdminContentProductsRoute,
-  AdminContentWorksRoute: AdminContentWorksRoute,
   LinksRumbleLinksIndexRoute: LinksRumbleLinksIndexRoute,
   LinksYtLinksIndexRoute: LinksYtLinksIndexRoute,
 }

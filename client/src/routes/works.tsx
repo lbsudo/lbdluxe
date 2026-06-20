@@ -4,8 +4,7 @@ import PageHeader from "@/components/global/page-header.tsx";
 import { LuGithub } from "react-icons/lu";
 import { WorkCard } from "@/components/pages/Works/WorkCard";
 import { LoaderCircle } from "lucide-react";
-import { useGetAllWorks } from "@/hooks/server/supabase/works/GET/useGetAllWorks.ts";
-import type { Work } from "shared";
+import { useCMSWorks } from "@/hooks/server/cms/GET/useCMSWorks";
 
 export const Route = createFileRoute("/works")({
   component: RouteComponent,
@@ -19,8 +18,7 @@ const headerData = {
 };
 
 function RouteComponent() {
-  const { data: worksResponse, isLoading, error } = useGetAllWorks();
-  const works: Work[] = worksResponse?.success ? worksResponse.works : [];
+  const { data: works, isLoading, error } = useCMSWorks();
 
   return (
     <>
@@ -32,7 +30,6 @@ function RouteComponent() {
           icon={<LuGithub size={16} />}
           iconSize={16}
         />
-          {/* Content wrapper – always present */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-3">
             {isLoading ? (
               <div className="col-span-full flex justify-center items-center py-8">
@@ -40,7 +37,7 @@ function RouteComponent() {
               </div>
             ) : error ? (
               <p className="col-span-full text-red-500">{error.message}</p>
-            ) : works.length === 0 ? (
+            ) : !works || works.length === 0 ? (
               <p className="col-span-full text-muted-foreground">No works found.</p>
             ) : (
               works.map((work) => (
