@@ -1,24 +1,20 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import PageHeader from "@/components/global/page-header.tsx";
-import { LuBookOpen } from "react-icons/lu";
 import { LoaderCircle, Library } from "lucide-react";
 import { useCMSShelfCategories } from "@/hooks/server/cms/GET/useCMSShelfCategories";
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
 import { ShelfCategoryItemCard } from "@/components/pages/Shelf/ShelfCategoryItemCard";
 import { cn } from "@/lib/utils";
 
-const searchSchema = {
-  category: (value: string | undefined): number | undefined => {
-    if (value == null) return undefined;
-    const n = Number(value);
-    return Number.isFinite(n) ? n : undefined;
-  },
-};
-
 export const Route = createFileRoute("/shelf")({
+  validateSearch: (input: Record<string, unknown>) => ({
+    category:
+      typeof input.category === "string" && Number.isFinite(Number(input.category))
+        ? Number(input.category)
+        : undefined,
+  }),
   component: RouteComponent,
-  validateSearch: searchSchema,
 });
 
 const headerData = {

@@ -6,9 +6,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { Contact } from "resend";
-import AdminLayout from "@/layouts/admin-layout";
-import {  useContacts } from "@/hooks/server/resend/GET/useContacts";
+import AdminLayout from "@/layouts/admin-layout.tsx";
+import { useContacts, type Contact } from "@/hooks/server/resend/GET/useContacts";
 import { useSegments} from "@/hooks/server/resend/GET/useSegments";
 import {
   Select,

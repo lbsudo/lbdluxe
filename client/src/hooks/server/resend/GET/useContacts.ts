@@ -1,6 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { hcWithType } from 'server/client'
-import type { Contact } from 'resend'
+
+export interface Contact {
+  email: string
+  first_name?: string | null
+  last_name?: string | null
+  unsubscribed: boolean
+  created_at: string
+}
 
 const isProd = import.meta.env.PROD
 const SERVER_URL = isProd

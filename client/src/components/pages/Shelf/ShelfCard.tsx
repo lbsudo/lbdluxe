@@ -49,10 +49,8 @@ export const ShelfCard: React.FC<ShelfCardProps> = ({ item }) => {
         <h3 className="font-semibold text-sm leading-tight line-clamp-2">{item.title}</h3>
         {authorNames && (
           <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="text-xs text-muted-foreground truncate cursor-default">
-                by {authorNames}
-              </span>
+            <TooltipTrigger className="text-xs text-muted-foreground truncate cursor-default">
+              by {authorNames}
             </TooltipTrigger>
             <TooltipContent>
               {authorNames}

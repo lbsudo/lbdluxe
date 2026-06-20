@@ -1,14 +1,21 @@
-
+import { useCMSLinksProfile } from "@/hooks/server/cms/GET/useCMSLinksProfile"
 import SocialLinks from "./SocialLinks/SocialLinks";
 import proPic from "../../../../assets/proPic-500x500.png";
 import checkmark from "../../../../assets/checkmark.svg";
+
 export const ProfileDetails = () => {
+  const { data: profile, isLoading } = useCMSLinksProfile()
+
+  const imageUrl =
+    !isLoading && profile?.profileImage && typeof profile.profileImage === "object" && "url" in profile.profileImage
+      ? (profile.profileImage as { url?: string | null }).url
+      : null
+
   return (
     <>
-      
       <div className="justify-cen ter fixed top-0 z-1 flex w-fit max-w-sm md:top-8 md:max-w-md">
         <img
-          src={proPic}
+          src={imageUrl ?? proPic}
           alt={"Profile Picture"}
           height={550}
           width={556}
@@ -21,11 +28,16 @@ export const ProfileDetails = () => {
         }
       >
         <h1 className={"flex items-center justify-center gap-1 text-4xl"}>
-          Lawrence Brown{" "}
+          {profile?.name ?? "Lawrence Brown"}{" "}
           <img src={checkmark} alt={"Checkmark"} width={21} height={21} />
         </h1>
-        <h6 className={"flex items-center justify-center text-lg"}>@lbdluxe</h6>
-        <SocialLinks />
+        {profile?.handle && (
+          <h6 className={"flex items-center justify-center text-lg"}>{profile.handle}</h6>
+        )}
+        {profile?.bio && (
+          <p className={"mt-2 text-center text-base text-white/70 max-w-sm"}>{profile.bio}</p>
+        )}
+        <SocialLinks links={profile?.socialLinks} />
       </div>
     </>
   );

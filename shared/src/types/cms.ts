@@ -140,6 +140,21 @@ export interface CMSShelfItem {
   _status?: string | null
 }
 
+export interface CMSLinksProfile {
+  id: number
+  name: string
+  handle?: string | null
+  bio?: string | null
+  profileImage?: CMSMedia | null
+  socialLinks?: {
+    title: string
+    url: string
+    iconType?: 'auto' | 'custom' | null
+    icon?: CMSMedia | null
+    id?: string | null
+  }[] | null
+}
+
 export interface CMSPage {
   id: number
   title: string

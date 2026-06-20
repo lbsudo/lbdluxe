@@ -400,6 +400,36 @@ cmsRoutes.get("/shelf-items/:slug", async (c) => {
   return c.json(converted)
 })
 
+cmsRoutes.get("/links-profile", async (c) => {
+  const cmsUrl = env(c, "CMS_URL")
+  const tenantId = env(c, "CMS_TENANT_ID")
+
+  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+  if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
+
+  const url = `${cmsUrl}/api/links-profile?depth=2&where[tenant][equals]=${encodeURIComponent(tenantId)}&limit=1`
+
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch {
+    return c.json({ error: "CMS unreachable" }, 502)
+  }
+
+  if (!res.ok) {
+    return c.json({ error: "CMS fetch failed" }, res.status as any)
+  }
+
+  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+  const doc = json.docs?.[0] ?? null
+  if (!doc) return c.json(null)
+
+  const converted = convertRichTextFields(doc, cmsUrl)
+  return c.json(converted)
+})
+
 cmsRoutes.get("/api/media/file/:filename", async (c) => {
   const cmsUrl = env(c, "CMS_URL")
   if (!cmsUrl) return new Response(null, { status: 500 })
