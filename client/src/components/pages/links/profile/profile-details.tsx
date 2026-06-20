@@ -29,7 +29,7 @@ export const ProfileDetails = () => {
         </h1>
         <h6 className={"flex items-center justify-center text-lg"}>@lbdluxe</h6>
         {profile?.bio && (
-          <p className={"mt-2 text-center text-base text-white/70 max-w-sm"}>{profile.bio}</p>
+          <p className={"mt-2 text-center text-lg font-medium text-white max-w-sm whitespace-pre-line"}>{profile.bio}</p>
         )}
         <SocialLinks />
       </div>

@@ -1,5 +1,4 @@
 import { LinkCardSm } from "./LinkCardSm";
-import { Description } from "./Description";
 import { LinkCardLg } from "./LinkCardLg";
 import { Contacts } from "./Contacts";
 import { NoThumbLink } from "../profile/SocialLinks/no-thumb-link";
@@ -12,7 +11,6 @@ export const PanelBody = async () => {
           "relative z-10 mx-4 flex w-full flex-col items-center justify-center bg-black px-4 pb-4"
         }
       >
-        <Description />
         <LinkCardLg
           linkUrl={"https://currencycovenant.com"}
           img={`../../../../assets/ogfb.png`}
