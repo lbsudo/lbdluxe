@@ -155,6 +155,18 @@ export interface CMSLinksProfile {
   }[] | null
 }
 
+export interface CMSProfileLink {
+  id: number
+  title: string
+  url: string
+  linkType: "lg" | "sm"
+  iconSet?: "si" | "sl" | null
+  iconName?: string | null
+  hexColor?: string | null
+  coverImage?: CMSMedia | null
+  order?: number | null
+}
+
 export interface CMSPage {
   id: number
   title: string
