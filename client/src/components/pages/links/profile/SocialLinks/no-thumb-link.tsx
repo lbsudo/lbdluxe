@@ -39,10 +39,10 @@ export const NoThumbLink = ({
           }
         >
           {SiIconComponent ? (
-            <SiIconComponent
-              className="h-8 w-8"
-              style={{ color: hex, fill: hex }}
-            />
+          <SiIconComponent
+            className="ml-4 h-8 w-8"
+            style={{ color: hex, fill: hex }}
+          />
           ) : (
             <span></span>
           )}

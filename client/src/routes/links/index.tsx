@@ -35,7 +35,7 @@ function Index() {
       <LinksLayout>
         <section
           className={
-            "relative flex flex-col items-center justify-start overflow-hidden"
+            "relative flex flex-col items-center justify-center overflow-hidden"
           }
         >
           <ProfileBar />

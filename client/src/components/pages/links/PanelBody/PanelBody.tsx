@@ -22,7 +22,7 @@ export const PanelBody = () => {
     <>
       <div
         className={
-          "relative z-10 mx-4 flex w-full flex-col items-center justify-center bg-black px-4 pb-4"
+          "relative z-10 flex w-full flex-col items-center justify-center bg-black px-4 pb-4"
         }
       >
         {lgCards.map((link) => (

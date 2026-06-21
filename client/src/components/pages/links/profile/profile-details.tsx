@@ -104,20 +104,23 @@ export const ProfileDetails = ({
   return (
     <>
       <div className="fixed top-0 z-1 left-1/2 -translate-x-1/2 flex w-[calc(100%-2rem)] max-w-[352px] justify-center md:top-8 md:max-w-[416px]">
-        <img
-          src={profile?.profileImage?.url ?? proPic}
-          alt={"Profile Picture"}
-          height={500}
-          width={500}
-          className={
-            "w-full max-w-full relative rounded-none object-cover md:rounded-2xl"
-          }
-          style={{
-            objectPosition: profile?.profileImage?.focalPoint
-              ? `${profile.profileImage.focalPoint.x * 100}% ${profile.profileImage.focalPoint.y * 100}%`
-              : "center",
-          }}
-        />
+        <div className="relative w-full">
+          <img
+            src={profile?.profileImage?.url ?? proPic}
+            alt={"Profile Picture"}
+            height={500}
+            width={500}
+            className={
+              "w-full rounded-none object-cover md:rounded-2xl"
+            }
+            style={{
+              objectPosition: profile?.profileImage?.focalPoint
+                ? `${profile.profileImage.focalPoint.x * 100}% ${profile.profileImage.focalPoint.y * 100}%`
+                : "center",
+            }}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black to-transparent pointer-events-none md:rounded-b-2xl" />
+        </div>
       </div>
       <div
         className={
