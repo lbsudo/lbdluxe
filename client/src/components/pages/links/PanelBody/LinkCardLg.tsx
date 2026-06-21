@@ -1,7 +1,9 @@
+import React from "react";
 import { Link } from "@tanstack/react-router";
 
 import * as SiIcons from "react-icons/si";
 import * as SlIcons from "react-icons/sl";
+import * as LucideIcons from "lucide-react";
 
 type Props = {
   linkUrl: string;
@@ -9,6 +11,7 @@ type Props = {
   title: string;
   slIconName?: keyof typeof SlIcons;
   siIconName?: keyof typeof SiIcons;
+  lucIconName?: string;
   hex: string;
 };
 
@@ -17,11 +20,13 @@ export const LinkCardLg = ({
   title,
   slIconName,
   siIconName,
+  lucIconName,
   hex,
   linkUrl,
 }: Props) => {
-  const SlIconComponent = SlIcons[slIconName!];
-  const SiIconComponent = SiIcons[siIconName!];
+  const SlIconComponent = slIconName ? SlIcons[slIconName] : undefined;
+  const SiIconComponent = siIconName ? SiIcons[siIconName] : undefined;
+  const LucideIconComponent = lucIconName ? (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>>)[lucIconName.charAt(0).toUpperCase() + lucIconName.slice(1)] : undefined;
   return (
     <>
       <Link
@@ -42,22 +47,22 @@ export const LinkCardLg = ({
           {/* Black overlay with 50% transparency */}
           <div className="absolute inset-0 z-3 bg-black/50"></div>
           <div className="absolute top-4 right-4 z-10">
-            {SlIconComponent ? (
+            {LucideIconComponent ? (
+              <LucideIconComponent
+                className="h-8 w-8"
+                style={{ color: hex }}
+              />
+            ) : SlIconComponent ? (
               <SlIconComponent
-                className={`text-[${hex}] h-8 w-8`}
+                className="h-8 w-8"
                 style={{ color: hex }}
               />
-            ) : (
-              <span></span>
-            )}
-            {SiIconComponent ? (
+            ) : SiIconComponent ? (
               <SiIconComponent
-                className={`text-[${hex}] h-8 w-8`}
+                className="h-8 w-8"
                 style={{ color: hex }}
               />
-            ) : (
-              <span></span>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="absolute bottom-0 z-10 ml-1 w-full justify-between pb-1">

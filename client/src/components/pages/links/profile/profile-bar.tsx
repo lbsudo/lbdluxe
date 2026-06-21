@@ -6,7 +6,7 @@ export const ProfileBar = () => {
   return (
     <>
       <div
-        className={`fixed top-0 z-90 flex h-14 w-full max-w-sm flex-row items-center justify-between px-4 transition-opacity duration-200 md:max-w-md`}
+        className={`fixed top-0 z-90 left-1/2 -translate-x-1/2 flex h-14 w-[calc(100%-2rem)] max-w-[352px] flex-row items-center justify-between px-4 transition-opacity duration-200 md:max-w-[416px]`}
         style={{
           backgroundColor: `rgba(18,18,18,1)`,
         }} // Apply calculated opacity

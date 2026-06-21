@@ -44,6 +44,10 @@ export interface CMSMedia {
   alt?: string | null
   width?: number | null
   height?: number | null
+  focalPoint?: {
+    x: number
+    y: number
+  } | null
 }
 
 export interface CMSPost {
@@ -160,10 +164,20 @@ export interface CMSProfileLink {
   title: string
   url: string
   linkType: "lg" | "sm"
-  iconSet?: "si" | "sl" | null
+  iconSet?: "si" | "sl" | "lucide" | null
   iconName?: string | null
   hexColor?: string | null
   coverImage?: CMSMedia | null
+  order?: number | null
+}
+
+export interface CMSContentNetwork {
+  id: number
+  tenant: number
+  title: string
+  url: string
+  hexColor?: string | null
+  networkType: "youtube" | "rumble"
   order?: number | null
 }
 

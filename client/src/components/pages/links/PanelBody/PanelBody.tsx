@@ -34,6 +34,7 @@ export const PanelBody = () => {
             hex={link.hexColor ?? "#FFFFFF"}
             slIconName={link.iconSet === "sl" ? (link.iconName as any) : undefined}
             siIconName={link.iconSet === "si" ? (link.iconName as any) : undefined}
+            lucIconName={link.iconSet === "lucide" ? (link.iconName as any) : undefined}
           />
         ))}
         {smPairs.map((pair, i) => (
@@ -47,6 +48,7 @@ export const PanelBody = () => {
                 hex={link.hexColor ?? "#FFFFFF"}
                 slIconName={link.iconSet === "sl" ? (link.iconName as any) : undefined}
                 siIconName={link.iconSet === "si" ? (link.iconName as any) : undefined}
+                lucIconName={link.iconSet === "lucide" ? (link.iconName as any) : undefined}
               />
             ))}
           </div>

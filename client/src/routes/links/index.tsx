@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 // import { Loader } from 'lucide-react'
 import LinksLayout from "@/layouts/links-layout";
-import { MotionUp } from "@/components/global/motions/motion-up";
 import { LinkPanel } from "@/components/pages/links/linkpanel";
 import { ProfileBar } from "@/components/pages/links/profile/profile-bar";
 
@@ -40,9 +39,7 @@ function Index() {
           }
         >
           <ProfileBar />
-          <MotionUp>
-            <LinkPanel />
-          </MotionUp>
+          <LinkPanel />
         </section>
       </LinksLayout>
     </>

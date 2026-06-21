@@ -35,13 +35,13 @@ export const NoThumbLink = ({
       >
         <div
           className={
-            "flex min-w-[320px] flex-row items-center justify-between space-x-0"
+            "flex w-full flex-row items-center justify-between space-x-0"
           }
         >
           {SiIconComponent ? (
             <SiIconComponent
-              className={`text-[${hex}] h-8 w-8`}
-              style={{ color: hex }}
+              className="h-8 w-8"
+              style={{ color: hex, fill: hex }}
             />
           ) : (
             <span></span>

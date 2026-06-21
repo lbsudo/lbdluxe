@@ -1,60 +1,48 @@
-import { MotionUp } from "@/components/global/motions/motion-up";
-import { VideoPlatformLinks } from "@/components/video-platform-links";
+"use client";
+
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+// import { Loader } from 'lucide-react'
+import LinksLayout from "@/layouts/links-layout";
+import { LinkPanel } from "@/components/pages/links/linkpanel";
+import { NetworkLinksPanel } from "@/components/pages/links/NetworkLinksPanel";
+import { ProfileBar } from "@/components/pages/links/profile/profile-bar";
 
 export const Route = createFileRoute("/links/rumble-links/")({
-  component: RouteComponent,
+  head: () => ({
+    meta: [{ title: "LBDLUXE | Home" }], // include at least one recognized field
+  }),
+  component: Index,
 });
 
-interface LinkItem {
-  linkUrl: string;
-  title: string;
-  siIconName: "SiRumble" | "SiYoutube";
-  hex?: "#FF0000" | "#3E8E41" | undefined;
-}
+function Index() {
+  const [isClient, setIsClient] = useState(false);
 
-const rumblelinks: LinkItem[] = [
-  {
-    linkUrl: "https://rumble.com/c/lbdluxe",
-    title: "LB Dluxe (Main Channel)",
-    siIconName: "SiRumble",
-    hex: "#3E8E41",
-  },
-  {
-    linkUrl: "https://rumble.com/c/lbdluxedigital",
-    title: "LB Dluxe Digital (Tech & Software)",
-    siIconName: "SiRumble",
-    hex: "#3E8E41",
-  },
-  {
-    linkUrl: "https://rumble.com/c/@thefadedphilosopher",
-    title: "The Faded Philosopher (Podcast)",
-    siIconName: "SiRumble",
-    hex: "#3E8E41",
-  },
-  {
-    linkUrl: "https://rumble.com/c/lbdluxebeats",
-    title: "LB Dluxe Beats (Music Production)",
-    siIconName: "SiRumble",
-    hex: "#3E8E41",
-  },
-  {
-    linkUrl: "https://rumble.com/c/ascendeddluxe",
-    title: "Ascended Dluxe (Polymathy)",
-    siIconName: "SiRumble",
-    hex: "#3E8E41",
-  },
-];
-function RouteComponent() {
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Notify the splash screen when the home route has finished mounting
+  useEffect(() => {
+    if (isClient) {
+      window.dispatchEvent(new Event("appReady"));
+    }
+  }, [isClient]);
+
+  if (!isClient) return null;
+
   return (
     <>
-      <section
-        className={"flex flex-col items-center justify-center overflow-hidden"}
-      >
-        <MotionUp>
-          <VideoPlatformLinks links={rumblelinks} />
-        </MotionUp>
-      </section>
+      <LinksLayout>
+        <section
+          className={
+            "relative flex flex-col items-center justify-start overflow-hidden"
+          }
+        >
+          <ProfileBar />
+          <LinkPanel panelBody={<NetworkLinksPanel networkType="rumble" />} />
+        </section>
+      </LinksLayout>
     </>
   );
 }
