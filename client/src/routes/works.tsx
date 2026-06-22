@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import PageHeader from "@/components/global/page-header.tsx";
-import { LuGithub } from "react-icons/lu";
+import { Github, LoaderCircle } from "lucide-react";
 import { WorkCard } from "@/components/pages/Works/WorkCard";
-import { LoaderCircle } from "lucide-react";
 import { useCMSWorks } from "@/hooks/server/cms/GET/useCMSWorks";
 
 export const Route = createFileRoute("/works")({
@@ -27,7 +26,7 @@ function RouteComponent() {
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}
-          icon={<LuGithub size={16} />}
+          icon={<Github size={16} />}
           iconSize={16}
         />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-3">

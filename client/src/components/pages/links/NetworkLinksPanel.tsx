@@ -19,7 +19,7 @@ export const NetworkLinksPanel = ({ networkType }: NetworkLinksPanelProps) => {
   );
 
   return (
-    <div className="relative z-10 flex w-[440px] max-w-[352px] flex-col items-center justify-center bg-black pb-4 md:max-w-[2000px]">
+    <div className="relative z-10 flex h-screen overflow-y-hidden w-[440px] max-w-[352px] flex-col items-center justify-start bg-black pt-4 md:max-w-[2000px]">
       {sorted.map((network) => (
         <NoThumbLink
           key={network.id}
@@ -36,4 +36,3 @@ export const NetworkLinksPanel = ({ networkType }: NetworkLinksPanelProps) => {
     </div>
   );
 };
-

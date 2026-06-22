@@ -52,7 +52,7 @@ export const ProfileDetails = ({
               {profile.bio}
             </p>
           )}
-          <SocialLinks />
+          <SocialLinks socialLinks={profile?.socialLinks} />
         </div>
       </>
     );
@@ -94,7 +94,7 @@ export const ProfileDetails = ({
                 {profile.bio}
               </p>
             )}
-            <SocialLinks />
+            <SocialLinks socialLinks={profile?.socialLinks} />
           </div>
         </div>
       </div>
@@ -124,7 +124,7 @@ export const ProfileDetails = ({
       </div>
       <div
         className={
-          "relative bottom-0 z-10 flex w-full flex-col items-center justify-center bg-linear-to-b from-transparent to-black px-4 pt-[60%] md:pt-[60%]"
+          "relative bottom-0 z-10 flex w-full flex-col items-center justify-center bg-linear-to-b from-transparent to-black px-4 pt-[40%] md:pt-[40%]"
         }
       >
         <h1 className={"flex items-center justify-center gap-1 text-4xl"}>
@@ -143,7 +143,7 @@ export const ProfileDetails = ({
             {profile.bio}
           </p>
         )}
-        <SocialLinks />
+        <SocialLinks socialLinks={profile?.socialLinks} />
       </div>
     </>
   );

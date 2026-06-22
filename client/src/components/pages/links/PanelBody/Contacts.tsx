@@ -1,4 +1,4 @@
-import { FaEnvelope, FaGlobe } from "react-icons/fa6";
+import { FaEnvelope, FaGlobe } from "@/components/icons";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@tanstack/react-router";
 

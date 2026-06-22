@@ -39,11 +39,10 @@
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.562.0",
-    "motion": "^12.27.0",
+
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.70.0",
-    "react-icons": "^5.5.0",
     "server": "workspace:*",
     "shared": "workspace:*",
     "sonner": "^2.0.7",

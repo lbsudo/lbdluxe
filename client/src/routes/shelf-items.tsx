@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import PageHeader from "@/components/global/page-header.tsx";
-import { LuBookOpen } from "react-icons/lu";
+import { BookOpen } from "lucide-react";
 import { ShelfCard } from "@/components/pages/Shelf/ShelfCard";
 import { LoaderCircle } from "lucide-react";
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
@@ -26,7 +26,7 @@ function RouteComponent() {
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}
-          icon={<LuBookOpen size={16} />}
+          icon={<BookOpen size={16} />}
           iconSize={16}
         />
 

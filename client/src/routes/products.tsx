@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout";
 import PageHeader from "@/components/global/page-header";
-import { LuGithub } from "react-icons/lu";
+import { Github } from "lucide-react";
 import { ProductCard } from "@/components/pages/Products/ProductCard";
 import { useCMSProducts } from "@/hooks/server/cms/GET/useCMSProducts";
 
@@ -25,7 +25,7 @@ function RouteComponent() {
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}
-          icon={<LuGithub size={16} />}
+          icon={<Github size={16} />}
           iconSize={16}
         />
         {isLoading && (

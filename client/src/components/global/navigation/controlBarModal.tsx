@@ -1,5 +1,4 @@
-import { Layers, LibraryBig, SquareArrowOutUpRight } from 'lucide-react'
-import { LuGithub, LuLinkedin } from 'react-icons/lu'
+import { Github, Layers, LibraryBig, Linkedin, SquareArrowOutUpRight } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import {
@@ -47,12 +46,12 @@ export function ControlBarModal() {
   const links = [
     {
       label: 'Github',
-      icon: <LuGithub className="size-5 ml-2" />,
+      icon: <Github className="size-5 ml-2" />,
       onClick: () => window.open('https://github.com/your-handle', '_blank'),
     },
     {
       label: 'LinkedIn',
-      icon: <LuLinkedin className="size-5 ml-2" />,
+      icon: <Linkedin className="size-5 ml-2" />,
       onClick: () =>
         window.open('https://linkedin.com/in/your-handle', '_blank'),
     },

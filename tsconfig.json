@@ -31,6 +31,8 @@
 
     // Output control
     "skipLibCheck": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo",
 
     // Optional strict flags (disabled by default)
     "noUnusedLocals": false,

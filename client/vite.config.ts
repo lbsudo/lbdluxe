@@ -21,4 +21,15 @@ export default defineConfig({
 			"@shared": path.resolve(__dirname, "../shared/src"),
 		},
 	},
+	optimizeDeps: {
+		include: [
+			"react",
+			"react-dom",
+			"framer-motion",
+			"lucide-react",
+			"clsx",
+			"tailwind-merge",
+		],
+		exclude: ["server", "shared"],
+	},
 });

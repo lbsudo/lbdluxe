@@ -1,7 +1,6 @@
 import React from "react";
 import type { CMSWork } from "shared";
-import { LuExternalLink } from "react-icons/lu";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 
 interface WorkCardProps {
   work: CMSWork;
@@ -57,7 +56,7 @@ export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 border border-primary text-primary hover:bg-foreground hover:text-background px-3 py-1 rounded-md transition-colors text-sm"
               >
-                <LuExternalLink size={14} />
+                <ExternalLink size={14} />
                 View project →
               </a>
             )}
@@ -68,7 +67,7 @@ export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 border border-primary text-primary hover:bg-foreground hover:text-background px-3 py-1 rounded-md transition-colors text-sm"
               >
-                <LuExternalLink size={14} />
+                <ExternalLink size={14} />
                 Repo →
               </a>
             )}

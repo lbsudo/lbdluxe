@@ -1,12 +1,12 @@
 "use client";
-import * as SiIcons from "react-icons/si";
-import { RxCaretRight } from "react-icons/rx";
+import { siIconMap } from "@/components/icons";
+import { ChevronRight } from "lucide-react";
 import clsx from "clsx";
 import { Link } from "@tanstack/react-router";
 
 interface Props {
   title: string;
-  siIconName?: keyof typeof SiIcons;
+  siIconName?: string;
   hex: string;
   linkUrl: string;
   target: string;
@@ -21,7 +21,7 @@ export const NoThumbLink = ({
   target,
   className,
 }: Props) => {
-  const SiIconComponent = SiIcons[siIconName!];
+  const SiIconComponent = siIconMap[siIconName!];
   // const router = useRouter();
   return (
     <>
@@ -47,7 +47,7 @@ export const NoThumbLink = ({
             <span></span>
           )}
           <p className={"text-left text-lg font-bold"}>{title}</p>
-          <RxCaretRight />
+          <ChevronRight />
         </div>
       </Link>
     </>

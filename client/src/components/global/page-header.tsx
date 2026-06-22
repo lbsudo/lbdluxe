@@ -1,5 +1,5 @@
 import { ShimmerButton } from "@/components/ui/shimmer-button.tsx";
-import { LuGithub } from "react-icons/lu";
+import { Github } from "lucide-react";
 import React, { ReactElement } from "react";
 
 interface PageHeaderProps {
@@ -43,7 +43,7 @@ export default function PageHeader({
           )
         ) : (
           // Fallback to the default GitHub icon
-          <LuGithub size={iconSize} />
+          <Github size={iconSize} />
         )}
         {buttonText}
       </ShimmerButton>

@@ -1,11 +1,12 @@
 import {
+  Github,
   Layers,
   LibraryBig,
+  Linkedin,
   PanelTopClose,
   SquareArrowOutUpRight,
 } from 'lucide-react'
 import { useState } from 'react'
-import { LuGithub, LuLinkedin } from 'react-icons/lu'
 import { useRouter } from '@tanstack/react-router'
 import {
   Drawer,
@@ -46,12 +47,12 @@ export function MobileNavDrawer() {
   const links = [
     {
       label: 'Github',
-      icon: <LuGithub size={24} className="size-5" />,
+      icon: <Github size={24} className="size-5" />,
       onClick: () => window.open('https://github.com/your-handle', '_blank'),
     },
     {
       label: 'LinkedIn',
-      icon: <LuLinkedin size={24} className="size-5" />,
+      icon: <Linkedin size={24} className="size-5" />,
       onClick: () =>
         window.open('https://linkedin.com/in/your-handle', '_blank'),
     },

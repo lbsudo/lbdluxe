@@ -1,5 +1,4 @@
-import { FaRegCopyright, FaRegEnvelope } from 'react-icons/fa'
-import { SiGithub, SiLinkerd } from 'react-icons/si'
+import { FaRegCopyright, FaRegEnvelope, SiGithub, SiLinkerd } from '@/components/icons'
 import { BriefcaseBusiness } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
@@ -27,7 +26,7 @@ export function Footer() {
               window.location.href = 'mailto:lbsudo100@gmail.com'
             }}
           >
-            <FaRegEnvelope size={40} className={'size-5'} /> Email
+            <FaRegEnvelope className={'size-5'} /> Email
           </Button>{' '}
           <span
             className={
@@ -53,7 +52,7 @@ export function Footer() {
                 className={'text-neutral-400'}
                 onClick={() => window.open('https://github.com/lbsudo')}
               >
-                <SiGithub size={20} className={'size-6'} />
+                <SiGithub className={'size-6'} />
               </button>
             </li>
             <li className={'flex justify-center items-center '}>
@@ -63,7 +62,7 @@ export function Footer() {
                   window.open('https://linkedin.com/in/lbsudo', '_blank')
                 }
               >
-                <SiLinkerd size={20} className={'size-6'} />
+                <SiLinkerd className={'size-6'} />
               </button>
             </li>
           </ul>

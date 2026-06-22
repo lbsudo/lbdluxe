@@ -1,6 +1,5 @@
 import React from "react";
-import * as SlIcons from "react-icons/sl";
-import * as SiIcons from "react-icons/si";
+import { siIconMap, slIconMap } from "@/components/icons";
 import * as LucideIcons from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
@@ -8,8 +7,8 @@ type Props = {
   linkUrl: string;
   img: string;
   title: string;
-  slIconName?: keyof typeof SlIcons;
-  siIconName?: keyof typeof SiIcons;
+  slIconName?: string;
+  siIconName?: string;
   lucIconName?: string;
   hex: string;
 };
@@ -23,8 +22,8 @@ export const LinkCardSm = ({
   hex,
   linkUrl,
 }: Props) => {
-  const SlIconComponent = slIconName ? SlIcons[slIconName] : undefined;
-  const SiIconComponent = siIconName ? SiIcons[siIconName] : undefined;
+  const SlIconComponent = slIconName ? slIconMap[slIconName] : undefined;
+  const SiIconComponent = siIconName ? siIconMap[siIconName] : undefined;
   const LucideIconComponent = lucIconName ? (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>>)[lucIconName.charAt(0).toUpperCase() + lucIconName.slice(1)] : undefined;
   return (
     <>
