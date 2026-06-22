@@ -1,7 +1,8 @@
 import { useState } from "react"
-import type { CMSBlock, CMSContentBlock, CMSCTABlock, CMSProfileBlock } from "shared"
+import type { CMSBlock, CMSContentBlock, CMSCTABlock, CMSProfileBlock, CMSProductsBlock } from "shared"
 import { Card } from "@/components/ui/card"
 import { useTypewriter } from "@/hooks/use-typewriter"
+import { ArrowUpRight } from "lucide-react"
 
 const columnClass: Record<string, string> = {
   oneThird: "md:col-span-4",
@@ -120,7 +121,51 @@ export function RenderBlock({ block }: { block: CMSBlock }) {
       return <CTABlock block={block} />
     case "profile":
       return <ProfileBlock block={block} />
+    case "products":
+      return <ProductsBlock block={block} />
     default:
       return null
   }
+}
+
+function ProductsBlock({ block }: { block: CMSProductsBlock }) {
+  return (
+    <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 px-4 max-w-6xl mx-auto w-full">
+      {block.items.map((item, i) => (
+        <div
+          key={item.id ?? i}
+          className="relative w-full border rounded-lg p-4 flex flex-col bg-neutral-900/50 backdrop-blur-sm hover:shadow-lg transition-shadow"
+        >
+          {item.beta && (
+            <span className="absolute top-2 right-2 px-2 py-1 text-xs bg-purple-600 text-white rounded">
+              Beta
+            </span>
+          )}
+          {item.iconImage?.url ? (
+            <img
+              src={item.iconImage.url}
+              alt={`${item.name} icon`}
+              className="w-16 h-16 object-contain"
+            />
+          ) : (
+            <ArrowUpRight className="w-8 h-8 text-foreground" />
+          )}
+          <div className="flex flex-col gap-2 mt-4">
+            <h2 className="font-bold text-lg">{item.name}</h2>
+            <p className="text-sm">{item.description}</p>
+          </div>
+          {item.projectLink && (
+            <a
+              href={item.projectLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute top-2 right-2"
+            >
+              <ArrowUpRight className="w-5 h-5" />
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  )
 }

@@ -37,7 +37,21 @@ export interface CMSProfileBlock {
   profileImage?: CMSMedia | null
 }
 
-export type CMSBlock = CMSContentBlock | CMSCTABlock | CMSProfileBlock
+export interface CMSProductItem {
+  id?: string | null
+  name: string
+  description: string
+  projectLink?: string | null
+  beta?: boolean | null
+  iconImage?: CMSMedia | null
+}
+
+export interface CMSProductsBlock {
+  blockType: "products"
+  items: CMSProductItem[]
+}
+
+export type CMSBlock = CMSContentBlock | CMSCTABlock | CMSProfileBlock | CMSProductsBlock
 
 export interface CMSMedia {
   url?: string | null
