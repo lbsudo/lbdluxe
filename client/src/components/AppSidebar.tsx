@@ -31,7 +31,6 @@ const data = {
       url: "/admin/site-content",
       items: [
         { title: "Works", url: "/admin/content/works" },
-        { title: "Products", url: "/admin/content/products" },
         { title: "Blog", url: "/admin/content/blog" },
       ],
     },

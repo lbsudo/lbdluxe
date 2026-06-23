@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout";
 import PageHeader from "@/components/global/page-header";
 import { Github } from "lucide-react";
-import { ProductCard } from "@/components/pages/Products/ProductCard";
-import { useCMSProducts } from "@/hooks/server/cms/GET/useCMSProducts";
+import { RenderBlock } from "@/components/cms/render-block";
+import { motion } from "framer-motion";
+import { fadeUp } from "@/lib/animations";
+import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 
 export const Route = createFileRoute("/products")({
   component: RouteComponent,
@@ -16,7 +18,7 @@ const headerData = {
 };
 
 function RouteComponent() {
-  const { data: products, isLoading, error } = useCMSProducts();
+  const { data: cmsPage, isLoading, error } = useCMSPage("products");
 
   return (
     <>
@@ -32,17 +34,33 @@ function RouteComponent() {
           <p className="text-muted-foreground">Loading products…</p>
         )}
         {error && <p className="text-red-500">{error.message}</p>}
-        {!isLoading && products?.length === 0 && (
-          <p className="text-muted-foreground">No products found.</p>
-        )}
-        {products && products.length > 0 && (
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+        {cmsPage && cmsPage.layout.length > 0 ? (
+          <motion.div
+            className="max-w-6xl mx-auto flex flex-col gap-6 items-center justify-center"
+            variants={container}
+            initial="hidden"
+            animate="visible"
+          >
+            {cmsPage.layout.map((block, i) => (
+              <motion.section key={i} variants={fadeUp} className="w-full">
+                <RenderBlock block={block} />
+              </motion.section>
             ))}
-          </div>
+          </motion.div>
+        ) : !isLoading && (
+          <p className="text-muted-foreground">No products found.</p>
         )}
       </DefaultLayout>
     </>
   );
 }
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      delay: 0.5,
+      staggerChildren: 0.4
+    }
+  }
+};

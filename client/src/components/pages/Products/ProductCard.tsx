@@ -1,9 +1,9 @@
 import React from "react";
-import type { CMSProduct } from "shared";
+import type { CMSProductGridItem } from "shared";
 import { ArrowUpRight } from "lucide-react";
 
 interface ProductCardProps {
-  product: CMSProduct;
+  product: CMSProductGridItem;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
