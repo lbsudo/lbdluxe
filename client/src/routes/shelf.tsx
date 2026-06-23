@@ -8,12 +8,12 @@ import { ShelfCategoryItemCard } from "@/components/pages/Shelf/ShelfCategoryIte
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/shelf")({
-  validateSearch: (input: Record<string, unknown>) => ({
-    category:
-      typeof input.category === "string" && Number.isFinite(Number(input.category))
-        ? Number(input.category)
-        : undefined,
-  }),
+  validateSearch: (input: Record<string, unknown>) => {
+    const val = input.category
+    if (typeof val === "number" && Number.isFinite(val)) return { category: val }
+    if (typeof val === "string" && Number.isFinite(Number(val))) return { category: Number(val) }
+    return { category: undefined }
+  },
   component: RouteComponent,
 });
 
@@ -59,10 +59,10 @@ function RouteComponent() {
                   navigate({ to: "/shelf", search: { category: category === cat.id ? undefined : cat.id } })
                 }
                 className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-md border transition-colors whitespace-nowrap",
+                  "px-4 py-2 text-sm font-medium rounded-md border transition-colors whitespace-nowrap cursor-pointer",
                   selectedCategory?.id === cat.id
                     ? "bg-primary text-primary-foreground border-primary"
-                    :                     "bg-secondary/50 text-foreground border-border hover:text-foreground hover:bg-accent/50",
+                    : "bg-secondary/50 text-foreground border-border hover:text-foreground hover:bg-accent/50",
                 )}
               >
                 {cat.title}
