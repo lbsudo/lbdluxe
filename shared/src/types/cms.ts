@@ -51,7 +51,24 @@ export interface CMSProductGridBlock {
   items: CMSProductGridItem[]
 }
 
-export type CMSBlock = CMSContentBlock | CMSCTABlock | CMSProfileBlock | CMSProductGridBlock
+export interface CMSWorkGridItem {
+  id?: string | null
+  name: string
+  description: string
+  projectLink?: string | null
+  repoLink?: string | null
+  directory?: boolean | null
+  beta?: boolean | null
+  iconImage?: CMSMedia | null
+  images?: { image: CMSMedia; id?: string | null }[] | null
+}
+
+export interface CMSWorkGridBlock {
+  blockType: "workGrid"
+  items: CMSWorkGridItem[]
+}
+
+export type CMSBlock = CMSContentBlock | CMSCTABlock | CMSProfileBlock | CMSProductGridBlock | CMSWorkGridBlock
 
 export interface CMSMedia {
   url?: string | null
@@ -89,39 +106,6 @@ export interface CMSMeta {
   title?: string | null
   description?: string | null
   image?: string | null
-}
-
-export interface CMSWork {
-  id: number
-  name: string
-  slug?: string | null
-  description: string
-  projectLink?: string | null
-  repoLink?: string | null
-  directory: boolean
-  beta: boolean
-  iconImage?: CMSMedia | null
-  images?: { image: CMSMedia; id?: string | null }[] | null
-  publishedAt?: string | null
-  updatedAt: string
-  createdAt: string
-  _status?: string | null
-}
-
-export interface CMSProduct {
-  id: number
-  name: string
-  slug?: string | null
-  description: string
-  projectLink?: string | null
-  directory: boolean
-  beta: boolean
-  iconImage?: CMSMedia | null
-  images?: { image: CMSMedia; id?: string | null }[] | null
-  publishedAt?: string | null
-  updatedAt: string
-  createdAt: string
-  _status?: string | null
 }
 
 export interface CMSShelfCategory {

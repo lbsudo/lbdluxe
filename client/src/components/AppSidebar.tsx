@@ -30,7 +30,6 @@ const data = {
       title: "Site Content",
       url: "/admin/site-content",
       items: [
-        { title: "Works", url: "/admin/content/works" },
         { title: "Blog", url: "/admin/content/blog" },
       ],
     },

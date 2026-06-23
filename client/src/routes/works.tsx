@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import PageHeader from "@/components/global/page-header.tsx";
-import { Github, LoaderCircle } from "lucide-react";
-import { WorkCard } from "@/components/pages/Works/WorkCard";
-import { useCMSWorks } from "@/hooks/server/cms/GET/useCMSWorks";
+import { Github } from "lucide-react";
+import { RenderBlock } from "@/components/cms/render-block";
+import { motion } from "framer-motion";
+import { fadeUp } from "@/lib/animations";
+import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 
 export const Route = createFileRoute("/works")({
   component: RouteComponent,
@@ -17,7 +19,7 @@ const headerData = {
 };
 
 function RouteComponent() {
-  const { data: works, isLoading, error } = useCMSWorks();
+  const { data: cmsPage, isLoading, error } = useCMSPage("works");
 
   return (
     <>
@@ -29,22 +31,37 @@ function RouteComponent() {
           icon={<Github size={16} />}
           iconSize={16}
         />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-3">
-            {isLoading ? (
-              <div className="col-span-full flex justify-center items-center py-8">
-                <LoaderCircle className="animate-spin text-muted-foreground" size={48} />
-              </div>
-            ) : error ? (
-              <p className="col-span-full text-red-500">{error.message}</p>
-            ) : !works || works.length === 0 ? (
-              <p className="col-span-full text-muted-foreground">No works found.</p>
-            ) : (
-              works.map((work) => (
-                <WorkCard key={work.id} work={work} />
-              ))
-            )}
-          </div>
+        {isLoading && (
+          <p className="text-muted-foreground">Loading works…</p>
+        )}
+        {error && <p className="text-red-500">{error.message}</p>}
+        {cmsPage && cmsPage.layout.length > 0 ? (
+          <motion.div
+            className="max-w-6xl mx-auto flex flex-col gap-6 items-center justify-center"
+            variants={container}
+            initial="hidden"
+            animate="visible"
+          >
+            {cmsPage.layout.map((block, i) => (
+              <motion.section key={i} variants={fadeUp} className="w-full">
+                <RenderBlock block={block} />
+              </motion.section>
+            ))}
+          </motion.div>
+        ) : !isLoading && (
+          <p className="text-muted-foreground">No works found.</p>
+        )}
       </DefaultLayout>
     </>
   );
 }
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      delay: 0.5,
+      staggerChildren: 0.4
+    }
+  }
+};

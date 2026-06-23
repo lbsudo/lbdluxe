@@ -1,8 +1,9 @@
 import { useState } from "react"
-import type { CMSBlock, CMSContentBlock, CMSCTABlock, CMSProfileBlock, CMSProductGridBlock } from "shared"
+import type { CMSBlock, CMSContentBlock, CMSCTABlock, CMSProfileBlock, CMSProductGridBlock, CMSWorkGridBlock } from "shared"
 import { Card } from "@/components/ui/card"
 import { useTypewriter } from "@/hooks/use-typewriter"
 import { ProductCard } from "@/components/pages/Products/ProductCard"
+import { WorkCard } from "@/components/pages/Works/WorkCard"
 
 const columnClass: Record<string, string> = {
   oneThird: "md:col-span-4",
@@ -123,6 +124,8 @@ export function RenderBlock({ block }: { block: CMSBlock }) {
       return <ProfileBlock block={block} />
     case "productGrid":
       return <ProductGridBlock block={block} />
+    case "workGrid":
+      return <WorkGridBlock block={block} />
     default:
       return null
   }
@@ -133,6 +136,16 @@ function ProductGridBlock({ block }: { block: CMSProductGridBlock }) {
     <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 px-4 max-w-6xl mx-auto w-full">
       {block.items.map((item, i) => (
         <ProductCard key={item.id ?? i} product={item} />
+      ))}
+    </div>
+  )
+}
+
+function WorkGridBlock({ block }: { block: CMSWorkGridBlock }) {
+  return (
+    <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 max-w-6xl mx-auto w-full">
+      {block.items.map((item, i) => (
+        <WorkCard key={item.id ?? i} work={item} />
       ))}
     </div>
   )

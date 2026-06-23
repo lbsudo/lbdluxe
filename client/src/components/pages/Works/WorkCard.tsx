@@ -1,9 +1,9 @@
 import React from "react";
-import type { CMSWork } from "shared";
+import type { CMSWorkGridItem } from "shared";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 
 interface WorkCardProps {
-  work: CMSWork;
+  work: CMSWorkGridItem;
 }
 
 export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
