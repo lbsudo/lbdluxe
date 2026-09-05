@@ -42,14 +42,21 @@ function convertRichTextFields(
       ) {
         const media = value as Record<string, unknown>
         const mediaUrl = media.url as string | undefined
+        const filename = media.filename as string | undefined
+        let finalUrl: string | null =
+          mediaUrl && typeof mediaUrl === "string" && mediaUrl.length > 0 ? mediaUrl : null
+        if (finalUrl?.startsWith("/api/media/file/")) {
+          finalUrl = `/cms${finalUrl}`
+        } else if (!finalUrl && filename) {
+          const mediaPrefix = (media.prefix as string | undefined) || "media"
+          finalUrl = `/cms/api/media/file/${encodeURIComponent(filename)}?prefix=${encodeURIComponent(mediaPrefix)}`
+        }
         result[key] = {
-          url:
-            mediaUrl?.startsWith("/api/media/file/")
-              ? `/cms${mediaUrl}`
-              : (mediaUrl ?? null),
+          url: finalUrl,
           alt: media.alt ?? null,
           width: media.width ?? null,
           height: media.height ?? null,
+          focalPoint: media.focalPoint ?? null,
         }
       } else if (typeof value === "object" && value !== null) {
         result[key] = convertRichTextFields(value as Record<string, unknown>, baseUrl)
@@ -75,7 +82,7 @@ cmsRoutes.get("/pages/:slug", async (c) => {
     return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
   }
 
-  const url = `${cmsUrl}/api/pages?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+  const url = `${cmsUrl}/api/pages?depth=3&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
 
   let res: Response
   try {
@@ -107,7 +114,7 @@ cmsRoutes.get("/posts", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  const url = `${cmsUrl}/api/posts?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-publishedAt&limit=50`
+  const url = `${cmsUrl}/api/posts?depth=3&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-publishedAt&limit=50`
 
   let res: Response
   try {
@@ -136,7 +143,7 @@ cmsRoutes.get("/posts/:slug", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  const url = `${cmsUrl}/api/posts?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+  const url = `${cmsUrl}/api/posts?depth=3&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
 
   let res: Response
   try {
@@ -221,7 +228,7 @@ cmsRoutes.get("/shelf-items", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  let url = `${cmsUrl}/api/shelf-items?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-updatedAt&limit=50`
+  let url = `${cmsUrl}/api/shelf-items?depth=3&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=-updatedAt&limit=50`
   if (categoryId) {
     url += `&where[shelfCategories][in]=${encodeURIComponent(categoryId)}`
   }
@@ -253,7 +260,7 @@ cmsRoutes.get("/shelf-items/:slug", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  const url = `${cmsUrl}/api/shelf-items?depth=2&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
+  const url = `${cmsUrl}/api/shelf-items?depth=3&where[slug][equals]=${encodeURIComponent(slug)}&where[tenant][equals]=${encodeURIComponent(tenantId)}`
 
   let res: Response
   try {
@@ -285,7 +292,7 @@ cmsRoutes.get("/profile-links", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  const url = `${cmsUrl}/api/profile-links?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=order&limit=50`
+  const url = `${cmsUrl}/api/profile-links?depth=3&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=order&limit=50`
 
   let res: Response
   try {
@@ -313,7 +320,7 @@ cmsRoutes.get("/content-network", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  const url = `${cmsUrl}/api/content-network?depth=2&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=order&limit=50`
+  const url = `${cmsUrl}/api/content-network?depth=3&where[_status][equals]=published&where[tenant][equals]=${encodeURIComponent(tenantId)}&sort=order&limit=50`
 
   let res: Response
   try {
@@ -340,7 +347,7 @@ cmsRoutes.get("/links-profile", async (c) => {
   if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
   if (!tenantId) return c.json({ error: "CMS_TENANT_ID not configured" }, 500)
 
-  const url = `${cmsUrl}/api/links-profile?depth=2&where[tenant][equals]=${encodeURIComponent(tenantId)}&limit=1`
+  const url = `${cmsUrl}/api/links-profile?depth=3&where[tenant][equals]=${encodeURIComponent(tenantId)}&limit=1`
 
   let res: Response
   try {
