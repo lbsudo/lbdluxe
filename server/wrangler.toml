@@ -10,6 +10,6 @@ zone_name = "lbdluxe.com"
 
 # Environment variable bindings
 [vars]
-CMS_URL = "https://cms.covenantdigital.tech"
+CMS_URL = "https://cms.lbdluxe.com"
 CMS_TENANT_ID = "10"
 ENVIRONMENT = "production"
