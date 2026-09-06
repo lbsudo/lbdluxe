@@ -49,7 +49,7 @@ export default function SocialLinks({ socialLinks }: Props) {
         href={"https://www.linkedin.com/in/lbsudo"}
         target={"_blank"}
         ariaLabel={"Visit my LinkedIn"}
-        iconName={"SiLinkerd"}
+        iconName={"SiLinkedin"}
         hex={"#0e76a8"}
       />
       <SocialLink

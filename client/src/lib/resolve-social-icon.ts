@@ -4,7 +4,7 @@ export interface ResolvedSocialIcon {
 }
 
 const platformMap: Record<string, ResolvedSocialIcon> = {
-  linkedin: { iconName: "SiLinkerd", hexColor: "#0e76a8" },
+  linkedin: { iconName: "SiLinkedin", hexColor: "#0e76a8" },
   tiktok: { iconName: "SiTiktok", hexColor: "#000000" },
   instagram: { iconName: "SiInstagram", hexColor: "#E4405F" },
   facebook: { iconName: "SiFacebook", hexColor: "#3b5998" },
