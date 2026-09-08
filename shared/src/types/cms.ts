@@ -171,7 +171,6 @@ export interface CMSProfileLink {
 
 export interface CMSContentNetwork {
   id: number
-  tenant: number
   title: string
   url: string
   hexColor?: string | null
