@@ -26,6 +26,14 @@ app.use(cors({
 
 app.get("/", (c) => c.text("🚀 Local Blog API Server is running!"));
 
+// The API has no crawlable content — keep bots off it entirely.
+app.get("/robots.txt", (c) =>
+  c.text("User-agent: *\nDisallow: /\n", 200, {
+    "Content-Type": "text/plain; charset=utf-8",
+    "Cache-Control": "public, max-age=86400",
+  }),
+);
+
 // Mount group routers
 app.route("/supabase", supabaseRoutes);
 app.route("/resend", resendRoutes);

@@ -1,4 +1,5 @@
 import { Hono } from "hono"
+import type { Context } from "hono"
 import { lexicalToHTML } from "./lexical-to-html"
 
 function env(c: { env?: Record<string, unknown> }, key: string): string | undefined {
@@ -10,6 +11,87 @@ type CMSEnv = {
 }
 
 export const cmsRoutes = new Hono<CMSEnv>()
+
+const TTL_BY_MINUTE = {
+  page: 300, // 5 min
+  list: 600, // 10 min
+  single: 300,
+  profile: 600,
+}
+
+/**
+ * Serves a GET response through the Cloudflare edge cache, keyed by URL plus
+ * the request origin so CORS variants never cross-contaminate. Falls back to
+ * a direct response if the cache API is unavailable (e.g. local dev).
+ */
+async function cachedJson(
+  c: Context<{ Bindings: { CMS_URL: string } }>,
+  ttl: number,
+  build: () => Promise<Response>,
+): Promise<Response> {
+  const cache = (globalThis as { caches?: { default?: { match: (r: Request) => Promise<Response | undefined>; put: (r: Request, res: Response) => Promise<void> } } }).caches?.default
+
+  const keyUrl = (() => {
+    const u = new URL(c.req.url)
+    const origin = c.req.header("Origin")
+    if (origin) u.searchParams.set("__origin", origin)
+    return u.toString()
+  })()
+  const key = new Request(keyUrl)
+
+  if (cache) {
+    try {
+      const hit = await cache.match(key)
+      if (hit) return hit
+    } catch {
+      // ignore cache failures; fall through
+    }
+  }
+
+  const res = await build()
+  const cacheable = res.status >= 200 && res.status < 400
+  if (cacheable) {
+    res.headers.set("Cache-Control", `public, s-maxage=${ttl}`)
+  }
+  if (cache && cacheable) {
+    try {
+      c.executionCtx.waitUntil(cache.put(key, res.clone()))
+    } catch {
+      // non-cacheable response — left uncached
+    }
+  }
+  return res
+}
+
+type CMSEnvContext = Context<{ Bindings: { CMS_URL: string } }>
+
+function cmsUrl(c: CMSEnvContext): string | null {
+  const url = env(c, "CMS_URL")
+  if (!url) return null
+  // use a plain URL so relative media paths stay relative
+  return url.replace(/\/$/, "")
+}
+
+async function fetchCms(c: CMSEnvContext, ttl: number, path: string): Promise<Response> {
+  const base = cmsUrl(c)
+  return cachedJson(c, ttl, async () => {
+    if (!base) return c.json({ error: "CMS_URL not configured" }, 500)
+    let res: Response
+    try {
+      res = await fetch(`${base}${path}`, {
+        headers: { "Content-Type": "application/json" },
+      })
+    } catch {
+      return c.json({ error: "CMS unreachable" }, 502)
+    }
+    if (!res.ok) {
+      return c.json({ error: "CMS fetch failed" }, res.status as any)
+    }
+    const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+    const docs = json.docs ?? []
+    return c.json(docs.map((d) => convertRichTextFields(d, base)))
+  })
+}
 
 function convertRichTextFields(
   obj: Record<string, unknown>,
@@ -70,283 +152,77 @@ function convertRichTextFields(
   return obj
 }
 
-cmsRoutes.get("/pages/:slug", async (c) => {
+async function firstDoc(c: CMSEnvContext, ttl: number, path: string): Promise<Response> {
+  return cachedJson(c, ttl, async () => {
+    const base = cmsUrl(c)
+    if (!base) return c.json({ error: "CMS_URL not configured" }, 500)
+    let res: Response
+    try {
+      res = await fetch(`${base}${path}`, {
+        headers: { "Content-Type": "application/json" },
+      })
+    } catch {
+      return c.json({ error: "CMS unreachable" }, 502)
+    }
+    if (!res.ok) {
+      return c.json({ error: "CMS fetch failed" }, res.status as any)
+    }
+    const json = (await res.json()) as { docs?: Record<string, unknown>[] }
+    const doc = json.docs?.[0]
+    if (!doc) {
+      return c.json(null)
+    }
+    return c.json(convertRichTextFields(doc, base))
+  })
+}
+
+cmsRoutes.get("/pages/:slug", (c) => {
   const slug = c.req.param("slug")
-  const cmsUrl = env(c, "CMS_URL")
-
-  if (!cmsUrl) {
-    return c.json({ error: "CMS_URL not configured" }, 500)
-  }
-
-  const url = `${cmsUrl}/api/pages?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const doc = json.docs?.[0]
-  if (!doc) {
-    return c.json(null)
-  }
-
-  const converted = convertRichTextFields(doc, cmsUrl)
-  return c.json(converted)
+  return firstDoc(c, TTL_BY_MINUTE.page, `/api/pages?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`)
 })
 
-cmsRoutes.get("/posts", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
+cmsRoutes.get("/posts", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/posts?depth=3&where[_status][equals]=published&sort=-publishedAt&limit=50`),
+)
 
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  const url = `${cmsUrl}/api/posts?depth=3&where[_status][equals]=published&sort=-publishedAt&limit=50`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const docs = json.docs ?? []
-  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
-  return c.json(converted)
-})
-
-cmsRoutes.get("/posts/:slug", async (c) => {
+cmsRoutes.get("/posts/:slug", (c) => {
   const slug = c.req.param("slug")
-  const cmsUrl = env(c, "CMS_URL")
-
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  const url = `${cmsUrl}/api/posts?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const doc = json.docs?.[0]
-  if (!doc) {
-    return c.json(null)
-  }
-
-  const converted = convertRichTextFields(doc, cmsUrl)
-  return c.json(converted)
+  return firstDoc(c, TTL_BY_MINUTE.single, `/api/posts?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`)
 })
 
-cmsRoutes.get("/authors", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
+cmsRoutes.get("/authors", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/authors?depth=0&limit=100&sort=title`),
+)
 
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+cmsRoutes.get("/shelf-categories", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/shelf-categories?depth=0&limit=100&sort=title`),
+)
 
-  const url = `${cmsUrl}/api/authors?depth=0&limit=100&sort=title`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  return c.json(json.docs ?? [])
-})
-
-cmsRoutes.get("/shelf-categories", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
-
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  const url = `${cmsUrl}/api/shelf-categories?depth=0&limit=100&sort=title`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  return c.json(json.docs ?? [])
-})
-
-cmsRoutes.get("/shelf-items", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
+cmsRoutes.get("/shelf-items", (c) => {
   const categoryId = c.req.query("categoryId")
-
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  let url = `${cmsUrl}/api/shelf-items?depth=3&where[_status][equals]=published&sort=-updatedAt&limit=50`
+  let path = `/api/shelf-items?depth=3&where[_status][equals]=published&sort=-updatedAt&limit=50`
   if (categoryId) {
-    url += `&where[shelfCategories][in]=${encodeURIComponent(categoryId)}`
+    path += `&where[shelfCategories][in]=${encodeURIComponent(categoryId)}`
   }
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const docs = json.docs ?? []
-  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
-  return c.json(converted)
+  return fetchCms(c, TTL_BY_MINUTE.list, path)
 })
 
-cmsRoutes.get("/shelf-items/:slug", async (c) => {
+cmsRoutes.get("/shelf-items/:slug", (c) => {
   const slug = c.req.param("slug")
-  const cmsUrl = env(c, "CMS_URL")
-
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  const url = `${cmsUrl}/api/shelf-items?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const doc = json.docs?.[0]
-  if (!doc) {
-    return c.json(null)
-  }
-
-  const converted = convertRichTextFields(doc, cmsUrl)
-  return c.json(converted)
+  return firstDoc(c, TTL_BY_MINUTE.single, `/api/shelf-items?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`)
 })
 
-cmsRoutes.get("/profile-links", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
+cmsRoutes.get("/profile-links", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.profile, `/api/profile-links?depth=3&where[_status][equals]=published&sort=order&limit=50`),
+)
 
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
+cmsRoutes.get("/content-network", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.profile, `/api/content-network?depth=3&where[_status][equals]=published&sort=order&limit=50`),
+)
 
-  const url = `${cmsUrl}/api/profile-links?depth=3&where[_status][equals]=published&sort=order&limit=50`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const docs = json.docs ?? []
-  const converted = docs.map((doc) => convertRichTextFields(doc, cmsUrl))
-  return c.json(converted)
-})
-
-cmsRoutes.get("/content-network", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
-
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  const url = `${cmsUrl}/api/content-network?depth=3&where[_status][equals]=published&sort=order&limit=50`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const docs = json.docs ?? []
-  return c.json(docs)
-})
-
-cmsRoutes.get("/links-profile", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
-
-  if (!cmsUrl) return c.json({ error: "CMS_URL not configured" }, 500)
-
-  const url = `${cmsUrl}/api/links-profile?depth=3&limit=1`
-
-  let res: Response
-  try {
-    res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch {
-    return c.json({ error: "CMS unreachable" }, 502)
-  }
-
-  if (!res.ok) {
-    return c.json({ error: "CMS fetch failed" }, res.status as any)
-  }
-
-  const json = (await res.json()) as { docs?: Record<string, unknown>[] }
-  const doc = json.docs?.[0]
-  if (!doc) return c.json(null)
-
-  const converted = convertRichTextFields(doc, cmsUrl)
-  return c.json(converted)
-})
+cmsRoutes.get("/links-profile", (c) =>
+  firstDoc(c, TTL_BY_MINUTE.profile, `/api/links-profile?depth=3&limit=1`),
+)
 
 cmsRoutes.get("/api/media/file/:filename", async (c) => {
   const cmsUrl = env(c, "CMS_URL")
