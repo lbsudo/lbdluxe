@@ -6,8 +6,15 @@ import { useCMSShelfCategories } from "@/hooks/server/cms/GET/useCMSShelfCategor
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
 import { ShelfCategoryItemCard } from "@/components/pages/Shelf/ShelfCategoryItemCard";
 import { cn } from "@/lib/utils";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/shelf")({
+  head: () =>
+    seoHead({
+      title: "The Shelf",
+      description: "Explore Lawrence Brown's shelf collection by category.",
+      path: "/shelf",
+    }),
   validateSearch: (input: Record<string, unknown>) => {
     const val = input.category
     if (typeof val === "number" && Number.isFinite(val)) return { category: val }

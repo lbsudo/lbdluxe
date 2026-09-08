@@ -6,8 +6,16 @@ import { RenderBlock } from "@/components/cms/render-block";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/works")({
+  head: () =>
+    seoHead({
+      title: "Recent Work",
+      description:
+        "Recent projects by Lawrence Brown — intuitive user experiences and robust, efficient software solutions.",
+      path: "/works",
+    }),
   component: RouteComponent,
 });
 

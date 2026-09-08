@@ -10,8 +10,16 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/")({
+  head: () =>
+    seoHead({
+      title: "Blog",
+      description:
+        "Articles by Lawrence Brown — ideas, tutorials, and updates on web development.",
+      path: "/blog",
+    }),
   component: BlogList,
 });
 

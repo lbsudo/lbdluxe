@@ -6,11 +6,17 @@ import LinksLayout from "@/layouts/links-layout";
 import { LinkPanel } from "@/components/pages/links/linkpanel";
 import { NetworkLinksPanel } from "@/components/pages/links/NetworkLinksPanel";
 import { ProfileBar } from "@/components/pages/links/profile/profile-bar";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/links/yt-links/")({
-  head: () => ({
-    meta: [{ title: "LBDLUXE | YouTube Links" }],
-  }),
+  head: () =>
+    seoHead({
+      title: "YouTube Links",
+      description: "All of LB DLUXE's YouTube links in one place.",
+      path: "/yt-links",
+      host: "links",
+      noindex: true,
+    }),
   component: Index,
 });
 

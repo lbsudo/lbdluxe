@@ -8,8 +8,18 @@ import "@/styles/tiptap.css";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { ControlBar } from "@/components/global/navigation/ControlBar";
+import { excerptFromHtml, useDynamicHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
+  head: () => ({
+    meta: [{ title: "LBDLUXE | Blog Post" }],
+    links: [
+      {
+        rel: "canonical",
+        href: `https://lbdluxe.com${typeof window !== "undefined" ? window.location.pathname : "/blog"}`,
+      },
+    ],
+  }),
   component: BlogPost,
   ssr: false,
 });
@@ -18,6 +28,33 @@ function BlogPost() {
   const { slug } = useParams({ from: "/blog/$slug" });
   const navigate = useNavigate();
   const { data: post, isLoading, error } = useCMSPost(slug);
+
+  useDynamicHead(
+    post
+      ? {
+          title: post.title,
+          description: excerptFromHtml(post.content) || `Read "${post.title}" on LBDLUXE.`,
+          path: `/blog/${slug}`,
+          image: post?.heroImage?.url ?? undefined,
+          type: "article",
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            datePublished: post.publishedAt ?? undefined,
+            dateModified: post.updatedAt,
+            author: {
+              "@type": "Person",
+              name: "Lawrence Brown",
+              url: "https://lbdluxe.com",
+            },
+            mainEntityOfPage: `https://lbdluxe.com/blog/${slug}`,
+            image: post?.heroImage?.url ?? undefined,
+          },
+        }
+      : null,
+    [post, slug],
+  );
 
   if (isLoading) {
     return (

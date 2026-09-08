@@ -6,11 +6,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import LinksLayout from "@/layouts/links-layout";
 import { LinkPanel } from "@/components/pages/links/linkpanel";
 import { ProfileBar } from "@/components/pages/links/profile/profile-bar";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/links/")({
-  head: () => ({
-    meta: [{ title: "LBDLUXE | Home" }], // include at least one recognized field
-  }),
+  head: () =>
+    seoHead({
+      title: "Links",
+      description: "All the places to find LB DLUXE online.",
+      path: "/",
+      host: "links",
+      noindex: true,
+    }),
   component: Index,
 });
 

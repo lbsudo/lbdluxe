@@ -5,8 +5,15 @@ import { BookOpen } from "lucide-react";
 import { ShelfCard } from "@/components/pages/Shelf/ShelfCard";
 import { LoaderCircle } from "lucide-react";
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/shelf-items")({
+  head: () =>
+    seoHead({
+      title: "My Shelf",
+      description: "Books, movies, TV shows, and albums Lawrence Brown has enjoyed.",
+      path: "/shelf-items",
+    }),
   component: RouteComponent,
 });
 

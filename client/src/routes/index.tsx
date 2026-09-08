@@ -10,6 +10,7 @@ import { RenderBlock } from "@/components/cms/render-block";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, seoHead } from "@/lib/seo";
 
 const container = {
   hidden: {},
@@ -23,9 +24,12 @@ const container = {
 
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [{ title: "LBDLUXE | Home" }], // include at least one recognized field
-  }),
+  head: () =>
+    seoHead({
+      title: DEFAULT_TITLE,
+      description: DEFAULT_DESCRIPTION,
+      path: "/",
+    }),
   component: Index,
 });
 
