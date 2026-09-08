@@ -63,17 +63,42 @@ async function cachedJson(
   return res
 }
 
-type CMSEnvContext = Context<{ Bindings: { CMS_URL: string } }>
+type CMSEnvContext = Context<{ Bindings: { CMS_URL: string; CMS_FETCH_BASE?: string } }>
 
-function cmsUrl(c: CMSEnvContext): string | null {
-  const url = env(c, "CMS_URL")
+// Where outbound CMS requests actually go. Defaults to the public CMS_URL,
+// but may be overridden with a direct origin (e.g. the Railway *.up.railway.app
+// host) when the Cloudflare-proxied domain misbehaves for same-zone subrequests.
+function cmsFetchBase(c: CMSEnvContext): string | null {
+  const url = env(c, "CMS_FETCH_BASE") || env(c, "CMS_URL")
   if (!url) return null
-  // use a plain URL so relative media paths stay relative
   return url.replace(/\/$/, "")
 }
 
+// Strip an absolute media URL back to a path when it points at the CMS origin
+// we fetch from, so relative /cms/api/media/... rewriting still applies even
+// when fetching via a direct origin host.
+function stripOrigin(url: string, base: string): string {
+  if (!url.startsWith("http")) return url
+  try {
+    const u = new URL(url)
+    const b = new URL(base)
+    if (u.host === b.host) return u.pathname + u.search
+  } catch {
+    // leave as-is on parse failure
+  }
+  return url
+}
+
+async function readErrorDetail(res: Response): Promise<string> {
+  try {
+    return (await res.text()).slice(0, 300)
+  } catch {
+    return ""
+  }
+}
+
 async function fetchCms(c: CMSEnvContext, ttl: number, path: string): Promise<Response> {
-  const base = cmsUrl(c)
+  const base = cmsFetchBase(c)
   return cachedJson(c, ttl, async () => {
     if (!base) return c.json({ error: "CMS_URL not configured" }, 500)
     let res: Response
@@ -85,7 +110,13 @@ async function fetchCms(c: CMSEnvContext, ttl: number, path: string): Promise<Re
       return c.json({ error: "CMS unreachable" }, 502)
     }
     if (!res.ok) {
-      return c.json({ error: "CMS fetch failed" }, res.status as any)
+      const detail = await readErrorDetail(res)
+      console.error(`CMS fetch failed (${res.status}) for ${path}:`, detail)
+      return c.json(
+        { error: "CMS fetch failed", cmsStatus: res.status, detail },
+        res.status as any,
+        { "X-CMS-Status": String(res.status) },
+      )
     }
     const json = (await res.json()) as { docs?: Record<string, unknown>[] }
     const docs = json.docs ?? []
@@ -126,7 +157,9 @@ function convertRichTextFields(
         const mediaUrl = media.url as string | undefined
         const filename = media.filename as string | undefined
         let finalUrl: string | null =
-          mediaUrl && typeof mediaUrl === "string" && mediaUrl.length > 0 ? mediaUrl : null
+          mediaUrl && typeof mediaUrl === "string" && mediaUrl.length > 0
+            ? stripOrigin(mediaUrl, baseUrl)
+            : null
         if (finalUrl?.startsWith("/api/media/file/")) {
           finalUrl = `/cms${finalUrl}`
         } else if (!finalUrl && filename) {
@@ -154,7 +187,7 @@ function convertRichTextFields(
 
 async function firstDoc(c: CMSEnvContext, ttl: number, path: string): Promise<Response> {
   return cachedJson(c, ttl, async () => {
-    const base = cmsUrl(c)
+    const base = cmsFetchBase(c)
     if (!base) return c.json({ error: "CMS_URL not configured" }, 500)
     let res: Response
     try {
@@ -165,7 +198,13 @@ async function firstDoc(c: CMSEnvContext, ttl: number, path: string): Promise<Re
       return c.json({ error: "CMS unreachable" }, 502)
     }
     if (!res.ok) {
-      return c.json({ error: "CMS fetch failed" }, res.status as any)
+      const detail = await readErrorDetail(res)
+      console.error(`CMS fetch failed (${res.status}) for ${path}:`, detail)
+      return c.json(
+        { error: "CMS fetch failed", cmsStatus: res.status, detail },
+        res.status as any,
+        { "X-CMS-Status": String(res.status) },
+      )
     }
     const json = (await res.json()) as { docs?: Record<string, unknown>[] }
     const doc = json.docs?.[0]
@@ -225,12 +264,12 @@ cmsRoutes.get("/links-profile", (c) =>
 )
 
 cmsRoutes.get("/api/media/file/:filename", async (c) => {
-  const cmsUrl = env(c, "CMS_URL")
-  if (!cmsUrl) return new Response(null, { status: 500 })
+  const base = cmsFetchBase(c)
+  if (!base) return new Response(null, { status: 500 })
 
   const filename = c.req.param("filename")
   const prefix = c.req.query("prefix") || "media"
-  const url = `${cmsUrl}/api/media/file/${filename}?prefix=${encodeURIComponent(prefix)}`
+  const url = `${base}/api/media/file/${filename}?prefix=${encodeURIComponent(prefix)}`
 
   let res: Response
   try {
