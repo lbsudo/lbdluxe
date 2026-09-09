@@ -57,6 +57,7 @@ export interface CMSWorkGridItem {
   description: string
   projectLink?: string | null
   repoLink?: string | null
+  linkDisplay?: "both" | "website" | "repo" | null
   directory?: boolean | null
   beta?: boolean | null
   iconImage?: CMSMedia | null

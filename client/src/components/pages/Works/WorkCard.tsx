@@ -8,6 +8,8 @@ interface WorkCardProps {
 
 export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
   const isClickable = work.directory && !!work.projectLink;
+  const showWebsite = work.linkDisplay !== "repo" && !!work.projectLink;
+  const showRepo = work.linkDisplay !== "website" && !!work.repoLink;
 
   const firstImageUrl = work.images?.[0]?.image?.url;
 
@@ -49,9 +51,9 @@ export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
 
         {!work.directory && (
           <div className="flex justify-between mt-3">
-            {work.projectLink && (
+            {showWebsite && (
               <a
-                href={work.projectLink}
+                href={work.projectLink!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 border border-primary text-primary hover:bg-foreground hover:text-background px-3 py-1 rounded-md transition-colors text-sm"
@@ -60,9 +62,9 @@ export const WorkCard: React.FC<WorkCardProps> = ({ work }) => {
                 View project →
               </a>
             )}
-            {work.repoLink && (
+            {showRepo && (
               <a
-                href={work.repoLink}
+                href={work.repoLink!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 border border-primary text-primary hover:bg-foreground hover:text-background px-3 py-1 rounded-md transition-colors text-sm"
