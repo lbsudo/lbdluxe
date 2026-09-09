@@ -3,7 +3,10 @@ import type { Context } from "hono"
 import { lexicalToHTML } from "./lexical-to-html"
 
 function env(c: { env?: Record<string, unknown> }, key: string): string | undefined {
-  return (c.env?.[key] as string | undefined) || process.env[key]
+  const bound = c.env?.[key] as string | undefined
+  if (bound) return bound
+  if (typeof process !== "undefined") return process.env[key]
+  return undefined
 }
 
 type CMSEnv = {
