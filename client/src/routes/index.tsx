@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, seoHead, usePageHead } from "@/lib/seo";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, usePageHead } from "@/lib/seo";
 
 const container = {
   hidden: {},
@@ -25,12 +25,6 @@ const container = {
 
 
 export const Route = createFileRoute("/")({
-  head: () =>
-    seoHead({
-      title: DEFAULT_TITLE,
-      description: DEFAULT_DESCRIPTION,
-      path: "/",
-    }),
   component: Index,
 });
 

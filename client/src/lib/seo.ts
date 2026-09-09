@@ -80,7 +80,13 @@ function upsertMeta(key: string, content: string, create: (el: HTMLMetaElement) 
   const selector = key.startsWith("og:") || key.startsWith("twitter:")
     ? `meta[property="${key}"]`
     : `meta[name="${key}"]`;
-  let el = document.head.querySelector<HTMLMetaElement>(selector);
+  // Prefer a node we own (tagged data-seo). Never tag or delete a node we don't own
+  // (e.g. one rendered by TanStack's route head() portal) — only update its content.
+  let el = document.head.querySelector<HTMLMetaElement>(`${selector}[data-seo]`);
+  const ours = !!el;
+  if (!el) {
+    el = document.head.querySelector<HTMLMetaElement>(selector);
+  }
   if (!el) {
     el = document.createElement("meta");
     if (key.startsWith("og:") || key.startsWith("twitter:")) {
@@ -91,15 +97,15 @@ function upsertMeta(key: string, content: string, create: (el: HTMLMetaElement) 
     el.setAttribute("data-seo", key);
     document.head.appendChild(el);
   }
-  if (el.getAttribute("data-seo") !== key) {
-    el.setAttribute("data-seo", key);
-  }
-  create(el);
+  if (ours) create(el);
   el.setAttribute("content", content);
 }
 
 function upsertCanonical(href: string) {
-  let el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  let el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"][data-seo="canonical"]');
+  if (!el) {
+    el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  }
   if (!el) {
     el = document.createElement("link");
     el.setAttribute("rel", "canonical");

@@ -4,7 +4,6 @@ import PageHeader from "@/components/global/page-header";
 import { useCMSPosts } from "@/hooks/server/cms/GET/useCMSPosts";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
-import { seoHead } from "@/lib/seo";
 import { usePageHead } from "@/lib/seo";
 
 import {
@@ -17,13 +16,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/blog/")({
-  head: () =>
-    seoHead({
-      title: "Blog",
-      description:
-        "Articles by Lawrence Brown — ideas, tutorials, and updates on web development.",
-      path: "/blog",
-    }),
   component: BlogList,
 });
 

@@ -11,15 +11,6 @@ import { ControlBar } from "@/components/global/navigation/ControlBar";
 import { excerptFromHtml, useDynamicHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
-  head: () => ({
-    meta: [{ title: "LBDLUXE | Blog Post" }],
-    links: [
-      {
-        rel: "canonical",
-        href: `https://lbdluxe.com${typeof window !== "undefined" ? window.location.pathname : "/blog"}`,
-      },
-    ],
-  }),
   component: BlogPost,
   ssr: false,
 });

@@ -7,15 +7,9 @@ import { LoaderCircle } from "lucide-react";
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
-import { seoHead, usePageHead } from "@/lib/seo";
+import { usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/shelf-items")({
-  head: () =>
-    seoHead({
-      title: "My Shelf",
-      description: "Books, movies, TV shows, and albums Lawrence Brown has enjoyed.",
-      path: "/shelf-items",
-    }),
   component: RouteComponent,
 });
 

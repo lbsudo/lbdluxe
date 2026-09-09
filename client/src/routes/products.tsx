@@ -7,15 +7,9 @@ import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
-import { seoHead, usePageHead } from "@/lib/seo";
+import { usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/products")({
-  head: () =>
-    seoHead({
-      title: "Product Catalog",
-      description: "A catalog of products curated by Lawrence Brown.",
-      path: "/products",
-    }),
   component: RouteComponent,
 });
 

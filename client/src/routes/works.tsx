@@ -7,16 +7,9 @@ import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
-import { seoHead, usePageHead } from "@/lib/seo";
+import { usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/works")({
-  head: () =>
-    seoHead({
-      title: "Recent Work",
-      description:
-        "Recent projects by Lawrence Brown — intuitive user experiences and robust, efficient software solutions.",
-      path: "/works",
-    }),
   component: RouteComponent,
 });
 

@@ -2,15 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout.tsx";
 import { LoaderCircle, Star, ArrowLeft, BookOpen, Clapperboard, Monitor, DiscAlbum, ExternalLink } from "lucide-react";
 import { useCMSShelfItem } from "@/hooks/server/cms/GET/useCMSShelfItems";
-import { excerptFromHtml, seoHead, useDynamicHead } from "@/lib/seo";
+import { excerptFromHtml, useDynamicHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/shelf-items/$slug")({
-  head: () =>
-    seoHead({
-      title: "Shelf Item",
-      description: "A shelf item from Lawrence Brown's collection.",
-      path: typeof window !== "undefined" ? window.location.pathname : "/shelf-items",
-    }),
   component: RouteComponent,
 });
 
