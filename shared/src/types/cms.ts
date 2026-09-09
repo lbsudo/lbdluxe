@@ -179,6 +179,30 @@ export interface CMSContentNetwork {
   order?: number | null
 }
 
+export interface CMSSite {
+  siteName: string
+  defaultTitle?: string | null
+  defaultDescription?: string | null
+  siteUrl?: string | null
+  linksUrl?: string | null
+  ogImage?: CMSMedia | null
+  themeColor?: string | null
+  newsletter?: {
+    heading?: string | null
+    subtitle?: string | null
+    placeholder?: string | null
+    buttonLabel?: string | null
+    id?: string | null
+  } | null
+  socials?: {
+    title: string
+    url: string
+    id?: string | null
+  }[] | null
+  updatedAt: string
+  createdAt: string
+}
+
 export interface CMSPage {
   id: number
   title: string

@@ -54,7 +54,7 @@ async function cachedJson(
   const res = await build()
   const cacheable = res.status >= 200 && res.status < 400
   if (cacheable) {
-    res.headers.set("Cache-Control", `public, s-maxage=${ttl}`)
+    res.headers.set("Cache-Control", `public, max-age=0, must-revalidate, s-maxage=${ttl}`)
   }
   if (cache && cacheable) {
     try {
@@ -253,6 +253,31 @@ cmsRoutes.get("/shelf-items/:slug", (c) => {
   const slug = c.req.param("slug")
   return firstDoc(c, TTL_BY_MINUTE.single, `/api/shelf-items?depth=3&where[slug][equals]=${encodeURIComponent(slug)}`)
 })
+
+cmsRoutes.get("/site", (c) =>
+  cachedJson(c, TTL_BY_MINUTE.profile, async () => {
+    const base = cmsFetchBase(c)
+    if (!base) return c.json({ error: "CMS_URL not configured" }, 500)
+    let res: Response
+    try {
+      res = await fetch(`${base}/api/globals/site?depth=2`, {
+        headers: { "Content-Type": "application/json" },
+      })
+    } catch {
+      return c.json({ error: "CMS unreachable" }, 502)
+    }
+    if (!res.ok) {
+      const detail = await readErrorDetail(res)
+      console.error(`CMS fetch failed (${res.status}) for /api/globals/site:`, detail)
+      return c.json(
+        { error: "CMS fetch failed", cmsStatus: res.status, detail },
+        res.status as any,
+        { "X-CMS-Status": String(res.status) },
+      )
+    }
+    return c.json(convertRichTextFields((await res.json()) as Record<string, unknown>, base))
+  }),
+)
 
 cmsRoutes.get("/profile-links", (c) =>
   fetchCms(c, TTL_BY_MINUTE.profile, `/api/profile-links?depth=3&where[_status][equals]=published&sort=order&limit=50`),

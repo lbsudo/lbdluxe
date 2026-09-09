@@ -6,7 +6,8 @@ import { RenderBlock } from "@/components/cms/render-block";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
-import { seoHead } from "@/lib/seo";
+import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
+import { seoHead, usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/works")({
   head: () =>
@@ -28,11 +29,19 @@ const headerData = {
 
 function RouteComponent() {
   const { data: cmsPage, isLoading, error } = useCMSPage("works");
+  const { data: site } = useCMSSite();
+  usePageHead(cmsPage, site, {
+    title: "Recent Work",
+    description:
+      "Recent projects by Lawrence Brown — intuitive user experiences and robust, efficient software solutions.",
+    path: "/works",
+  });
 
   return (
     <>
       <DefaultLayout>
         <PageHeader
+          page={cmsPage}
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}

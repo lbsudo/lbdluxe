@@ -4,9 +4,11 @@ import PageHeader from "@/components/global/page-header.tsx";
 import { LoaderCircle, Library } from "lucide-react";
 import { useCMSShelfCategories } from "@/hooks/server/cms/GET/useCMSShelfCategories";
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
+import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
+import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
 import { ShelfCategoryItemCard } from "@/components/pages/Shelf/ShelfCategoryItemCard";
 import { cn } from "@/lib/utils";
-import { seoHead } from "@/lib/seo";
+import { seoHead, usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/shelf")({
   head: () =>
@@ -36,6 +38,13 @@ function RouteComponent() {
 
   const { data: categories, isLoading: catsLoading, error: catsError } = useCMSShelfCategories();
   const { data: items, isLoading: itemsLoading, error: itemsError } = useCMSShelfItems(category);
+  const { data: cmsPage } = useCMSPage("shelf");
+  const { data: site } = useCMSSite();
+  usePageHead(cmsPage, site, {
+    title: "The Shelf",
+    description: "Explore Lawrence Brown's shelf collection by category.",
+    path: "/shelf",
+  });
 
   const selectedCategory = categories?.find((c) => c.id === category);
 
@@ -43,6 +52,7 @@ function RouteComponent() {
     <>
       <DefaultLayout>
         <PageHeader
+          page={cmsPage}
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}

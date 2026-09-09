@@ -1,10 +1,13 @@
 import {
+  Clapperboard,
   Github,
+  Instagram,
   Layers,
   LibraryBig,
   Linkedin,
   PanelTopClose,
   SquareArrowOutUpRight,
+  Youtube,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
@@ -18,10 +21,50 @@ import {
 import { Button } from '@/components/ui/button.tsx'
 import { Input } from '@/components/ui/input.tsx'
 import { Separator } from '@/components/ui/separator.tsx'
+import { useCMSSite } from '@/hooks/server/cms/GET/useCMSSite'
+
+const FALLBACK_LINKS = [
+  {
+    label: 'Github',
+    icon: <Github size={24} className="size-5" />,
+    onClick: () => window.open('https://github.com/your-handle', '_blank'),
+  },
+  {
+    label: 'LinkedIn',
+    icon: <Linkedin size={24} className="size-5" />,
+    onClick: () =>
+      window.open('https://linkedin.com/in/your-handle', '_blank'),
+  },
+]
 
 export function MobileNavDrawer() {
   const router = useRouter()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const { data: site } = useCMSSite()
+
+  const socials = site?.socials?.filter((s) => s.title && s.url)
+
+  const links = socials?.length
+    ? socials.map((s) => {
+        const key = s.title.toLowerCase()
+        const Icon = key.includes('github')
+          ? Github
+          : key.includes('link')
+            ? Linkedin
+            : key.includes('insta')
+              ? Instagram
+              : key.includes('youtube')
+                ? Youtube
+                : key.includes('tiktok')
+                  ? Clapperboard
+                  : SquareArrowOutUpRight
+        return {
+          label: s.title,
+          icon: <Icon size={24} className="size-5" />,
+          onClick: () => window.open(s.url, '_blank'),
+        }
+      })
+    : FALLBACK_LINKS
 
   const dialogRoutes = [
     {
@@ -41,20 +84,6 @@ export function MobileNavDrawer() {
       label: 'links.lbdluxe.com',
       icon: <SquareArrowOutUpRight size={20} />,
       onClick: () => window.open('https://links.lbdluxe.com', '_blank'),
-    },
-  ]
-
-  const links = [
-    {
-      label: 'Github',
-      icon: <Github size={24} className="size-5" />,
-      onClick: () => window.open('https://github.com/your-handle', '_blank'),
-    },
-    {
-      label: 'LinkedIn',
-      icon: <Linkedin size={24} className="size-5" />,
-      onClick: () =>
-        window.open('https://linkedin.com/in/your-handle', '_blank'),
     },
   ]
 

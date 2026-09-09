@@ -1,4 +1,13 @@
-import { Github, Layers, LibraryBig, Linkedin, SquareArrowOutUpRight } from 'lucide-react'
+import {
+  Clapperboard,
+  Github,
+  Instagram,
+  Layers,
+  LibraryBig,
+  Linkedin,
+  SquareArrowOutUpRight,
+  Youtube,
+} from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import {
@@ -11,10 +20,50 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import { useCMSSite } from '@/hooks/server/cms/GET/useCMSSite'
+
+const FALLBACK_LINKS = [
+  {
+    label: 'Github',
+    icon: <Github className="size-5 ml-2" />,
+    onClick: () => window.open('https://github.com/your-handle', '_blank'),
+  },
+  {
+    label: 'LinkedIn',
+    icon: <Linkedin className="size-5 ml-2" />,
+    onClick: () =>
+      window.open('https://linkedin.com/in/your-handle', '_blank'),
+  },
+]
 
 export function ControlBarModal() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const { data: site } = useCMSSite()
+
+  const socials = site?.socials?.filter((s) => s.title && s.url)
+
+  const links = socials?.length
+    ? socials.map((s) => {
+        const key = s.title.toLowerCase()
+        const Icon = key.includes('github')
+          ? Github
+          : key.includes('link')
+            ? Linkedin
+            : key.includes('insta')
+              ? Instagram
+              : key.includes('youtube')
+                ? Youtube
+                : key.includes('tiktok')
+                  ? Clapperboard
+                  : SquareArrowOutUpRight
+        return {
+          label: s.title,
+          icon: <Icon className="size-5 ml-2" />,
+          onClick: () => window.open(s.url, '_blank'),
+        }
+      })
+    : FALLBACK_LINKS
 
   // ⌥K (Option+K / Alt+K) global shortcut
   useEffect(() => {
@@ -40,20 +89,6 @@ export function ControlBarModal() {
       label: 'links.lbdluxe.com',
       icon: <SquareArrowOutUpRight className="size-5 ml-2" />,
       onClick: () => window.open('https://links.lbdluxe.com', '_blank'),
-    },
-  ]
-
-  const links = [
-    {
-      label: 'Github',
-      icon: <Github className="size-5 ml-2" />,
-      onClick: () => window.open('https://github.com/your-handle', '_blank'),
-    },
-    {
-      label: 'LinkedIn',
-      icon: <Linkedin className="size-5 ml-2" />,
-      onClick: () =>
-        window.open('https://linkedin.com/in/your-handle', '_blank'),
     },
   ]
 

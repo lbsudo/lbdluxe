@@ -2,6 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import DefaultLayout from "@/layouts/default-layout";
 import PageHeader from "@/components/global/page-header";
 import { useCMSPosts } from "@/hooks/server/cms/GET/useCMSPosts";
+import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
+import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
+import { seoHead } from "@/lib/seo";
+import { usePageHead } from "@/lib/seo";
+
 import {
   Card,
   CardContent,
@@ -10,7 +15,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/")({
   head: () =>
@@ -33,6 +37,14 @@ const headerData = {
 function BlogList(): React.ReactElement {
   const navigate = useNavigate();
   const { data: posts, isLoading, error } = useCMSPosts();
+  const { data: cmsPage } = useCMSPage("blog");
+  const { data: site } = useCMSSite();
+  usePageHead(cmsPage, site, {
+    title: "Blog",
+    description:
+      "Articles by Lawrence Brown — ideas, tutorials, and updates on web development.",
+    path: "/blog",
+  });
 
   if (error) return <p className="text-red-500">{error.message}</p>;
 
@@ -40,6 +52,7 @@ function BlogList(): React.ReactElement {
     return (
       <DefaultLayout>
         <PageHeader
+          page={cmsPage}
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}
@@ -64,6 +77,7 @@ function BlogList(): React.ReactElement {
   return (
     <DefaultLayout>
       <PageHeader
+        page={cmsPage}
         buttonText={headerData.buttonText}
         title={headerData.title}
         description={headerData.description}

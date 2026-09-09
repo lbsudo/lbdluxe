@@ -6,8 +6,19 @@ import { Card } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useAddResendContact } from "@/hooks/server/resend/POST/useAddResendContact.ts";
+import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite.ts";
 
 export function NewsletterSubmit() {
+  const { data: site } = useCMSSite();
+  const newsletter = site?.newsletter;
+
+  const heading = newsletter?.heading?.trim() || "Subscribe to Newsletter";
+  const subtitle =
+    newsletter?.subtitle?.trim() ||
+    "A newsletter for entrepreneurs, developers, and lifelong learners.";
+  const placeholder = newsletter?.placeholder?.trim() || "name@example.com";
+  const buttonLabel = newsletter?.buttonLabel?.trim() || "Subscribe";
+
   const {
     register,
     handleSubmit,
@@ -38,11 +49,11 @@ export function NewsletterSubmit() {
     <Card className="mx-2 z-2 flex w-full items-center rounded-xl justify-center border dark:border-neutral-300/25 bg-transparent p-2 md:mx-0 md:w-2/3">
       <Card className="flex w-full items-center justify-center rounded-lg dark:bg-neutral-700/20 backdrop-blur-sm py-6 px-6 gap-2 ">
         <p className="text-3xl font-semibold w-full text-center">
-          Subscribe to Newsletter
+          {heading}
         </p>
 
         <p className="px-2 mb-2 text-center text-xl">
-          A newsletter for entrepreneurs, developers, and lifelong learners.
+          {subtitle}
         </p>
 
         <form
@@ -61,7 +72,7 @@ export function NewsletterSubmit() {
           />
           <Input
             type="email"
-            placeholder="name@example.com"
+            placeholder={placeholder}
             {...register("email", { required: "Email is required" })}
             className="border-foreground/75"
           />
@@ -80,7 +91,7 @@ export function NewsletterSubmit() {
                 <Loader2 className="h-5 w-5 animate-spin" /> Subscribing...
               </>
             ) : (
-              "Subscribe"
+              buttonLabel
             )}
           </Button>
         </form>

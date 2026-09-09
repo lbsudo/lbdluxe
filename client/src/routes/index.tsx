@@ -10,7 +10,8 @@ import { RenderBlock } from "@/components/cms/render-block";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, seoHead } from "@/lib/seo";
+import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, seoHead, usePageHead } from "@/lib/seo";
 
 const container = {
   hidden: {},
@@ -36,6 +37,12 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [isClient, setIsClient] = useState(false);
   const { data: cmsPage } = useCMSPage("home");
+  const { data: site } = useCMSSite();
+  usePageHead(cmsPage, site, {
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    path: "/",
+  });
 
   useEffect(() => {
     setIsClient(true);

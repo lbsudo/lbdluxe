@@ -5,7 +5,9 @@ import { BookOpen } from "lucide-react";
 import { ShelfCard } from "@/components/pages/Shelf/ShelfCard";
 import { LoaderCircle } from "lucide-react";
 import { useCMSShelfItems } from "@/hooks/server/cms/GET/useCMSShelfItems";
-import { seoHead } from "@/lib/seo";
+import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
+import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
+import { seoHead, usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/shelf-items")({
   head: () =>
@@ -25,11 +27,19 @@ const headerData = {
 
 function RouteComponent() {
   const { data: items, isLoading, error } = useCMSShelfItems();
+  const { data: cmsPage } = useCMSPage("shelf-items");
+  const { data: site } = useCMSSite();
+  usePageHead(cmsPage, site, {
+    title: "My Shelf",
+    description: "Books, movies, TV shows, and albums Lawrence Brown has enjoyed.",
+    path: "/shelf-items",
+  });
 
   return (
     <>
       <DefaultLayout>
         <PageHeader
+          page={cmsPage}
           buttonText={headerData.buttonText}
           title={headerData.title}
           description={headerData.description}

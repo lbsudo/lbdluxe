@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { CMSPage, CMSSite } from "shared";
 
 export const SITE_NAME = "LBDLUXE";
 export const SITE_URL = "https://lbdluxe.com";
@@ -214,4 +215,50 @@ export function excerptFromHtml(html: string | null | undefined, max = 160): str
   if (text.length <= max) return text;
   const cut = text.slice(0, max).lastIndexOf(" ");
   return `${text.slice(0, cut > 0 ? cut : max).trim()}…`;
+}
+
+/**
+ * Applies CMS-driven metadata for a page once its data loads, layering the
+ * page's own meta/title over a static fallback, then the site defaults.
+ * Renders nothing (keeps the static head) until the page resolves.
+ */
+export function usePageHead(
+  page: CMSPage | null | undefined,
+  site: CMSSite | null | undefined,
+  fallback: SEOOptions,
+  deps: unknown[] = [],
+) {
+  const title =
+    page?.meta?.title?.trim() ||
+    fallback.title ||
+    page?.title?.trim() ||
+    site?.defaultTitle ||
+    undefined;
+  const description =
+    page?.meta?.description?.trim() ||
+    fallback.description?.trim() ||
+    site?.defaultDescription?.trim() ||
+    undefined;
+  const image = page?.meta?.image?.trim() || site?.ogImage?.url || undefined;
+
+  const resolved: SEOOptions | null =
+    title || description || image
+      ? {
+          ...fallback,
+          title,
+          description: description ?? fallback.description,
+          image,
+        }
+      : null;
+
+  useDynamicHead(resolved, [
+    page?.id,
+    page?.updatedAt,
+    site?.defaultTitle,
+    site?.defaultDescription,
+    site?.ogImage?.url,
+    fallback.title,
+    fallback.description,
+    ...deps,
+  ]);
 }
