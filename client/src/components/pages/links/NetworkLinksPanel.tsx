@@ -24,7 +24,7 @@ export const NetworkLinksPanel = ({ networkType }: NetworkLinksPanelProps) => {
   );
 
   return (
-    <div className="relative z-10 flex min-h-screen w-[440px] max-w-[352px] flex-col items-center justify-start overflow-y-auto bg-black pt-4 md:max-w-[2000px]">
+    <div className="relative z-10 flex w-[440px] max-w-[352px] flex-col items-center justify-start bg-black pt-4 pb-4 md:max-w-[2000px]">
       {sorted.map((network) => (
         <NoThumbLink
           key={network.id}
@@ -38,7 +38,7 @@ export const NetworkLinksPanel = ({ networkType }: NetworkLinksPanelProps) => {
           target="_blank"
         />
       ))}
-      <Link to="/links" className="mt-2 mb-3">
+      <Link to="/links" className="mt-2">
         <HoverBorderGradient
           as="button"
           className={"text-sm flex items-center justify-center gap-2"}
