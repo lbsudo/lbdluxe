@@ -27,12 +27,6 @@ function Index() {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    if (isClient) {
-      window.dispatchEvent(new Event("appReady"));
-    }
-  }, [isClient]);
-
   if (!isClient) return null;
 
   return (

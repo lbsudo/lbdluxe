@@ -6,28 +6,32 @@ import { useState, useEffect } from 'react';
  * SplashScreen component
  *
  * @param visible – controls the fade‑in/fade‑out animation
+ * @param progress – 0…1 how much of the critical data is loaded; drives the loading bar
+ * @param fadeOutMs – duration of the fade‑out animation before the splash unmounts (default 500)
  * @param onHidden – optional callback fired after the fade‑out completes
- * @param durationMs – optional duration (ms) for the loading‑bar animation (default 2500)
  */
 export default function SplashScreen({
   visible,
+  progress = 0,
+  fadeOutMs = 500,
   onHidden,
-  durationMs,
 }: {
   visible: boolean;
+  progress?: number;
+  fadeOutMs?: number;
   onHidden?: () => void;
-  durationMs?: number;
 }) {
   // Keep the component mounted while it is visible *or* during the fade‑out animation.
   const [isMounted, setIsMounted] = useState(true);
   // Start with show = false for fade‑in animation
   const [show, setShow] = useState(false);
 
-  // Loading‑bar duration (fallback to 2500 ms)
-  const barDuration = durationMs ?? 2500;
+  const pct = Math.round(Math.min(100, Math.max(0, progress * 100)));
 
   // Compute transition duration based on direction
-  const transitionClass = show ? 'duration-300' : 'duration-500';
+  const transitionClass = show
+    ? 'duration-300'
+    : `duration-[${fadeOutMs}ms]`;
 
   // React to `visible` changes
   useEffect(() => {
@@ -39,10 +43,10 @@ export default function SplashScreen({
       const timer = setTimeout(() => {
         setIsMounted(false);
         onHidden?.();
-      }, 500); // match fade‑out duration
+      }, fadeOutMs); // match fade‑out duration
       return () => clearTimeout(timer);
     }
-  }, [visible, onHidden]);
+  }, [visible, onHidden, fadeOutMs]);
 
   // If we have already unmounted after fade‑out, render nothing
   if (!isMounted) return null;
@@ -50,7 +54,7 @@ export default function SplashScreen({
   return (
     <div
       className={`
-        fixed inset-0 z-50 flex flex-col items-center justify-center
+        fixed inset-0 z-[100] flex flex-col items-center justify-center
         bg-cover bg-center bg-black transition-opacity ${transitionClass}
         ${show ? 'opacity-100' : 'opacity-0'}
         ${!show ? 'pointer-events-none' : ''}
@@ -63,14 +67,34 @@ export default function SplashScreen({
         alt="Logo"
         className={`h-100 w-100 transition-opacity ${transitionClass}`}
       />
-      {/* Loading bar – replaces spinner */}
+      {/* Rotating dodecahedron – decorative loading animation */}
+      <div className="mt-2" style={{ perspective: '500px' }}>
+        <div className="poly-spin relative h-14 w-14">
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 13.9px, 33.0px 13.9px, 18.0px 3.0px, 8.7px 31.5px, 27.3px 31.5px)", transform: "matrix3d(1.0000,0.0000,0.0000,0.0000,0.0000,-0.5257,0.8507,0.0000,0.0000,-0.8507,-0.5257,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 20.6px, 33.0px 20.6px, 18.0px 31.5px, 8.7px 3.0px, 27.3px 3.0px)", transform: "matrix3d(1.0000,0.0000,0.0000,0.0000,0.0000,0.5257,0.8507,0.0000,0.0000,-0.8507,0.5257,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 20.6px, 33.0px 20.6px, 18.0px 31.5px, 8.7px 3.0px, 27.3px 3.0px)", transform: "matrix3d(1.0000,0.0000,0.0000,0.0000,0.0000,-0.5257,-0.8507,0.0000,0.0000,0.8507,-0.5257,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 13.9px, 33.0px 13.9px, 18.0px 3.0px, 8.7px 31.5px, 27.3px 31.5px)", transform: "matrix3d(1.0000,0.0000,0.0000,0.0000,0.0000,0.5257,-0.8507,0.0000,0.0000,0.8507,0.5257,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 13.9px, 33.0px 13.9px, 18.0px 3.0px, 8.7px 31.5px, 27.3px 31.5px)", transform: "matrix3d(0.0000,0.0000,1.0000,0.0000,-0.5257,0.8507,0.0000,0.0000,-0.8507,-0.5257,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 20.6px, 33.0px 20.6px, 18.0px 31.5px, 8.7px 3.0px, 27.3px 3.0px)", transform: "matrix3d(0.0000,0.0000,1.0000,0.0000,0.5257,0.8507,0.0000,0.0000,-0.8507,0.5257,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 20.6px, 33.0px 20.6px, 18.0px 31.5px, 8.7px 3.0px, 27.3px 3.0px)", transform: "matrix3d(0.0000,0.0000,1.0000,0.0000,-0.5257,-0.8507,0.0000,0.0000,0.8507,-0.5257,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 13.9px, 33.0px 13.9px, 18.0px 3.0px, 8.7px 31.5px, 27.3px 31.5px)", transform: "matrix3d(0.0000,0.0000,1.0000,0.0000,0.5257,-0.8507,0.0000,0.0000,0.8507,0.5257,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 13.9px, 33.0px 13.9px, 8.7px 31.5px, 27.3px 31.5px, 18.0px 3.0px)", transform: "matrix3d(0.0000,1.0000,0.0000,0.0000,0.8507,0.0000,-0.5257,0.0000,-0.5257,0.0000,-0.8507,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 20.6px, 33.0px 20.6px, 8.7px 3.0px, 27.3px 3.0px, 18.0px 31.5px)", transform: "matrix3d(0.0000,1.0000,0.0000,0.0000,0.8507,0.0000,0.5257,0.0000,0.5257,0.0000,-0.8507,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 20.6px, 33.0px 20.6px, 8.7px 3.0px, 27.3px 3.0px, 18.0px 31.5px)", transform: "matrix3d(0.0000,1.0000,0.0000,0.0000,-0.8507,0.0000,-0.5257,0.0000,-0.5257,0.0000,0.8507,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+          <div className="absolute left-1/2 top-1/2 border border-white/60 bg-white/40" style={{ width: 36.0, height: 34.5, marginLeft: -18.0, marginTop: -17.3, clipPath: "polygon(3.0px 13.9px, 33.0px 13.9px, 8.7px 31.5px, 27.3px 31.5px, 18.0px 3.0px)", transform: "matrix3d(0.0000,1.0000,0.0000,0.0000,-0.8507,0.0000,0.5257,0.0000,0.5257,0.0000,0.8507,0.0000,0.0000,0.0000,0.0000,1.0000) translateZ(20.6px)" }} />
+        </div>
+      </div>
+      {/* Loading bar – reflects real data-loading progress */}
       <div
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={pct}
         className="mt-4 w-64 max-w-[300px] h-1 bg-neutral-600 overflow-hidden rounded"
-        style={{ '--loading-duration': `${barDuration}ms` } as any}
       >
         <div
-          className="h-full bg-white w-0 animate-loading-bar"
-          onAnimationEnd={onHidden}
+          className="h-full bg-white transition-[width] duration-300 ease-out"
+          style={{ width: `${pct}%` }}
         />
       </div>
     </div>

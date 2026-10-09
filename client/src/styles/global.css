@@ -144,10 +144,10 @@
   }
 }
 
-@keyframes loadingBar {
-  from { width: 0%; }
-  to { width: 100%; }
+@keyframes poly-spin {
+  to { transform: rotate3d(1, 1, 1, 360deg); }
 }
-.animate-loading-bar {
-  animation: loadingBar var(--loading-duration, 2500ms) linear forwards;
+.poly-spin {
+  animation: poly-spin 2.5s linear infinite;
+  transform-style: preserve-3d;
 }

@@ -179,6 +179,26 @@ export interface CMSContentNetwork {
   order?: number | null
 }
 
+export interface CMSDigitalProduct {
+  id: number
+  title: string
+  slug?: string | null
+  shortDescription?: string | null
+  description?: string | null
+  coverImage?: CMSMedia | null
+  gallery?: CMSMedia[] | null
+  price: number
+  currency: string
+  polarCheckoutLink: string
+  badge?: string | null
+  featured?: boolean | null
+  order?: number | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
 export interface CMSSite {
   siteName: string
   defaultTitle?: string | null

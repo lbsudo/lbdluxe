@@ -287,6 +287,10 @@ cmsRoutes.get("/content-network", (c) =>
   fetchCms(c, TTL_BY_MINUTE.profile, `/api/content-network?depth=3&where[_status][equals]=published&sort=order&limit=50`),
 )
 
+cmsRoutes.get("/digital-products", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/digital-products?depth=3&where[_status][equals]=published&sort=-featured,order&limit=50`),
+)
+
 cmsRoutes.get("/links-profile", (c) =>
   firstDoc(c, TTL_BY_MINUTE.profile, `/api/links-profile?depth=3&limit=1`),
 )
