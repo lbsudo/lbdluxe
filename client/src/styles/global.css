@@ -169,14 +169,6 @@
   }
 }
 
-@keyframes poly-spin {
-  to { transform: rotate3d(1, 1, 1, 360deg); }
-}
-.poly-spin {
-  animation: poly-spin 2.5s linear infinite;
-  transform-style: preserve-3d;
-}
-
 /*
  * CSS-only replacements for the framer-motion primitives used on the links
  * pages. Keeping framer off the links critical path removes ~150 KB (gzip) from

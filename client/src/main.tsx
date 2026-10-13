@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import SplashScreen from "@/components/SplashScreen";
+import { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,8 +32,8 @@ declare module "@tanstack/react-router" {
   }
 }
 
-// The splash preloader feeds these into react-query's prefetchQuery. The hooks
-// export fully-typed UseQueryOptions<T>; `object` keeps the heterogeneous list
+// The preloader feeds these into react-query's prefetchQuery. The hooks export
+// fully-typed UseQueryOptions<T>; `object` keeps the heterogeneous list
 // homogeneous without an `any` and the exact shape is restored at the call site.
 type CriticalQuery = object;
 
@@ -111,69 +110,47 @@ function criticalQueriesFor({
 }
 
 // Safety cap: an unhandled route, blocked request, or flaky network must never
-// leave the splash on screen forever. Queries usually settle well before this.
-const SPLASH_MAX_MS = 6000;
-// Minimum branded-splash time on the first load so a warm cache doesn't make it
-// blink in and straight back out.
-const SPLASH_MIN_MS = 450;
+// leave the loader on screen forever. Queries usually settle well before this.
+const BOOT_MAX_MS = 6000;
+// Minimum time the loader stays up so a warm cache doesn't make it blink.
+const BOOT_MIN_MS = 450;
 
-function readSplashEligibility(): boolean {
-  try {
-    return !sessionStorage.getItem("splashShown");
-  } catch {
-    return true;
-  }
-}
-
-// Fades out and removes the inline #boot loader from index.html. It is the
-// zero-JS loading screen that covers the gap before this bundle executes.
-function removeBootLoader() {
+// Feeds real progress into #boot's determinate bar (index.html).
+function setBootProgress(p: number) {
   const boot = document.getElementById("boot");
   if (!boot) return;
+  boot.setAttribute("data-progress", "true");
+  boot.style.setProperty("--p", String(Math.min(1, Math.max(0, p))));
+}
+
+// Fades out and removes #boot. This is the loader's full lifecycle end.
+function hideBoot() {
+  const boot = document.getElementById("boot");
+  if (!boot || boot.classList.contains("is-hidden")) return;
   boot.classList.add("is-hidden");
-  window.setTimeout(() => boot.remove(), 220);
+  window.setTimeout(() => boot.remove(), 240);
 }
 
 function AppWrapper() {
-  // Branded splash is shown once per session. On later loads the inline #boot
-  // loader stays up until critical data settles, so slow loads still get a
-  // loading screen without repeating the full intro.
-  const [splashEligible] = useState(readSplashEligibility);
-  const [splashVisible, setSplashVisible] = useState(splashEligible);
-  const [splashProgress, setSplashProgress] = useState(0);
-
-  const reveal = useCallback(() => {
-    if (splashEligible) {
-      setSplashVisible(false);
-    } else {
-      removeBootLoader();
-    }
-  }, [splashEligible]);
-
+  // #boot (the single inline loader in index.html) is shown from first paint
+  // until the page's critical queries settle. This effect only nudges its
+  // progress bar and then hides it — nothing is re-rendered by React.
   useEffect(() => {
-    // Mark as seen immediately so a reload later in the session reads it.
-    try {
-      sessionStorage.setItem("splashShown", "true");
-    } catch {
-      // ignore storage failures (private mode, etc.)
-    }
-
     const queries = criticalQueriesFor(window.location);
+    const startedAt = performance.now();
     let cancelled = false;
     let settled = 0;
-    let revealed = false;
+    let done = false;
 
     const finish = () => {
-      if (revealed || cancelled) return;
-      revealed = true;
-      reveal();
+      if (done || cancelled) return;
+      done = true;
+      const elapsed = performance.now() - startedAt;
+      const wait = Math.max(0, BOOT_MIN_MS - elapsed);
+      window.setTimeout(() => {
+        if (!cancelled) hideBoot();
+      }, wait);
     };
-
-    // First load: the branded splash replaces #boot right away (identical
-    // black background, so the hand-off is invisible).
-    if (splashEligible) {
-      requestAnimationFrame(removeBootLoader);
-    }
 
     if (queries.length === 0) {
       finish();
@@ -182,7 +159,7 @@ function AppWrapper() {
       };
     }
 
-    const capTimer = window.setTimeout(finish, SPLASH_MAX_MS);
+    const capTimer = window.setTimeout(finish, BOOT_MAX_MS);
 
     queries.forEach((query) => {
       queryClient
@@ -191,13 +168,9 @@ function AppWrapper() {
         .finally(() => {
           if (cancelled) return;
           settled += 1;
-          setSplashProgress(settled / queries.length);
-          if (settled < queries.length) return;
-          // All critical data is in. Hold the branded splash for a beat so it
-          // doesn't flash; on later loads just drop #boot immediately.
-          if (splashEligible) {
-            window.setTimeout(finish, SPLASH_MIN_MS);
-          } else {
+          setBootProgress(settled / queries.length);
+          if (settled >= queries.length) {
+            window.clearTimeout(capTimer);
             finish();
           }
         });
@@ -207,18 +180,10 @@ function AppWrapper() {
       cancelled = true;
       window.clearTimeout(capTimer);
     };
-  }, [reveal, splashEligible]);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {splashEligible && (
-        <SplashScreen
-          visible={splashVisible}
-          progress={splashProgress}
-          fadeOutMs={180}
-          onHidden={() => setSplashVisible(false)}
-        />
-      )}
       <RouterProvider router={router} />
     </QueryClientProvider>
   );

@@ -17,7 +17,7 @@ const container = {
   hidden: {},
   visible: {
     transition: {
-      delay: 0.5,          // wait for splash fade‑out before children animate
+      delay: 0.3,          // let the inline loader lift before children animate
       staggerChildren: 0.4 // more space between bio and newsletter
     }
   }
