@@ -23,20 +23,21 @@ export default function SplashScreen({
 }) {
   // Keep the component mounted while it is visible *or* during the fade‑out animation.
   const [isMounted, setIsMounted] = useState(true);
-  // Start with show = false for fade‑in animation
-  const [show, setShow] = useState(false);
+  // Starts visible: this component takes over from the inline #boot loader, so
+  // it must not fade in from transparent (that would flash the black backdrop).
+  const [show, setShow] = useState(visible);
 
   const pct = Math.round(Math.min(100, Math.max(0, progress * 100)));
 
-  // Compute transition duration based on direction
-  const transitionClass = show
-    ? 'duration-300'
-    : `duration-[${fadeOutMs}ms]`;
+  // Transition duration is applied inline — the previous `duration-[${ms}ms]`
+  // template literal was never detected by Tailwind's compiler, so the fade-out
+  // silently fell back to a default.
+  const transitionDuration = show ? '300ms' : `${fadeOutMs}ms`;
 
   // React to `visible` changes
   useEffect(() => {
     if (visible) {
-      setShow(true); // start fade‑in (0 → 100%)
+      setShow(true); // ensure visible during loading
     } else {
       setShow(false); // start fade‑out (100 → 0%)
       // after the CSS transition, clean up
@@ -55,17 +56,21 @@ export default function SplashScreen({
     <div
       className={`
         fixed inset-0 z-[100] flex flex-col items-center justify-center
-        bg-cover bg-center bg-black transition-opacity ${transitionClass}
+        bg-cover bg-center bg-black transition-opacity
         ${show ? 'opacity-100' : 'opacity-0'}
         ${!show ? 'pointer-events-none' : ''}
       `}
+      style={{ transitionDuration }}
 
       aria-hidden="true"
     >
       <img
         src={logo}
         alt="Logo"
-        className={`h-100 w-100 transition-opacity ${transitionClass}`}
+        width={128}
+        height={128}
+        className="h-32 w-32 transition-opacity"
+        style={{ transitionDuration }}
       />
       {/* Rotating dodecahedron – decorative loading animation */}
       <div className="mt-2" style={{ perspective: '500px' }}>

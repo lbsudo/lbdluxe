@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { siIconMap } from "@/components/icons";
 
 interface Props {
@@ -27,9 +26,10 @@ export default function SocialLink({
 
   return (
     <>
-      <Link
-        to={href}
+      <a
+        href={href}
         target={target}
+        rel="noopener noreferrer"
         aria-label={ariaLabel}
         className={"flex items-center justify-center rounded-full bg-white p-2"}
       >
@@ -49,7 +49,7 @@ export default function SocialLink({
         ) : !showImg && !IconComponent ? (
           <span>Icon not found</span>
         ) : null}
-      </Link>
+      </a>
     </>
   );
 }

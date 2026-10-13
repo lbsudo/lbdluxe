@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import LinksLayout from "@/layouts/links-layout";
 import { LinkPanel } from "@/components/pages/links/linkpanel";
@@ -21,14 +20,6 @@ export const Route = createFileRoute("/links/yt-links/")({
 });
 
 function Index() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
-
   return (
     <>
       <LinksLayout>

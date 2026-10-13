@@ -54,7 +54,7 @@ async function cachedJson(
   const res = await build()
   const cacheable = res.status >= 200 && res.status < 400
   if (cacheable) {
-    res.headers.set("Cache-Control", `public, max-age=0, must-revalidate, s-maxage=${ttl}`)
+    res.headers.set("Cache-Control", `public, max-age=0, s-maxage=${ttl}, stale-while-revalidate=${ttl * 4}`)
   }
   if (cache && cacheable) {
     try {

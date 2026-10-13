@@ -1,7 +1,5 @@
-import React from "react";
 import { siIconMap, slIconMap } from "@/components/icons";
-import * as LucideIcons from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { LucideDynamicIcon } from "@/components/icons/LucideDynamicIcon";
 
 type Props = {
   linkUrl: string;
@@ -24,12 +22,12 @@ export const LinkCardSm = ({
 }: Props) => {
   const SlIconComponent = slIconName ? slIconMap[slIconName] : undefined;
   const SiIconComponent = siIconName ? siIconMap[siIconName] : undefined;
-  const LucideIconComponent = lucIconName ? (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>>)[lucIconName.charAt(0).toUpperCase() + lucIconName.slice(1)] : undefined;
   return (
     <>
-      <Link
-        to={linkUrl}
+      <a
+        href={linkUrl}
         target="_blank"
+        rel="noopener noreferrer"
         className="relative mt-2 mb-3 flex w-1/2 items-center justify-center rounded-lg border-none bg-transparent"
       >
         <div className="relative w-full rounded-lg">
@@ -45,8 +43,9 @@ export const LinkCardSm = ({
           {/* Black overlay with 50% transparency */}
           <div className="absolute inset-0 z-3 rounded-lg bg-black/50"></div>
           <div className="absolute top-4 right-4 z-10">
-            {LucideIconComponent ? (
-              <LucideIconComponent
+            {lucIconName ? (
+              <LucideDynamicIcon
+                name={lucIconName}
                 className="h-6 w-6"
                 style={{ color: hex }}
               />
@@ -68,7 +67,7 @@ export const LinkCardSm = ({
             {title}
           </p>
         </div>
-      </Link>
+      </a>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
@@ -38,14 +38,12 @@ declare module "@tanstack/react-router" {
 // homogeneous without an `any` and the exact shape is restored at the call site.
 type CriticalQuery = object;
 
-// Queries every links.lbdluxe.com page needs before first paint. The profile
-// details, link cards, content networks and footer socials all consume these,
-// so warming them during the splash means the app renders with data present.
+// The site global and links profile/link cards are shared by every
+// links.lbdluxe.com page, so they always belong in the critical set.
 const LINK_BASE_QUERIES: CriticalQuery[] = [
   cmsSiteQuery,
   cmsLinksProfileQuery,
   cmsProfileLinksQuery,
-  cmsContentNetworksQuery,
 ];
 
 function criticalQueriesFor({
@@ -61,7 +59,13 @@ function criticalQueriesFor({
   const path = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
 
   if (host === "links.lbdluxe.com" || path.startsWith("/links")) {
-    return LINK_BASE_QUERIES;
+    // The network panels (yt/rumble) additionally need the content networks,
+    // but the base /links page does not — don't make it wait on that request.
+    const needsNetworks =
+      path.includes("yt-links") || path.includes("rumble-links");
+    return needsNetworks
+      ? [...LINK_BASE_QUERIES, cmsContentNetworksQuery]
+      : LINK_BASE_QUERIES;
   }
 
   if (path === "/") return [cmsSiteQuery, cmsPageQuery("home")];
@@ -109,90 +113,113 @@ function criticalQueriesFor({
 // Safety cap: an unhandled route, blocked request, or flaky network must never
 // leave the splash on screen forever. Queries usually settle well before this.
 const SPLASH_MAX_MS = 6000;
+// Minimum branded-splash time on the first load so a warm cache doesn't make it
+// blink in and straight back out.
+const SPLASH_MIN_MS = 450;
+
+function readSplashEligibility(): boolean {
+  try {
+    return !sessionStorage.getItem("splashShown");
+  } catch {
+    return true;
+  }
+}
+
+// Fades out and removes the inline #boot loader from index.html. It is the
+// zero-JS loading screen that covers the gap before this bundle executes.
+function removeBootLoader() {
+  const boot = document.getElementById("boot");
+  if (!boot) return;
+  boot.classList.add("is-hidden");
+  window.setTimeout(() => boot.remove(), 220);
+}
 
 function AppWrapper() {
-  const [showSplash, setShowSplash] = useState(false);
-  const [appVisible, setAppVisible] = useState(false);
+  // Branded splash is shown once per session. On later loads the inline #boot
+  // loader stays up until critical data settles, so slow loads still get a
+  // loading screen without repeating the full intro.
+  const [splashEligible] = useState(readSplashEligibility);
+  const [splashVisible, setSplashVisible] = useState(splashEligible);
   const [splashProgress, setSplashProgress] = useState(0);
 
+  const reveal = useCallback(() => {
+    if (splashEligible) {
+      setSplashVisible(false);
+    } else {
+      removeBootLoader();
+    }
+  }, [splashEligible]);
+
   useEffect(() => {
-    let cancelled = false;
-    let revealed = false;
-    let settled = 0;
-
-    let showSplashNow = false;
+    // Mark as seen immediately so a reload later in the session reads it.
     try {
-      if (!sessionStorage.getItem("splashShown")) {
-        showSplashNow = true;
-      }
+      sessionStorage.setItem("splashShown", "true");
     } catch {
-      showSplashNow = true;
+      // ignore storage failures (private mode, etc.)
     }
-
-    if (!showSplashNow) {
-      setAppVisible(true);
-      return;
-    }
-
-    // Mount the router behind the black splash immediately so the current
-    // (code-split) route starts loading and paints while the splash is up.
-    // By reveal time the page is fully rendered underneath, so the fade-out
-    // reveals real content instead of a blank white frame.
-    setAppVisible(true);
-
-    const reveal = () => {
-      if (revealed || cancelled) return;
-      revealed = true;
-      requestAnimationFrame(() => {
-        if (cancelled) return;
-        setShowSplash(false);
-      });
-      try {
-        sessionStorage.setItem("splashShown", "true");
-      } catch (err) {
-        console.error(err);
-      }
-    };
 
     const queries = criticalQueriesFor(window.location);
+    let cancelled = false;
+    let settled = 0;
+    let revealed = false;
 
-    setShowSplash(true);
-    if (queries.length === 0) {
+    const finish = () => {
+      if (revealed || cancelled) return;
+      revealed = true;
       reveal();
-      return;
+    };
+
+    // First load: the branded splash replaces #boot right away (identical
+    // black background, so the hand-off is invisible).
+    if (splashEligible) {
+      requestAnimationFrame(removeBootLoader);
     }
 
-    // No-minimum reveal: the splash hides the moment every critical query has
-    // settled. This fires only as a last resort if a query hangs.
-    const capTimer = setTimeout(reveal, SPLASH_MAX_MS);
+    if (queries.length === 0) {
+      finish();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const capTimer = window.setTimeout(finish, SPLASH_MAX_MS);
 
     queries.forEach((query) => {
       queryClient
         .prefetchQuery(query as Parameters<QueryClient["prefetchQuery"]>[0])
         .catch(() => {})
         .finally(() => {
+          if (cancelled) return;
           settled += 1;
           setSplashProgress(settled / queries.length);
+          if (settled < queries.length) return;
+          // All critical data is in. Hold the branded splash for a beat so it
+          // doesn't flash; on later loads just drop #boot immediately.
+          if (splashEligible) {
+            window.setTimeout(finish, SPLASH_MIN_MS);
+          } else {
+            finish();
+          }
         });
     });
 
     return () => {
       cancelled = true;
-      clearTimeout(capTimer);
+      window.clearTimeout(capTimer);
     };
-  }, []);
+  }, [reveal, splashEligible]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SplashScreen
-        visible={showSplash}
-        progress={splashProgress}
-        fadeOutMs={180}
-        onHidden={() => {
-          setAppVisible(true);
-        }}
-      />
-      {appVisible && <RouterProvider router={router} />}
+      {splashEligible && (
+        <SplashScreen
+          visible={splashVisible}
+          progress={splashProgress}
+          fadeOutMs={180}
+          onHidden={() => setSplashVisible(false)}
+        />
+      )}
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

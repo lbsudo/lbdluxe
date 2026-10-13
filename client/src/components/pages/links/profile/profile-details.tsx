@@ -1,10 +1,59 @@
 import { useCMSLinksProfile } from "@/hooks/server/cms/GET/useCMSLinksProfile";
 import SocialLinks from "./SocialLinks/SocialLinks";
 import proPic from "../../../../assets/proPic-500x500.png";
+import proPicWebp from "../../../../assets/proPic-hero.webp";
+import proPicAvif from "../../../../assets/proPic-hero.avif";
 import checkmark from "../../../../assets/checkmark.svg";
 
 interface ProfileDetailsProps {
   imagePosition?: "fixed" | "relative" | "behind-panel";
+}
+
+/**
+ * Renders the profile hero. When the CMS provides an image we use it directly
+ * (the API has no transform params); otherwise we fall back to the local
+ * optimized variant set — AVIF/WebP are ~30 KB vs ~615 KB for the bundled PNG.
+ */
+function HeroImage({
+  src,
+  className,
+  style,
+}: {
+  src?: string | null;
+  className: string;
+  style: React.CSSProperties;
+}) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={"Profile Picture"}
+        height={500}
+        width={500}
+        decoding="async"
+        fetchPriority="high"
+        className={className}
+        style={style}
+      />
+    );
+  }
+
+  return (
+    <picture>
+      <source srcSet={proPicAvif} type="image/avif" />
+      <source srcSet={proPicWebp} type="image/webp" />
+      <img
+        src={proPic}
+        alt={"Profile Picture"}
+        height={500}
+        width={500}
+        decoding="async"
+        fetchPriority="high"
+        className={className}
+        style={style}
+      />
+    </picture>
+  );
 }
 
 export const ProfileDetails = ({
@@ -12,22 +61,21 @@ export const ProfileDetails = ({
 }: ProfileDetailsProps) => {
   const { data: profile } = useCMSLinksProfile();
 
+  const focalStyle: React.CSSProperties = {
+    objectPosition: profile?.profileImage?.focalPoint
+      ? `${profile.profileImage.focalPoint.x * 100}% ${profile.profileImage.focalPoint.y * 100}%`
+      : "center",
+  };
+
   if (imagePosition === "relative") {
     return (
       <>
         <div className="flex w-full max-w-sm flex-col items-center">
           <div className="flex w-full justify-center">
-            <img
-              src={profile?.profileImage?.url ?? proPic}
-              alt={"Profile Picture"}
-              height={500}
-              width={500}
+            <HeroImage
+              src={profile?.profileImage?.url}
               className={"rounded-2xl object-cover w-auto"}
-              style={{
-                objectPosition: profile?.profileImage?.focalPoint
-                  ? `${profile.profileImage.focalPoint.x * 100}% ${profile.profileImage.focalPoint.y * 100}%`
-                  : "center",
-              }}
+              style={focalStyle}
             />
           </div>
         </div>
@@ -62,17 +110,10 @@ export const ProfileDetails = ({
     return (
       <div className="relative w-full max-w-sm md:max-w-md">
         <div className="absolute left-0 right-0 top-0 z-1 h-[500px]">
-          <img
-            src={profile?.profileImage?.url ?? proPic}
-            alt={"Profile Picture"}
-            height={500}
-            width={500}
+          <HeroImage
+            src={profile?.profileImage?.url}
             className={"h-full w-full rounded-t-3xl object-cover"}
-            style={{
-              objectPosition: profile?.profileImage?.focalPoint
-                ? `${profile.profileImage.focalPoint.x * 100}% ${profile.profileImage.focalPoint.y * 100}%`
-                : "center",
-            }}
+            style={focalStyle}
           />
         </div>
         <div className="absolute left-0 right-0 top-0 z-2 h-[500px] bg-gradient-to-b from-black/60 to-transparent" />
@@ -105,19 +146,10 @@ export const ProfileDetails = ({
     <>
       <div className="fixed top-0 z-1 left-1/2 -translate-x-1/2 flex w-[calc(100%-2rem)] max-w-[352px] justify-center md:top-8 md:max-w-[416px]">
         <div className="relative w-full">
-          <img
-            src={profile?.profileImage?.url ?? proPic}
-            alt={"Profile Picture"}
-            height={500}
-            width={500}
-            className={
-              "w-full rounded-none object-cover md:rounded-2xl"
-            }
-            style={{
-              objectPosition: profile?.profileImage?.focalPoint
-                ? `${profile.profileImage.focalPoint.x * 100}% ${profile.profileImage.focalPoint.y * 100}%`
-                : "center",
-            }}
+          <HeroImage
+            src={profile?.profileImage?.url}
+            className={"w-full rounded-none object-cover md:rounded-2xl"}
+            style={focalStyle}
           />
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black to-transparent pointer-events-none md:rounded-b-2xl" />
         </div>
@@ -148,4 +180,3 @@ export const ProfileDetails = ({
     </>
   );
 };
-

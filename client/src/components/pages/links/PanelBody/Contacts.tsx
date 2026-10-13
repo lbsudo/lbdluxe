@@ -17,7 +17,12 @@ export const Contacts = () => {
           </div>
           <div className={"flex items-center gap-2"}>
             <FaEnvelope className={"h-5 w-5 text-white"} />
-            <a className={"text-lg font-bold"}>lbsudo100@gmail.com</a>
+            <a
+              href={"mailto:lbsudo100@gmail.com"}
+              className={"text-lg font-bold"}
+            >
+              lbsudo100@gmail.com
+            </a>
           </div>
         </CardContent>
       </Card>

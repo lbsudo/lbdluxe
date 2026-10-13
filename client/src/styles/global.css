@@ -1,8 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import "tailwindcss";
 @import "./switzer.css";
 
 @import "tw-animate-css";
+
+/*
+ * Bebas Neue is self-hosted (was previously loaded both here via @import and as
+ * a <link> in index.html, costing two render-blocking third-party round trips).
+ * woff2 only — every browser we target supports it.
+ */
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/bebas/BebasNeue-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/bebas/BebasNeue-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -150,4 +175,80 @@
 .poly-spin {
   animation: poly-spin 2.5s linear infinite;
   transform-style: preserve-3d;
+}
+
+/*
+ * CSS-only replacements for the framer-motion primitives used on the links
+ * pages. Keeping framer off the links critical path removes ~150 KB (gzip) from
+ * first paint; the main site still uses framer-motion where it wants richer
+ * choreography.
+ */
+@keyframes lbd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.motion-up {
+  animation: lbd-fade-up 0.5s ease-out both;
+}
+
+@property --lbd-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes lbd-border-spin {
+  to {
+    --lbd-angle: 360deg;
+  }
+}
+.lbd-border-gradient {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+}
+.lbd-border-gradient__glow {
+  position: absolute;
+  inset: -100%;
+  z-index: 0;
+  background: conic-gradient(
+    from var(--lbd-angle),
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.9) 60deg,
+    rgba(50, 117, 248, 0.9) 120deg,
+    rgba(255, 255, 255, 0) 180deg
+  );
+  animation-name: lbd-border-spin;
+  animation-duration: var(--lbd-spin-duration, 3s);
+  animation-direction: var(--lbd-spin-direction, normal);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.lbd-border-gradient__content {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: #000;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-up,
+  .lbd-border-gradient__glow {
+    animation: none;
+  }
 }

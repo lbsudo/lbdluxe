@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 // import { Loader } from 'lucide-react'
 import LinksLayout from "@/layouts/links-layout";
@@ -21,14 +20,6 @@ export const Route = createFileRoute("/links/")({
 });
 
 function Index() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
-
   return (
     <>
       <LinksLayout>

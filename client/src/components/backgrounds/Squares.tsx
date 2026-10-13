@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 interface SquaresProps {
   direction?: 'right' | 'left' | 'up' | 'down' | 'diagonal';
@@ -26,15 +26,19 @@ const Squares: React.FC<SquaresProps> = ({
   const numSquaresX = useRef<number>(0);
   const numSquaresY = useRef<number>(0);
   const gridOffset = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [hoveredSquare, setHoveredSquare] = useState<HoveredSquare | null>(
-    null,
-  );
+  // Held in a ref (not state) so moving the mouse no longer re-runs the whole
+  // effect — previously every mousemove tore down and rebuilt the rAF loop.
+  const hoveredSquare = useRef<HoveredSquare | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth; // Set canvas width to full viewport
@@ -59,9 +63,9 @@ const Squares: React.FC<SquaresProps> = ({
 
           // Handle hover effect
           if (
-            hoveredSquare &&
-            Math.floor((x - startX) / squareSize) === hoveredSquare.x &&
-            Math.floor((y - startY) / squareSize) === hoveredSquare.y
+            hoveredSquare.current &&
+            Math.floor((x - startX) / squareSize) === hoveredSquare.current.x &&
+            Math.floor((y - startY) / squareSize) === hoveredSquare.current.y
           ) {
             ctx.fillStyle = hoverFillColor;
             ctx.fillRect(squareX, squareY, squareSize, squareSize);
@@ -136,32 +140,55 @@ const Squares: React.FC<SquaresProps> = ({
         (mouseY + gridOffset.current.y - startY) / squareSize,
       );
 
-      setHoveredSquare({ x: hoveredSquareX, y: hoveredSquareY });
+      // Cheap ref write; the running draw loop picks it up on the next frame.
+      hoveredSquare.current = { x: hoveredSquareX, y: hoveredSquareY };
     };
 
     const handleMouseLeave = () => {
-      setHoveredSquare(null);
+      hoveredSquare.current = null;
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
 
-    requestRef.current = requestAnimationFrame(updateAnimation);
+    const start = () => {
+      if (prefersReducedMotion) {
+        // Respect the user's preference: render one static frame, don't animate.
+        drawGrid();
+        return;
+      }
+      if (requestRef.current == null) {
+        requestRef.current = requestAnimationFrame(updateAnimation);
+      }
+    };
+
+    const stop = () => {
+      if (requestRef.current != null) {
+        cancelAnimationFrame(requestRef.current);
+        requestRef.current = null;
+      }
+    };
+
+    // Don't burn CPU/battery animating a canvas nobody can see.
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    };
+
+    start();
+    document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      stop();
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [
-    direction,
-    speed,
-    borderColor,
-    hoverFillColor,
-    hoveredSquare,
-    squareSize,
-  ]);
+  }, [direction, speed, borderColor, hoverFillColor, squareSize]);
 
   return (
     <div

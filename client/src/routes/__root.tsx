@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/global/constants/theme/use-themes";
 import { AppToaster } from "@/components/global/constants/AppToaster";
+import { lazy, Suspense } from "react";
 import {
   createRootRoute,
   redirect,
@@ -7,7 +8,16 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+
+// The router devtools must never enter the production bundle. Gating on
+// import.meta.env.DEV lets Rollup drop the dynamic import entirely for prod.
+const TanStackRouterDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import("@tanstack/react-router-devtools").then((m) => ({
+        default: m.TanStackRouterDevtools,
+      })),
+    )
+  : () => null;
 
 export const Route = createRootRoute({
   beforeLoad: () => {
@@ -35,7 +45,11 @@ export const Route = createRootRoute({
         <HeadContent />
         <Outlet />
         <AppToaster />
-        <TanStackRouterDevtools />
+        {import.meta.env.DEV && (
+          <Suspense fallback={null}>
+            <TanStackRouterDevtools />
+          </Suspense>
+        )}
       </ThemeProvider>
       <Scripts />
     </>
