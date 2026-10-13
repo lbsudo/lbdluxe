@@ -136,7 +136,7 @@ export function ProductDetail({ product }: { product: CMSFitnessProduct }) {
 
           {product.disclaimer && (
             <div className="border-t pt-4 text-xs text-muted-foreground">
-              <div className="prose prose-xs dark:prose-invert max-w-none">
+              <div className="prose prose-sm dark:prose-invert max-w-none">
                 <div dangerouslySetInnerHTML={{ __html: product.disclaimer }} />
               </div>
             </div>

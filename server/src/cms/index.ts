@@ -143,7 +143,11 @@ function convertRichTextFields(
     const result: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(obj)) {
       if (
-        (key === "richText" || key === "content" || key === "review" || key === "disclaimer") &&
+        (key === "richText" ||
+          key === "content" ||
+          key === "description" ||
+          key === "review" ||
+          key === "disclaimer") &&
         value &&
         typeof value === "object" &&
         "root" in (value as Record<string, unknown>)
