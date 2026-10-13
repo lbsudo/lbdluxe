@@ -35,7 +35,7 @@ export function ProductDetail({ product }: { product: CMSFitnessProduct }) {
     .map((r) => REGION_LABELS[r] ?? r)
 
   return (
-    <AgeGate>
+    <AgeGate enabled={Boolean(product.ageRestricted)}>
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 p-4 md:flex-row">
         <div className="w-full shrink-0 md:w-1/2">
           <div className="aspect-square overflow-hidden rounded-lg border bg-muted">

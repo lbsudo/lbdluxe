@@ -7,17 +7,25 @@ const STORAGE_KEY = "lbd-fitness-age-ack"
 /**
  * Blocks age-restricted product content until the visitor confirms they are of
  * age. Acknowledgement is remembered in localStorage so it's asked only once.
+ * Set `enabled` to false for products that aren't age-restricted.
  */
-export function AgeGate({ children }: { children: ReactNode }) {
+export function AgeGate({
+  children,
+  enabled = true,
+}: {
+  children: ReactNode
+  enabled?: boolean
+}) {
   const [acknowledged, setAcknowledged] = useState<boolean | null>(null)
 
   useEffect(() => {
+    if (!enabled) return
     try {
       setAcknowledged(window.localStorage.getItem(STORAGE_KEY) === "1")
     } catch {
       setAcknowledged(false)
     }
-  }, [])
+  }, [enabled])
 
   const confirm = () => {
     try {
@@ -31,6 +39,8 @@ export function AgeGate({ children }: { children: ReactNode }) {
   const decline = () => {
     window.location.href = "https://lbdluxe.com"
   }
+
+  if (!enabled) return <>{children}</>
 
   if (acknowledged === null) return null
 
