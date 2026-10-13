@@ -90,7 +90,8 @@
        * The single loading screen. It is pure HTML/CSS and paints with the
        * document, long before the React bundle parses, so there is never a white
        * flash or a second (spinner) screen. Layout: LB monogram -> rotating
-       * dodecahedron -> progress bar. main.tsx only feeds the bar and removes it.
+       * wireframe octahedron -> progress bar. main.tsx only feeds the bar and
+       * removes it.
        */
       html,
       body {
@@ -127,9 +128,10 @@
       }
 
       /*
-       * Rotating dodecahedron. Every measurement is expressed in `em` against the
-       * container's font-size, so the whole shape resizes by changing one value
-       * (font-size). 12 faces are composited on the GPU by a single rotating
+       * Rotating wireframe octahedron. Every measurement is expressed in `em`
+       * against the container's font-size, so the whole shape resizes by changing
+       * one value (font-size). 12 edges (uniform length R*sqrt(2), with R the
+       * center-to-vertex radius) are composited on the GPU by a single rotating
        * parent; transform-style keeps them in 3D.
        */
       #boot .poly {
@@ -137,7 +139,7 @@
         width: 1em;
         height: 1em;
         margin-top: 20px;
-        font-size: 120px;
+        font-size: 80px;
         perspective: 8.928571em; /* 500px at the original 56px design */
       }
 
@@ -149,65 +151,53 @@
         will-change: transform;
       }
 
-      #boot .poly .face {
+      #boot .poly .edge {
         position: absolute;
         left: 50%;
         top: 50%;
-        width: 0.642857em;
-        height: 0.616071em;
-        margin-left: -0.321429em;
-        margin-top: -0.308929em;
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0.4);
+        width: 0.7071em;
+        height: 0.0156em;
+        margin-left: -0.35355em;
+        margin-top: -0.0078em;
+        border-radius: 0.0156em;
+        background: #fff;
       }
 
-      #boot .poly .face:nth-child(1) {
-        clip-path: polygon(0.053571em 0.248214em, 0.589286em 0.248214em, 0.321429em 0.053571em, 0.155357em 0.5625em, 0.4875em 0.5625em);
-        transform: matrix3d(1, 0, 0, 0, 0, -0.5257, 0.8507, 0, 0, -0.8507, -0.5257, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(1) {
+        transform: translate3d(0.25em, -0.25em, 0) rotateZ(45deg);
       }
-      #boot .poly .face:nth-child(2) {
-        clip-path: polygon(0.053571em 0.367857em, 0.589286em 0.367857em, 0.321429em 0.5625em, 0.155357em 0.053571em, 0.4875em 0.053571em);
-        transform: matrix3d(1, 0, 0, 0, 0, 0.5257, 0.8507, 0, 0, -0.8507, 0.5257, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(2) {
+        transform: translate3d(0, -0.25em, 0.25em) rotateZ(90deg) rotateY(-45deg);
       }
-      #boot .poly .face:nth-child(3) {
-        clip-path: polygon(0.053571em 0.367857em, 0.589286em 0.367857em, 0.321429em 0.5625em, 0.155357em 0.053571em, 0.4875em 0.053571em);
-        transform: matrix3d(1, 0, 0, 0, 0, -0.5257, -0.8507, 0, 0, 0.8507, -0.5257, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(3) {
+        transform: translate3d(-0.25em, -0.25em, 0) rotateZ(135deg);
       }
-      #boot .poly .face:nth-child(4) {
-        clip-path: polygon(0.053571em 0.248214em, 0.589286em 0.248214em, 0.321429em 0.053571em, 0.155357em 0.5625em, 0.4875em 0.5625em);
-        transform: matrix3d(1, 0, 0, 0, 0, 0.5257, -0.8507, 0, 0, 0.8507, 0.5257, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(4) {
+        transform: translate3d(0, -0.25em, -0.25em) rotateZ(90deg) rotateY(45deg);
       }
-      #boot .poly .face:nth-child(5) {
-        clip-path: polygon(0.053571em 0.248214em, 0.589286em 0.248214em, 0.321429em 0.053571em, 0.155357em 0.5625em, 0.4875em 0.5625em);
-        transform: matrix3d(0, 0, 1, 0, -0.5257, 0.8507, 0, 0, -0.8507, -0.5257, 0, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(5) {
+        transform: translate3d(0.25em, 0.25em, 0) rotateZ(-45deg);
       }
-      #boot .poly .face:nth-child(6) {
-        clip-path: polygon(0.053571em 0.367857em, 0.589286em 0.367857em, 0.321429em 0.5625em, 0.155357em 0.053571em, 0.4875em 0.053571em);
-        transform: matrix3d(0, 0, 1, 0, 0.5257, 0.8507, 0, 0, -0.8507, 0.5257, 0, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(6) {
+        transform: translate3d(0, 0.25em, 0.25em) rotateZ(-90deg) rotateY(-45deg);
       }
-      #boot .poly .face:nth-child(7) {
-        clip-path: polygon(0.053571em 0.367857em, 0.589286em 0.367857em, 0.321429em 0.5625em, 0.155357em 0.053571em, 0.4875em 0.053571em);
-        transform: matrix3d(0, 0, 1, 0, -0.5257, -0.8507, 0, 0, 0.8507, -0.5257, 0, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(7) {
+        transform: translate3d(-0.25em, 0.25em, 0) rotateZ(-135deg);
       }
-      #boot .poly .face:nth-child(8) {
-        clip-path: polygon(0.053571em 0.248214em, 0.589286em 0.248214em, 0.321429em 0.053571em, 0.155357em 0.5625em, 0.4875em 0.5625em);
-        transform: matrix3d(0, 0, 1, 0, 0.5257, -0.8507, 0, 0, 0.8507, 0.5257, 0, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(8) {
+        transform: translate3d(0, 0.25em, -0.25em) rotateZ(-90deg) rotateY(45deg);
       }
-      #boot .poly .face:nth-child(9) {
-        clip-path: polygon(0.053571em 0.248214em, 0.589286em 0.248214em, 0.155357em 0.5625em, 0.4875em 0.5625em, 0.321429em 0.053571em);
-        transform: matrix3d(0, 1, 0, 0, 0.8507, 0, -0.5257, 0, -0.5257, 0, -0.8507, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(9) {
+        transform: translate3d(0.25em, 0, 0.25em) rotateZ(180deg) rotateY(-45deg);
       }
-      #boot .poly .face:nth-child(10) {
-        clip-path: polygon(0.053571em 0.367857em, 0.589286em 0.367857em, 0.155357em 0.053571em, 0.4875em 0.053571em, 0.321429em 0.5625em);
-        transform: matrix3d(0, 1, 0, 0, 0.8507, 0, 0.5257, 0, 0.5257, 0, -0.8507, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(10) {
+        transform: translate3d(-0.25em, 0, 0.25em) rotateZ(180deg) rotateY(45deg);
       }
-      #boot .poly .face:nth-child(11) {
-        clip-path: polygon(0.053571em 0.367857em, 0.589286em 0.367857em, 0.155357em 0.053571em, 0.4875em 0.053571em, 0.321429em 0.5625em);
-        transform: matrix3d(0, 1, 0, 0, -0.8507, 0, -0.5257, 0, -0.5257, 0, 0.8507, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(11) {
+        transform: translate3d(-0.25em, 0, -0.25em) rotateY(45deg);
       }
-      #boot .poly .face:nth-child(12) {
-        clip-path: polygon(0.053571em 0.248214em, 0.589286em 0.248214em, 0.155357em 0.5625em, 0.4875em 0.5625em, 0.321429em 0.053571em);
-        transform: matrix3d(0, 1, 0, 0, -0.8507, 0, 0.5257, 0, 0.5257, 0, 0.8507, 0, 0, 0, 0, 1) translateZ(0.367857em);
+      #boot .poly .edge:nth-child(12) {
+        transform: translate3d(0.25em, 0, -0.25em) rotateY(-45deg);
       }
 
       @keyframes poly-spin {
@@ -283,18 +273,18 @@
       </svg>
       <div class="poly" aria-hidden="true">
         <div class="poly-inner">
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
-          <div class="face"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
+          <div class="edge"></div>
         </div>
       </div>
       <div class="bar">
