@@ -2,6 +2,7 @@
 import { Hono } from "hono";
 import { Resend } from "resend";
 import { addResendContact } from "./add-resend-contact";
+import { addWaitlistContact } from "./add-waitlist-contact";
 import { getResendContacts } from "./get-all-resend-contacts";
 import { getSegments } from "./get-segments";
 import { resendMiddleware } from "../middleware/resend";
@@ -24,5 +25,6 @@ resendRoutes.use("*", resendMiddleware);
 
 // Mount routes
 resendRoutes.post("/add-resend-contact", addResendContact);
+resendRoutes.post("/add-waitlist-contact", addWaitlistContact);
 resendRoutes.get("/get-resend-contacts", getResendContacts);
 resendRoutes.get("/segments", getSegments);

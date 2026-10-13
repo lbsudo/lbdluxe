@@ -143,7 +143,7 @@ function convertRichTextFields(
     const result: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(obj)) {
       if (
-        (key === "richText" || key === "content" || key === "review") &&
+        (key === "richText" || key === "content" || key === "review" || key === "disclaimer") &&
         value &&
         typeof value === "object" &&
         "root" in (value as Record<string, unknown>)
@@ -290,6 +290,27 @@ cmsRoutes.get("/content-network", (c) =>
 cmsRoutes.get("/digital-products", (c) =>
   fetchCms(c, TTL_BY_MINUTE.list, `/api/digital-products?depth=3&where[_status][equals]=published&sort=-featured,order&limit=50`),
 )
+
+// Fitness shop. `type` is the category (program | supplement | peptide); omit it
+// to fetch the whole catalog.
+cmsRoutes.get("/fitness-products", (c) => {
+  const type = c.req.query("type")
+  const typeFilter = type ? `&where[type][equals]=${encodeURIComponent(type)}` : ""
+  return fetchCms(
+    c,
+    TTL_BY_MINUTE.list,
+    `/api/fitness-products?depth=3&where[_status][equals]=published&sort=-featured,order&limit=100${typeFilter}`,
+  )
+})
+
+cmsRoutes.get("/fitness-products/:slug", (c) => {
+  const slug = c.req.param("slug")
+  return firstDoc(
+    c,
+    TTL_BY_MINUTE.single,
+    `/api/fitness-products?depth=3&where[_status][equals]=published&where[slug][equals]=${encodeURIComponent(slug)}`,
+  )
+})
 
 cmsRoutes.get("/links-profile", (c) =>
   firstDoc(c, TTL_BY_MINUTE.profile, `/api/links-profile?depth=3&limit=1`),

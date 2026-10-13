@@ -13,14 +13,19 @@ import { Route as WorksRouteImport } from './routes/works'
 import { Route as ShelfItemsRouteImport } from './routes/shelf-items'
 import { Route as ShelfRouteImport } from './routes/shelf'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as FitnessRouteImport } from './routes/fitness'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LinksIndexRouteImport } from './routes/links/index'
+import { Route as FitnessIndexRouteImport } from './routes/fitness.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShelfItemsSlugRouteImport } from './routes/shelf-items.$slug'
+import { Route as FitnessTypeRouteImport } from './routes/fitness.$type'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as LinksYtLinksIndexRouteImport } from './routes/links/yt-links/index'
 import { Route as LinksRumbleLinksIndexRouteImport } from './routes/links/rumble-links/index'
+import { Route as FitnessTypeIndexRouteImport } from './routes/fitness.$type.index'
+import { Route as FitnessTypeSlugRouteImport } from './routes/fitness.$type.$slug'
 import { Route as AdminBaseNewsletterSubsRouteImport } from './routes/admin/base/newsletter-subs'
 
 const WorksRoute = WorksRouteImport.update({
@@ -43,6 +48,11 @@ const ProductsRoute = ProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FitnessRoute = FitnessRouteImport.update({
+  id: '/fitness',
+  path: '/fitness',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -52,6 +62,11 @@ const LinksIndexRoute = LinksIndexRouteImport.update({
   id: '/links/',
   path: '/links/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const FitnessIndexRoute = FitnessIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FitnessRoute,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
@@ -68,6 +83,11 @@ const ShelfItemsSlugRoute = ShelfItemsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ShelfItemsRoute,
 } as any)
+const FitnessTypeRoute = FitnessTypeRouteImport.update({
+  id: '/$type',
+  path: '/$type',
+  getParentRoute: () => FitnessRoute,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -83,6 +103,16 @@ const LinksRumbleLinksIndexRoute = LinksRumbleLinksIndexRouteImport.update({
   path: '/links/rumble-links/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FitnessTypeIndexRoute = FitnessTypeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FitnessTypeRoute,
+} as any)
+const FitnessTypeSlugRoute = FitnessTypeSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => FitnessTypeRoute,
+} as any)
 const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
   id: '/admin/base/newsletter-subs',
   path: '/admin/base/newsletter-subs',
@@ -91,16 +121,21 @@ const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fitness': typeof FitnessRouteWithChildren
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
   '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/fitness/$type': typeof FitnessTypeRouteWithChildren
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/fitness/': typeof FitnessIndexRoute
   '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
+  '/fitness/$type/$slug': typeof FitnessTypeSlugRoute
+  '/fitness/$type/': typeof FitnessTypeIndexRoute
   '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links/': typeof LinksYtLinksIndexRoute
 }
@@ -114,24 +149,32 @@ export interface FileRoutesByTo {
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/fitness': typeof FitnessIndexRoute
   '/links': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
+  '/fitness/$type/$slug': typeof FitnessTypeSlugRoute
+  '/fitness/$type': typeof FitnessTypeIndexRoute
   '/links/rumble-links': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links': typeof LinksYtLinksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fitness': typeof FitnessRouteWithChildren
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
   '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/fitness/$type': typeof FitnessTypeRouteWithChildren
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/fitness/': typeof FitnessIndexRoute
   '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
+  '/fitness/$type/$slug': typeof FitnessTypeSlugRoute
+  '/fitness/$type/': typeof FitnessTypeIndexRoute
   '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links/': typeof LinksYtLinksIndexRoute
 }
@@ -139,16 +182,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/fitness'
     | '/products'
     | '/shelf'
     | '/shelf-items'
     | '/works'
     | '/blog/$slug'
+    | '/fitness/$type'
     | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
+    | '/fitness/'
     | '/links/'
     | '/admin/base/newsletter-subs'
+    | '/fitness/$type/$slug'
+    | '/fitness/$type/'
     | '/links/rumble-links/'
     | '/links/yt-links/'
   fileRoutesByTo: FileRoutesByTo
@@ -162,29 +210,38 @@ export interface FileRouteTypes {
     | '/shelf-items/$slug'
     | '/admin'
     | '/blog'
+    | '/fitness'
     | '/links'
     | '/admin/base/newsletter-subs'
+    | '/fitness/$type/$slug'
+    | '/fitness/$type'
     | '/links/rumble-links'
     | '/links/yt-links'
   id:
     | '__root__'
     | '/'
+    | '/fitness'
     | '/products'
     | '/shelf'
     | '/shelf-items'
     | '/works'
     | '/blog/$slug'
+    | '/fitness/$type'
     | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
+    | '/fitness/'
     | '/links/'
     | '/admin/base/newsletter-subs'
+    | '/fitness/$type/$slug'
+    | '/fitness/$type/'
     | '/links/rumble-links/'
     | '/links/yt-links/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FitnessRoute: typeof FitnessRouteWithChildren
   ProductsRoute: typeof ProductsRoute
   ShelfRoute: typeof ShelfRoute
   ShelfItemsRoute: typeof ShelfItemsRouteWithChildren
@@ -228,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fitness': {
+      id: '/fitness'
+      path: '/fitness'
+      fullPath: '/fitness'
+      preLoaderRoute: typeof FitnessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -241,6 +305,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/links/'
       preLoaderRoute: typeof LinksIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/fitness/': {
+      id: '/fitness/'
+      path: '/'
+      fullPath: '/fitness/'
+      preLoaderRoute: typeof FitnessIndexRouteImport
+      parentRoute: typeof FitnessRoute
     }
     '/blog/': {
       id: '/blog/'
@@ -263,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShelfItemsSlugRouteImport
       parentRoute: typeof ShelfItemsRoute
     }
+    '/fitness/$type': {
+      id: '/fitness/$type'
+      path: '/$type'
+      fullPath: '/fitness/$type'
+      preLoaderRoute: typeof FitnessTypeRouteImport
+      parentRoute: typeof FitnessRoute
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -284,6 +362,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LinksRumbleLinksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fitness/$type/': {
+      id: '/fitness/$type/'
+      path: '/'
+      fullPath: '/fitness/$type/'
+      preLoaderRoute: typeof FitnessTypeIndexRouteImport
+      parentRoute: typeof FitnessTypeRoute
+    }
+    '/fitness/$type/$slug': {
+      id: '/fitness/$type/$slug'
+      path: '/$slug'
+      fullPath: '/fitness/$type/$slug'
+      preLoaderRoute: typeof FitnessTypeSlugRouteImport
+      parentRoute: typeof FitnessTypeRoute
+    }
     '/admin/base/newsletter-subs': {
       id: '/admin/base/newsletter-subs'
       path: '/admin/base/newsletter-subs'
@@ -293,6 +385,33 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface FitnessTypeRouteChildren {
+  FitnessTypeSlugRoute: typeof FitnessTypeSlugRoute
+  FitnessTypeIndexRoute: typeof FitnessTypeIndexRoute
+}
+
+const FitnessTypeRouteChildren: FitnessTypeRouteChildren = {
+  FitnessTypeSlugRoute: FitnessTypeSlugRoute,
+  FitnessTypeIndexRoute: FitnessTypeIndexRoute,
+}
+
+const FitnessTypeRouteWithChildren = FitnessTypeRoute._addFileChildren(
+  FitnessTypeRouteChildren,
+)
+
+interface FitnessRouteChildren {
+  FitnessTypeRoute: typeof FitnessTypeRouteWithChildren
+  FitnessIndexRoute: typeof FitnessIndexRoute
+}
+
+const FitnessRouteChildren: FitnessRouteChildren = {
+  FitnessTypeRoute: FitnessTypeRouteWithChildren,
+  FitnessIndexRoute: FitnessIndexRoute,
+}
+
+const FitnessRouteWithChildren =
+  FitnessRoute._addFileChildren(FitnessRouteChildren)
 
 interface ShelfItemsRouteChildren {
   ShelfItemsSlugRoute: typeof ShelfItemsSlugRoute
@@ -308,6 +427,7 @@ const ShelfItemsRouteWithChildren = ShelfItemsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FitnessRoute: FitnessRouteWithChildren,
   ProductsRoute: ProductsRoute,
   ShelfRoute: ShelfRoute,
   ShelfItemsRoute: ShelfItemsRouteWithChildren,

@@ -90,6 +90,11 @@ export function ControlBarModal() {
       icon: <SquareArrowOutUpRight className="size-5 ml-2" />,
       onClick: () => window.open('https://links.lbdluxe.com', '_blank'),
     },
+    {
+      label: 'shop.lbdluxe.com',
+      icon: <SquareArrowOutUpRight className="size-5 ml-2" />,
+      onClick: () => window.open('https://shop.lbdluxe.com', '_blank'),
+    },
   ]
 
   return (

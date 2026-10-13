@@ -3,6 +3,7 @@
 # blocking high-volume crawlers that add nothing but cost.
 
 Sitemap: https://lbdluxe.com/sitemap.xml
+Sitemap: https://shop.lbdluxe.com/sitemap-shop.xml
 
 # --- Search engines & indexes (keep) ---
 User-agent: Googlebot

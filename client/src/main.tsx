@@ -12,6 +12,11 @@ import { cmsPostQuery } from "@/hooks/server/cms/GET/useCMSPost";
 import { cmsShelfCategoriesQuery } from "@/hooks/server/cms/GET/useCMSShelfCategories";
 import { cmsDigitalProductsQuery } from "@/hooks/server/cms/GET/useCMSDigitalProducts";
 import {
+  cmsFitnessProductQuery,
+  cmsFitnessProductsQuery,
+  type FitnessProductType,
+} from "@/hooks/server/cms/GET/useCMSFitnessProducts";
+import {
   cmsShelfItemQuery,
   cmsShelfItemsQuery,
 } from "@/hooks/server/cms/GET/useCMSShelfItems";
@@ -36,6 +41,8 @@ declare module "@tanstack/react-router" {
 // fully-typed UseQueryOptions<T>; `object` keeps the heterogeneous list
 // homogeneous without an `any` and the exact shape is restored at the call site.
 type CriticalQuery = object;
+
+const FITNESS_TYPES = ["program", "supplement", "peptide"];
 
 // The site global and links profile/link cards are shared by every
 // links.lbdluxe.com page, so they always belong in the critical set.
@@ -67,10 +74,23 @@ function criticalQueriesFor({
       : LINK_BASE_QUERIES;
   }
 
-  if (path === "/") return [cmsSiteQuery, cmsPageQuery("home")];
+  if (path === "/" && host !== "shop.lbdluxe.com") return [cmsSiteQuery, cmsPageQuery("home")];
   if (path === "/works") return [cmsSiteQuery, cmsPageQuery("works")];
   if (path === "/products")
     return [cmsSiteQuery, cmsPageQuery("products"), cmsDigitalProductsQuery];
+
+  // Shop lives on shop.lbdluxe.com (which redirects "/" to /fitness) and at
+  // /fitness on the main host.
+  if (host === "shop.lbdluxe.com" || path === "/fitness" || path.startsWith("/fitness/")) {
+    if (path.startsWith("/fitness/")) {
+      const rest = path.slice("/fitness/".length);
+      const [type, slug] = rest.split("/");
+      if (slug) return [cmsSiteQuery, cmsFitnessProductQuery(decodeURIComponent(slug))];
+      if (FITNESS_TYPES.includes(type))
+        return [cmsSiteQuery, cmsFitnessProductsQuery(type as FitnessProductType)];
+    }
+    return [cmsSiteQuery, cmsFitnessProductsQuery()];
+  }
 
   if (path === "/shelf") {
     const rawCategory = new URLSearchParams(search).get("category");

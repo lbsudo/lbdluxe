@@ -26,6 +26,9 @@ export const Route = createRootRoute({
       if (host === "links.lbdluxe.com" && window.location.pathname === "/") {
         throw redirect({ to: "/links" });
       }
+      if (host === "shop.lbdluxe.com" && window.location.pathname === "/") {
+        throw redirect({ to: "/fitness" });
+      }
     }
   },
   head: () => ({

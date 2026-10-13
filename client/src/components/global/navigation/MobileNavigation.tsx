@@ -20,6 +20,7 @@ export function MobileNavigation() {
     { label: 'Home', path: '/' },
     { label: 'Works', path: '/works' },
     { label: 'Products', path: '/products' },
+    { label: 'Fitness', path: '/fitness' },
     { label: 'Blog', path: '/blog' },
   ]
 

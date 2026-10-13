@@ -199,6 +199,33 @@ export interface CMSDigitalProduct {
   _status?: string | null
 }
 
+export interface CMSFitnessProduct {
+  id: number
+  title: string
+  slug?: string | null
+  type: "program" | "supplement" | "peptide"
+  shortDescription?: string | null
+  description?: string | null
+  coverImage?: CMSMedia | null
+  gallery?: { image: CMSMedia; id?: string | null }[] | null
+  price: number
+  currency: string
+  polarCheckoutLink?: string | null
+  comingSoon?: boolean | null
+  badge?: string | null
+  featured?: boolean | null
+  order?: number | null
+  ageRestricted?: boolean | null
+  /** Comma-separated region codes, e.g. "US, CA". */
+  availableRegions?: string | null
+  shippingNote?: string | null
+  disclaimer?: string | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
 export interface CMSSite {
   siteName: string
   defaultTitle?: string | null

@@ -7,6 +7,7 @@ import type { Plugin } from "vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
 const SITE_URL = "https://lbdluxe.com";
+const SHOP_URL = "https://shop.lbdluxe.com";
 
 const STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = [
   { path: "/", changeFreq: "weekly", priority: "1.0" },
@@ -15,6 +16,14 @@ const STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = 
   { path: "/shelf-items", changeFreq: "weekly", priority: "0.6" },
   { path: "/products", changeFreq: "monthly", priority: "0.6" },
   { path: "/blog", changeFreq: "weekly", priority: "0.9" },
+];
+
+// The shop is canonical on its own subdomain, so it gets its own sitemap.
+const SHOP_STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = [
+  { path: "/fitness", changeFreq: "weekly", priority: "0.9" },
+  { path: "/fitness/programs", changeFreq: "weekly", priority: "0.7" },
+  { path: "/fitness/supplements", changeFreq: "weekly", priority: "0.6" },
+  { path: "/fitness/peptides", changeFreq: "weekly", priority: "0.6" },
 ];
 
 function sitemapXml(entries: { loc: string; lastmod?: string; changeFreq: string; priority: string }[]) {
@@ -69,6 +78,44 @@ function buildSitemap(): Plugin {
       const outFile = path.join(options.dir ?? "dist", "sitemap.xml");
       await writeFile(outFile, sitemapXml(entries));
       this.info(`sitemap.xml written with ${entries.length} URLs`);
+
+      // Shop sitemap (canonical on shop.lbdluxe.com).
+      const shopEntries: { loc: string; lastmod?: string; changeFreq: string; priority: string }[] =
+        SHOP_STATIC_ROUTES.map((r) => ({
+          loc: `${SHOP_URL}${r.path}`,
+          changeFreq: r.changeFreq,
+          priority: r.priority,
+        }));
+
+      try {
+        const res = await fetch(`${apiUrl}/cms/fitness-products`, {
+          headers: { Accept: "application/json" },
+          signal: AbortSignal.timeout(10000),
+        });
+        if (res.ok) {
+          const products = (await res.json()) as {
+            slug?: string | null;
+            type?: string | null;
+            updatedAt?: string;
+          }[];
+          for (const product of products) {
+            if (!product.slug || !product.type) continue;
+            const lastmod = product.updatedAt ? product.updatedAt.slice(0, 10) : undefined;
+            shopEntries.push({
+              loc: `${SHOP_URL}/fitness/${product.type}/${product.slug}`,
+              lastmod,
+              changeFreq: "monthly",
+              priority: "0.7",
+            });
+          }
+        }
+      } catch {
+        // CMS unreachable at build time — static shop routes only.
+      }
+
+      const shopOutFile = path.join(options.dir ?? "dist", "sitemap-shop.xml");
+      await writeFile(shopOutFile, sitemapXml(shopEntries));
+      this.info(`sitemap-shop.xml written with ${shopEntries.length} URLs`);
     },
   };
 }
