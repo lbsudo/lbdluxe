@@ -24,7 +24,7 @@ export const LinkPanel = ({ panelBody }: LinkPanelProps) => {
         }
       >
         <ProfileDetails />
-        <MotionUp>{panelBody ?? <PanelBody />}</MotionUp>
+        <MotionUp className="relative z-10">{panelBody ?? <PanelBody />}</MotionUp>
       </div>
     </>
   );
