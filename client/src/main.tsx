@@ -79,9 +79,13 @@ function criticalQueriesFor({
   if (path === "/products")
     return [cmsSiteQuery, cmsPageQuery("products"), cmsDigitalProductsQuery];
 
-  // Shop lives on shop.lbdluxe.com (which redirects "/" to /fitness) and at
-  // /fitness on the main host.
-  if (host === "shop.lbdluxe.com" || path === "/fitness" || path.startsWith("/fitness/")) {
+  // The shop is its own site on shop.lbdluxe.com (the main host redirects
+  // /fitness there), so its critical queries are prefetched only on the shop
+  // host — plus local dev, where the fitness routes render on localhost.
+  const shopPrefetch =
+    host === "shop.lbdluxe.com" ||
+    (import.meta.env.DEV && (path === "/fitness" || path.startsWith("/fitness/")));
+  if (shopPrefetch) {
     if (path.startsWith("/fitness/")) {
       const rest = path.slice("/fitness/".length);
       const [type, slug] = rest.split("/");

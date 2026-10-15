@@ -16,11 +16,12 @@ export function MobileNavigation() {
     }
   }, [isOpen])
 
+  // The fitness shop lives on shop.lbdluxe.com — surfaced only as the ShopCard
+  // in the products grid, not as a nav option.
   const mainRoutes = [
     { label: 'Home', path: '/' },
     { label: 'Works', path: '/works' },
     { label: 'Products', path: '/products' },
-    { label: 'Fitness', path: '/fitness' },
     { label: 'Blog', path: '/blog' },
   ]
 

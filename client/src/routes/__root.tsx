@@ -19,15 +19,24 @@ const TanStackRouterDevtools = import.meta.env.DEV
     )
   : () => null;
 
+// The shop subdomain is the shop and nothing else: its root is the storefront
+// and every non-shop path is bounced to the main site so the two hosts never
+// serve duplicate content.
 export const Route = createRootRoute({
   beforeLoad: () => {
     if (typeof window !== "undefined") {
       const host = window.location.hostname;
-      if (host === "links.lbdluxe.com" && window.location.pathname === "/") {
+      const path = window.location.pathname;
+      if (host === "links.lbdluxe.com" && path === "/") {
         throw redirect({ to: "/links" });
       }
-      if (host === "shop.lbdluxe.com" && window.location.pathname === "/") {
-        throw redirect({ to: "/fitness" });
+      if (host === "shop.lbdluxe.com") {
+        if (path === "/") {
+          throw redirect({ to: "/fitness" });
+        }
+        if (!path.startsWith("/fitness")) {
+          throw redirect({ href: `https://lbdluxe.com${path}` });
+        }
       }
     }
   },

@@ -79,16 +79,13 @@ export function MobileNavDrawer() {
     },
   ]
 
+  // The fitness shop is surfaced via the ShopCard on the /products grid —
+  // only the links subdomain stays in this quick-nav list.
   const subdomains = [
     {
       label: 'links.lbdluxe.com',
       icon: <SquareArrowOutUpRight size={20} />,
       onClick: () => window.open('https://links.lbdluxe.com', '_blank'),
-    },
-    {
-      label: 'shop.lbdluxe.com',
-      icon: <SquareArrowOutUpRight size={20} />,
-      onClick: () => window.open('https://shop.lbdluxe.com', '_blank'),
     },
   ]
 

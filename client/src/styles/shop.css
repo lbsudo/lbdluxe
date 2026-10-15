@@ -1,0 +1,386 @@
+/*
+ * THE SHOP — shop.lbdluxe.com theme.
+ *
+ * Scoped design language for the fitness storefront: dark neon glass with
+ * CSS-3D depth (tilt cards, floating layers, a perspective grid floor). The
+ * shop is its own site — everything below is either scoped to `.shop-theme`
+ * (token overrides for the design system) or namespaced `shop-*` utilities
+ * that never run on main-site pages. The one exception: the self-contained
+ * `.shop-cube` / `.shop-card-floor` visuals used by the teaser card on the
+ * main site's products grid, which use raw colors (no theme tokens) so they
+ * render identically in the main site's light and dark modes.
+ *
+ * Everything lives in `@layer components` so Tailwind utilities (later
+ * layer) can still override these defaults per element — e.g. positioning
+ * a `.shop-panel` with `absolute inset-0` or resizing a `.shop-tab`.
+ */
+@layer components {
+  /* ---------------------------------------------------------------- */
+  /* Tokens — override the design-system variables for the shop       */
+  /* subtree. The shop is always dark, so these do not depend on       */
+  /* `.dark`. (A declaration on the element beats inherited values, so */
+  /* the outer html.dark tokens lose here by construction, not by     */
+  /* layer order.)                                                    */
+  /* ---------------------------------------------------------------- */
+  .shop-theme {
+    --radius: 1rem;
+
+    --background: oklch(0.085 0.025 285);
+    --foreground: oklch(0.93 0.03 250);
+    --card: oklch(0.17 0.04 285 / 55%);
+    --card-foreground: oklch(0.93 0.03 250);
+    --popover: oklch(0.15 0.04 285 / 90%);
+    --popover-foreground: oklch(0.93 0.03 250);
+    --primary: oklch(0.87 0.15 195);
+    --primary-foreground: oklch(0.12 0.03 285);
+    --secondary: oklch(0.68 0.24 330);
+    --secondary-foreground: oklch(0.98 0.005 250);
+    --muted: oklch(0.19 0.03 285 / 50%);
+    --muted-foreground: oklch(0.71 0.045 265);
+    --accent: oklch(0.24 0.07 230 / 65%);
+    --accent-foreground: oklch(0.93 0.03 250);
+    --destructive: oklch(0.66 0.22 25);
+    --border: oklch(0.87 0.15 195 / 22%);
+    --input: oklch(0.87 0.15 195 / 28%);
+    --ring: oklch(0.87 0.15 195 / 65%);
+
+    /* Shop-only extras (raw values — not mapped through @theme). */
+    --shop-cyan: oklch(0.87 0.15 195);
+    --shop-magenta: oklch(0.68 0.24 330);
+    --shop-violet: oklch(0.62 0.2 300);
+    --shop-grid-line: oklch(0.87 0.15 195 / 15%);
+    --shop-radius: 1rem;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Ambient background — fixed glow layers + perspective grid floor.  */
+  /* ------------------------------------------------------------------ */
+  .shop-bg {
+    background:
+      radial-gradient(52rem 34rem at 18% -12%, oklch(0.62 0.2 300 / 17%), transparent 60%),
+      radial-gradient(44rem 30rem at 108% 12%, oklch(0.68 0.24 330 / 13%), transparent 60%),
+      radial-gradient(50rem 44rem at 50% 118%, oklch(0.87 0.15 195 / 12%), transparent 62%),
+      var(--background);
+  }
+
+  /* Synthwave floor: a plane rotated back in 3D, lines scrolling "toward"
+   * the viewer. Needs its own perspective wrapper, not `.shop-3d`. */
+  .shop-floor-wrap {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 42vh;
+    perspective: 520px;
+    perspective-origin: 50% 0%;
+    overflow: hidden;
+  }
+  .shop-floor {
+    position: absolute;
+    left: -60%;
+    right: -60%;
+    top: 0;
+    bottom: -80%;
+    background-image:
+      repeating-linear-gradient(to right, var(--shop-grid-line) 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(to bottom, var(--shop-grid-line) 0 1px, transparent 1px 72px);
+    transform: rotateX(58deg);
+    transform-origin: 50% 0%;
+    animation: shop-floor-scroll 3.4s linear infinite;
+    opacity: 0.55;
+    -webkit-mask-image: linear-gradient(to top, black 25%, transparent 82%);
+    mask-image: linear-gradient(to top, black 25%, transparent 82%);
+  }
+  @keyframes shop-floor-scroll {
+    to {
+      background-position: 0 72px, 0 72px;
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Glass surfaces.                                                     */
+  /* ------------------------------------------------------------------ */
+  .shop-panel {
+    position: relative;
+    border-radius: var(--shop-radius);
+    border: 1px solid var(--border);
+    background: linear-gradient(
+      165deg,
+      oklch(0.3 0.06 280 / 22%),
+      oklch(0.12 0.03 285 / 52%)
+    );
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 oklch(0.93 0.03 250 / 10%),
+      0 24px 48px -28px oklch(0 0 0 / 85%);
+  }
+
+  /* Spinning neon rim (reuses the --lbd-angle @property + keyframes from
+   * global.css so the property is registered exactly once). */
+  .shop-rim {
+    position: relative;
+    display: inline-flex;
+    border-radius: 9999px;
+    padding: 1px;
+    overflow: hidden;
+    background: conic-gradient(
+      from var(--lbd-angle, 0deg),
+      transparent 0deg,
+      oklch(0.87 0.15 195 / 85%) 50deg,
+      oklch(0.68 0.24 330 / 85%) 110deg,
+      transparent 200deg
+    );
+    animation: lbd-border-spin 4.5s linear infinite;
+  }
+  .shop-rim-content {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    background: oklch(0.12 0.03 285);
+    padding: 0.375rem 1rem;
+  }
+
+  /* Category pill (header + in-page tabs). */
+  .shop-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background: oklch(0.17 0.04 285 / 45%);
+    color: var(--muted-foreground);
+    padding: 0.375rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  }
+  .shop-tab:hover {
+    color: var(--foreground);
+    border-color: oklch(0.87 0.15 195 / 45%);
+  }
+  .shop-tab[data-active="true"] {
+    color: var(--primary);
+    border-color: oklch(0.87 0.15 195 / 55%);
+    background: oklch(0.87 0.15 195 / 12%);
+    box-shadow:
+      0 0 18px -6px oklch(0.87 0.15 195 / 60%),
+      inset 0 0 12px oklch(0.87 0.15 195 / 12%);
+  }
+
+  /* Primary CTA — solid neon cyan. */
+  .shop-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, oklch(0.87 0.15 195), oklch(0.8 0.13 210));
+    color: oklch(0.1 0.03 285);
+    font-weight: 700;
+    box-shadow:
+      0 0 22px -6px oklch(0.87 0.15 195 / 60%),
+      inset 0 1px 0 oklch(1 0 0 / 30%);
+    transition: filter 0.2s, box-shadow 0.2s, opacity 0.2s;
+  }
+  .shop-btn:hover {
+    filter: brightness(1.1);
+    box-shadow:
+      0 0 30px -6px oklch(0.87 0.15 195 / 85%),
+      inset 0 1px 0 oklch(1 0 0 / 30%);
+  }
+  .shop-btn:disabled {
+    opacity: 0.55;
+  }
+
+  /* Neon gradient display text. */
+  .shop-neon-text {
+    background: linear-gradient(
+      96deg,
+      oklch(0.87 0.15 195) 0%,
+      oklch(0.77 0.19 300) 45%,
+      oklch(0.68 0.24 330) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 26px oklch(0.87 0.15 195 / 30%));
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* CSS-3D depth.                                                        */
+  /* ------------------------------------------------------------------ */
+  /* Perspective container for 3D children (grids, heroes). */
+  .shop-3d {
+    perspective: 1100px;
+  }
+
+  /* Tilt surface — the `use-tilt` hook feeds --tilt-x/--tilt-y/--mx/--my
+   * from pointer events; without a fine pointer the vars stay at their
+   * defaults and this is a no-op. */
+  .shop-tilt {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    position: relative;
+    transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    transform-style: preserve-3d;
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.22s ease;
+  }
+  .shop-tilt:hover {
+    box-shadow:
+      inset 0 1px 0 oklch(0.93 0.03 250 / 14%),
+      0 0 0 1px oklch(0.87 0.15 195 / 30%),
+      0 34px 60px -30px oklch(0 0 0 / 90%),
+      0 0 44px -14px oklch(0.87 0.15 195 / 45%);
+  }
+  /* Cursor-following highlight. */
+  .shop-tilt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      260px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(0.87 0.15 195 / 15%),
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .shop-tilt:hover::after {
+    opacity: 1;
+  }
+
+  /* Layers that pop toward the viewer on hover (requires preserve-3d, so
+   * never put `overflow: hidden` or backdrop-filter on the .shop-tilt
+   * element itself — hence the child .shop-panel backing layer). */
+  .shop-pop {
+    transform: translateZ(0);
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .shop-pop-lg {
+    transform: translateZ(0);
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .shop-tilt:hover .shop-pop {
+    transform: translateZ(24px);
+  }
+  .shop-tilt:hover .shop-pop-lg {
+    transform: translateZ(42px);
+  }
+
+  /* Gentle idle float for hero dressing. */
+  @keyframes shop-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  .shop-float {
+    animation: shop-float 7s ease-in-out infinite;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* The cube — shop wordmark motif + products-grid teaser.              */
+  /* Self-contained raw colors so it renders identically outside         */
+  /* `.shop-theme`.                                                      */
+  /* ------------------------------------------------------------------ */
+  .shop-cube-wrap {
+    display: grid;
+    place-items: center;
+    perspective: 420px;
+  }
+  .shop-cube {
+    position: relative;
+    width: var(--cube, 56px);
+    height: var(--cube, 56px);
+    transform-style: preserve-3d;
+    animation: shop-cube-spin 10s linear infinite;
+  }
+  .shop-cube > span {
+    position: absolute;
+    inset: 0;
+    border: 1px solid oklch(0.87 0.15 195 / 65%);
+    background: oklch(0.87 0.15 195 / 7%);
+    box-shadow: inset 0 0 14px oklch(0.87 0.15 195 / 22%);
+  }
+  .shop-cube > span:nth-child(1) {
+    transform: translateZ(calc(var(--cube, 56px) / 2));
+  }
+  .shop-cube > span:nth-child(2) {
+    transform: rotateY(180deg) translateZ(calc(var(--cube, 56px) / 2));
+  }
+  .shop-cube > span:nth-child(3) {
+    transform: rotateY(90deg) translateZ(calc(var(--cube, 56px) / 2));
+  }
+  .shop-cube > span:nth-child(4) {
+    transform: rotateY(-90deg) translateZ(calc(var(--cube, 56px) / 2));
+  }
+  .shop-cube > span:nth-child(5) {
+    transform: rotateX(90deg) translateZ(calc(var(--cube, 56px) / 2));
+  }
+  .shop-cube > span:nth-child(6) {
+    transform: rotateX(-90deg) translateZ(calc(var(--cube, 56px) / 2));
+  }
+  @keyframes shop-cube-spin {
+    from {
+      transform: rotateX(-24deg) rotateY(0deg);
+    }
+    to {
+      transform: rotateX(-24deg) rotateY(360deg);
+    }
+  }
+
+  /* Mini floor inside the products-grid teaser card. The scene wrapper */
+  /* gets a tight perspective so the floor's edges converge within the  */
+  /* small card.                                                        */
+  .shop-card-scene {
+    perspective: 360px;
+  }
+  .shop-card-floor {
+    position: absolute;
+    left: -20%;
+    right: -20%;
+    bottom: -35%;
+    height: 70%;
+    background-image:
+      repeating-linear-gradient(to right, oklch(0.87 0.15 195 / 20%) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(to bottom, oklch(0.87 0.15 195 / 20%) 0 1px, transparent 1px 28px);
+    transform: rotateX(58deg);
+    transform-origin: 50% 0%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 45%);
+    mask-image: linear-gradient(to bottom, transparent, black 45%);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Reduced motion — freeze every ambient animation and depth effect.  */
+  /* ------------------------------------------------------------------ */
+  @media (prefers-reduced-motion: reduce) {
+    .shop-floor,
+    .shop-cube,
+    .shop-rim,
+    .shop-float {
+      animation: none;
+    }
+    .shop-tilt,
+    .shop-pop,
+    .shop-pop-lg,
+    .shop-tilt::after {
+      transition: none;
+    }
+    .shop-tilt:hover .shop-pop,
+    .shop-tilt:hover .shop-pop-lg {
+      transform: none;
+    }
+  }
+}

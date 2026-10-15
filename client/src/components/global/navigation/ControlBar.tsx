@@ -9,11 +9,12 @@ export function ControlBar() {
   const router = useRouter();
 
   // 🔹 config arrays
+  // The fitness shop lives on shop.lbdluxe.com — it is surfaced on the main
+  // site only as the ShopCard in the products grid, not as a nav option.
   const mainRoutes = [
     { label: "Home", path: "/" },
     { label: "Works", path: "/works" },
     { label: "Products", path: "/products" },
-    { label: "Fitness", path: "/fitness" },
     { label: "Blog", path: "/blog" },
   ];
 

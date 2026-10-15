@@ -9,6 +9,7 @@ import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
 import { useCMSDigitalProducts } from "@/hooks/server/cms/GET/useCMSDigitalProducts";
 import { DigitalProductCard } from "@/components/pages/Products/DigitalProductCard";
+import { ShopCard } from "@/components/pages/Products/ShopCard";
 import { usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/products")({
@@ -46,20 +47,21 @@ function RouteComponent() {
           <p className="text-muted-foreground">Loading products…</p>
         )}
         {productsError && <p className="text-red-500">{productsError.message}</p>}
-        {products && products.length > 0 && (
-          <motion.div
-            className="px-4 py-6 max-w-6xl mx-auto w-full"
-            variants={container}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.section variants={fadeUp} className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((product) => (
-                <DigitalProductCard key={product.id} product={product} />
-              ))}
-            </motion.section>
-          </motion.div>
-        )}
+        {/* The fitness shop (shop.lbdluxe.com) is surfaced here as a card —
+            it is not a nav option — and routes to its own subdomain. */}
+        <motion.div
+          className="px-4 py-6 max-w-6xl mx-auto w-full"
+          variants={container}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.section variants={fadeUp} className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ShopCard />
+            {products?.map((product) => (
+              <DigitalProductCard key={product.id} product={product} />
+            ))}
+          </motion.section>
+        </motion.div>
         {cmsPage && cmsPage.layout.length > 0 ? (
           <motion.div
             className="max-w-6xl mx-auto flex flex-col gap-6 items-center justify-center"

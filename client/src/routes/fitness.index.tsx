@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LoaderCircle, ShoppingBag } from "lucide-react";
-import PageHeader from "@/components/global/page-header";
 import { FitnessProductCard } from "@/components/pages/Fitness/FitnessProductCard";
 import {
   FITNESS_TYPE_META,
@@ -16,7 +15,6 @@ export const Route = createFileRoute("/fitness/")({
 });
 
 const headerData = {
-  buttonText: "Shop",
   title: "THE SHOP",
   description: "Training programs, supplements, and research peptides.",
 };
@@ -36,16 +34,25 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader
-        page={cmsPage}
-        buttonText={headerData.buttonText}
-        title={headerData.title}
-        description={headerData.description}
-        icon={<ShoppingBag size={16} />}
-        iconSize={16}
-      />
+      {/* Hero — the shop's own header, not the main site's PageHeader. */}
+      <section className="relative mx-auto flex w-full max-w-4xl flex-col items-center px-4 pt-14 text-center sm:pt-20">
+        <div className="shop-float mb-6">
+          <div className="shop-rim">
+            <span className="shop-rim-content font-bebas text-sm tracking-[0.3em] text-muted-foreground">
+              SHOP.LBDLUXE.COM
+            </span>
+          </div>
+        </div>
+        <h1 className="shop-neon-text font-bebas text-6xl leading-[0.95] tracking-wide sm:text-8xl">
+          {headerData.title}
+        </h1>
+        <p className="mt-4 max-w-xl font-bebas text-lg tracking-wider text-muted-foreground sm:text-xl">
+          {headerData.description}
+        </p>
+      </section>
 
-      <section className="mx-auto mt-6 grid w-full max-w-5xl gap-4 px-4 sm:grid-cols-3">
+      {/* 3D category panels */}
+      <section className="shop-3d mx-auto mt-12 grid w-full max-w-5xl gap-5 px-4 sm:grid-cols-3">
         {FITNESS_TYPE_ORDER.map((type) => {
           const meta = FITNESS_TYPE_META[type];
           return (
@@ -53,24 +60,42 @@ function RouteComponent() {
               key={type}
               to="/fitness/$type"
               params={{ type }}
-              className="flex flex-col gap-2 rounded-lg border bg-card p-5 transition-colors hover:bg-accent/50"
+              className="shop-tilt group relative flex flex-col rounded-2xl"
             >
-              <span className="text-muted-foreground">{meta.icon}</span>
-              <span className="text-lg font-semibold">{meta.label}</span>
-              <span className="text-sm text-muted-foreground">{meta.tagline}</span>
+              <div aria-hidden className="shop-panel absolute inset-0" />
+              <span className="shop-pop relative z-10 flex h-full flex-col gap-2 p-6 text-left">
+                <span className="text-primary [filter:drop-shadow(0_0_12px_var(--primary))]">
+                  {meta.icon}
+                </span>
+                <span className="font-bebas text-3xl tracking-wide text-foreground">
+                  {meta.label}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {meta.tagline}
+                </span>
+                <span className="mt-3 text-xs font-semibold tracking-widest text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  BROWSE →
+                </span>
+              </span>
             </Link>
           );
         })}
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-4 py-10">
-        <h2 className="mb-4 text-xl font-semibold">All products</h2>
+      {/* All products */}
+      <section className="shop-3d mx-auto w-full max-w-6xl px-4 py-12">
+        <div className="mb-5 flex items-center gap-3">
+          <ShoppingBag className="size-5 text-primary" />
+          <h2 className="font-bebas text-3xl tracking-wide text-foreground">
+            All products
+          </h2>
+        </div>
         {isLoading ? (
           <div className="flex justify-center py-12">
             <LoaderCircle className="animate-spin text-muted-foreground" size={40} />
           </div>
         ) : error ? (
-          <p className="text-red-500">{error.message}</p>
+          <p className="text-red-400">{error.message}</p>
         ) : products && products.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (

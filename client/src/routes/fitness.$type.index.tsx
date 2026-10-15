@@ -44,12 +44,16 @@ function RouteComponent() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-10">
-      <div className="mb-6 flex items-center gap-3">
-        <span className="text-muted-foreground">{meta.icon}</span>
+    <section className="shop-3d mx-auto w-full max-w-6xl px-4 py-10">
+      <div className="mb-6 flex items-center gap-4">
+        <span className="text-primary [filter:drop-shadow(0_0_12px_var(--primary))]">
+          {meta.icon}
+        </span>
         <div>
-          <h1 className="text-2xl font-bold">{meta.label}</h1>
-          <p className="text-sm text-muted-foreground">{meta.description}</p>
+          <h1 className="shop-neon-text font-bebas text-4xl tracking-wide sm:text-5xl">
+            {meta.label}
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">{meta.description}</p>
         </div>
       </div>
 
@@ -58,7 +62,7 @@ function RouteComponent() {
           <LoaderCircle className="animate-spin text-muted-foreground" size={40} />
         </div>
       ) : error ? (
-        <p className="text-red-500">{error.message}</p>
+        <p className="text-red-400">{error.message}</p>
       ) : products && products.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((product) => (

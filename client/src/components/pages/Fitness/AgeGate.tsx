@@ -47,9 +47,11 @@ export function AgeGate({
   if (acknowledged) return <>{children}</>
 
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-lg border bg-card p-8 text-center">
-      <ShieldAlert className="size-10 text-muted-foreground" />
-      <h2 className="text-xl font-semibold">Are you of legal age?</h2>
+    <div className="shop-panel mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-8 text-center">
+      <ShieldAlert className="size-10 text-primary [filter:drop-shadow(0_0_14px_var(--primary))]" />
+      <h2 className="font-bebas text-3xl tracking-wide text-foreground">
+        Are you of legal age?
+      </h2>
       <p className="text-sm text-muted-foreground">
         This product is age-restricted. You must be at least 18 years old (or the legal age in
         your jurisdiction) to view it.

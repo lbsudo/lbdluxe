@@ -19,11 +19,13 @@ const STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = 
 ];
 
 // The shop is canonical on its own subdomain, so it gets its own sitemap.
+// NOTE: type path segments must match the route param values exactly
+// (program | supplement | peptide — singular), not the plural labels.
 const SHOP_STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = [
   { path: "/fitness", changeFreq: "weekly", priority: "0.9" },
-  { path: "/fitness/programs", changeFreq: "weekly", priority: "0.7" },
-  { path: "/fitness/supplements", changeFreq: "weekly", priority: "0.6" },
-  { path: "/fitness/peptides", changeFreq: "weekly", priority: "0.6" },
+  { path: "/fitness/program", changeFreq: "weekly", priority: "0.7" },
+  { path: "/fitness/supplement", changeFreq: "weekly", priority: "0.6" },
+  { path: "/fitness/peptide", changeFreq: "weekly", priority: "0.6" },
 ];
 
 function sitemapXml(entries: { loc: string; lastmod?: string; changeFreq: string; priority: string }[]) {

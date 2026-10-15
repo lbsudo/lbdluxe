@@ -1,5 +1,4 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
 import {
   FITNESS_TYPE_META,
   FITNESS_TYPE_ORDER,
@@ -14,23 +13,21 @@ function TypeLayout() {
 
   return (
     <>
-      <nav className="mx-auto mt-6 flex w-full max-w-5xl flex-wrap gap-2 px-4">
+      <nav
+        className="mx-auto mt-8 flex w-full max-w-5xl flex-wrap gap-2 px-4"
+        aria-label="Shop categories"
+      >
         {FITNESS_TYPE_ORDER.map((t) => {
-          const meta = FITNESS_TYPE_META[t];
           const active = t === type;
           return (
             <Link
               key={t}
               to="/fitness/$type"
               params={{ type: t }}
-              className={cn(
-                "rounded-md border px-4 py-2 text-sm font-medium transition-colors",
-                active
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-secondary/50 hover:bg-accent/50",
-              )}
+              className="shop-tab"
+              data-active={active}
             >
-              {meta.label}
+              {FITNESS_TYPE_META[t].label}
             </Link>
           );
         })}

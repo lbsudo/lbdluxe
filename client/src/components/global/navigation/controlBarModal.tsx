@@ -84,16 +84,13 @@ export function ControlBarModal() {
     { label: 'Stack', path: '/stack', icon: <Layers className="size-5 ml-2" /> },
   ]
 
+  // The fitness shop is surfaced via the ShopCard on the /products grid —
+  // only the links subdomain stays in this quick-nav list.
   const subdomains = [
     {
       label: 'links.lbdluxe.com',
       icon: <SquareArrowOutUpRight className="size-5 ml-2" />,
       onClick: () => window.open('https://links.lbdluxe.com', '_blank'),
-    },
-    {
-      label: 'shop.lbdluxe.com',
-      icon: <SquareArrowOutUpRight className="size-5 ml-2" />,
-      onClick: () => window.open('https://shop.lbdluxe.com', '_blank'),
     },
   ]
 

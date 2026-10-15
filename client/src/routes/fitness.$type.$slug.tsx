@@ -51,11 +51,11 @@ function RouteComponent() {
   );
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pt-6">
+    <div className="mx-auto w-full max-w-6xl px-4 pt-8">
       <Link
         to="/fitness/$type"
         params={{ type }}
-        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        className="shop-tab mb-6 inline-flex"
       >
         <ArrowLeft size={16} />
         Back to {typeLabel}
@@ -66,7 +66,7 @@ function RouteComponent() {
           <LoaderCircle className="animate-spin text-muted-foreground" size={48} />
         </div>
       ) : error ? (
-        <p className="text-red-500">{error.message}</p>
+        <p className="text-red-400">{error.message}</p>
       ) : !product || !matchesType ? (
         <p className="text-muted-foreground">Product not found.</p>
       ) : (
