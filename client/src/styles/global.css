@@ -3,6 +3,11 @@
 
 @import "tw-animate-css";
 
+/* Rich-text rendering (blog posts, product descriptions) — the plugin was
+ * previously only wired through a v3-style tailwind.config.js that Tailwind
+ * v4 never loads, so every `prose-*` class silently did nothing. */
+@plugin "@tailwindcss/typography";
+
 /*
  * Bebas Neue is self-hosted (was previously loaded both here via @import and as
  * a <link> in index.html, costing two render-blocking third-party round trips).
@@ -30,6 +35,18 @@
 }
 
 @custom-variant dark (&:is(.dark *));
+
+/*
+ * Font utilities. These were previously only defined in a v3-style
+ * tailwind.config.js that Tailwind v4 never loads (there was no `@config`
+ * directive), so `font-bebas` (set on <html>) and `font-switzer` silently
+ * generated no CSS and the whole app rendered in the system sans stack.
+ * Declared here CSS-first so the utilities actually exist.
+ */
+@theme {
+  --font-bebas: "Bebas Neue", "Arial Narrow", system-ui, sans-serif;
+  --font-switzer: "Switzer-Regular", system-ui, sans-serif;
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

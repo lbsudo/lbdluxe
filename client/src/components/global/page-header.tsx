@@ -78,7 +78,7 @@ export default function PageHeader({
       {wrappedAction}
       <h1
         className="
-       font-witzer font-bold text-6xl leading-[1.1] text-center
+       font-switzer font-bold text-6xl leading-[1.1] text-center
        bg-linear-to-b from-[#fafafa] to-[#a3a3a3]
        bg-clip-text text-transparent
        animate-enter scroll-mt-20 font-stretch-extra-condensed tracking-tighter
