@@ -158,6 +158,36 @@ export interface CMSLinksProfile {
   }[] | null
 }
 
+export interface CMSBusinessCardSocial {
+  title: string
+  url: string
+  platform?: "linkedin" | "twitter" | "instagram" | "facebook" | "youtube" | "tiktok" | "github" | "threads" | "other" | null
+  iconType?: "auto" | "custom" | null
+  icon?: CMSMedia | null
+  id?: string | null
+}
+
+export interface CMSBusinessCard {
+  id: number
+  name: string
+  slug?: string | null
+  title?: string | null
+  company?: string | null
+  bio?: string | null
+  profileImage?: CMSMedia | null
+  coverImage?: CMSMedia | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  address?: string | null
+  mapUrl?: string | null
+  socialLinks?: CMSBusinessCardSocial[] | null
+  accentColor?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
 export interface CMSProfileLink {
   id: number
   title: string
@@ -232,6 +262,7 @@ export interface CMSSite {
   defaultDescription?: string | null
   siteUrl?: string | null
   linksUrl?: string | null
+  cardUrl?: string | null
   ogImage?: CMSMedia | null
   themeColor?: string | null
   newsletter?: {

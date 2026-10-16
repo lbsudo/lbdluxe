@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cmsSiteQuery } from "@/hooks/server/cms/GET/useCMSSite";
 import { cmsPageQuery } from "@/hooks/server/cms/GET/useCMSPage";
 import { cmsLinksProfileQuery } from "@/hooks/server/cms/GET/useCMSLinksProfile";
+import { cmsBusinessCardQuery } from "@/hooks/server/cms/GET/useCMSBusinessCard";
 import { cmsProfileLinksQuery } from "@/hooks/server/cms/GET/useCMSProfileLinks";
 import { cmsContentNetworksQuery } from "@/hooks/server/cms/GET/useCMSContentNetworks";
 import { cmsPostsQuery } from "@/hooks/server/cms/GET/useCMSPosts";
@@ -63,6 +64,10 @@ function criticalQueriesFor({
 }): CriticalQuery[] {
   const host = hostname.replace(/^www\./, "");
   const path = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
+
+  if (host === "card.lbdluxe.com" || path.startsWith("/card")) {
+    return [cmsBusinessCardQuery];
+  }
 
   if (host === "links.lbdluxe.com" || path.startsWith("/links")) {
     // The network panels (yt/rumble) additionally need the content networks,

@@ -17,6 +17,7 @@ import { Route as FitnessRouteImport } from './routes/fitness'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LinksIndexRouteImport } from './routes/links/index'
 import { Route as FitnessIndexRouteImport } from './routes/fitness.index'
+import { Route as CardIndexRouteImport } from './routes/card/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShelfItemsSlugRouteImport } from './routes/shelf-items.$slug'
@@ -67,6 +68,11 @@ const FitnessIndexRoute = FitnessIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => FitnessRoute,
+} as any)
+const CardIndexRoute = CardIndexRouteImport.update({
+  id: '/card/',
+  path: '/card/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/card/': typeof CardIndexRoute
   '/fitness/': typeof FitnessIndexRoute
   '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/card': typeof CardIndexRoute
   '/fitness': typeof FitnessIndexRoute
   '/links': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/card/': typeof CardIndexRoute
   '/fitness/': typeof FitnessIndexRoute
   '/links/': typeof LinksIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
@@ -192,6 +201,7 @@ export interface FileRouteTypes {
     | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
+    | '/card/'
     | '/fitness/'
     | '/links/'
     | '/admin/base/newsletter-subs'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/shelf-items/$slug'
     | '/admin'
     | '/blog'
+    | '/card'
     | '/fitness'
     | '/links'
     | '/admin/base/newsletter-subs'
@@ -230,6 +241,7 @@ export interface FileRouteTypes {
     | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
+    | '/card/'
     | '/fitness/'
     | '/links/'
     | '/admin/base/newsletter-subs'
@@ -249,6 +261,7 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  CardIndexRoute: typeof CardIndexRoute
   LinksIndexRoute: typeof LinksIndexRoute
   AdminBaseNewsletterSubsRoute: typeof AdminBaseNewsletterSubsRoute
   LinksRumbleLinksIndexRoute: typeof LinksRumbleLinksIndexRoute
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/fitness/'
       preLoaderRoute: typeof FitnessIndexRouteImport
       parentRoute: typeof FitnessRoute
+    }
+    '/card/': {
+      id: '/card/'
+      path: '/card'
+      fullPath: '/card/'
+      preLoaderRoute: typeof CardIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/blog/': {
       id: '/blog/'
@@ -435,6 +455,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  CardIndexRoute: CardIndexRoute,
   LinksIndexRoute: LinksIndexRoute,
   AdminBaseNewsletterSubsRoute: AdminBaseNewsletterSubsRoute,
   LinksRumbleLinksIndexRoute: LinksRumbleLinksIndexRoute,

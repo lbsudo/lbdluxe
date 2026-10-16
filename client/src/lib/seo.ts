@@ -5,6 +5,7 @@ export const SITE_NAME = "LBDLUXE";
 export const SITE_URL = "https://lbdluxe.com";
 export const LINKS_URL = "https://links.lbdluxe.com";
 export const SHOP_URL = "https://shop.lbdluxe.com";
+export const CARD_URL = "https://card.lbdluxe.com";
 export const DEFAULT_TITLE = "Lawrence Brown — Full-Stack Developer";
 export const DEFAULT_DESCRIPTION =
   "Portfolio of Lawrence Brown, a full-stack developer crafting modern, accessible, high-performance web applications, tutorials, and open-source projects.";
@@ -16,7 +17,7 @@ export interface SEOOptions {
   description: string;
   /** Path relative to the host root, e.g. "/", "/works", "/blog/my-post". */
   path: string;
-  host?: "main" | "links" | "shop";
+  host?: "main" | "links" | "shop" | "card";
   image?: string;
   type?: "website" | "article";
   noindex?: boolean;
@@ -24,7 +25,7 @@ export interface SEOOptions {
 }
 
 export function seoHead(opts: SEOOptions) {
-  const base = opts.host === "links" ? LINKS_URL : opts.host === "shop" ? SHOP_URL : SITE_URL;
+  const base = opts.host === "links" ? LINKS_URL : opts.host === "shop" ? SHOP_URL : opts.host === "card" ? CARD_URL : SITE_URL;
   const url = `${base}${opts.path === "/" ? "/" : opts.path}`;
   const title = opts.title ? `${SITE_NAME} | ${opts.title}` : `${SITE_NAME} | ${DEFAULT_TITLE}`;
   const description = opts.description;
@@ -134,7 +135,7 @@ function removeDynamicTags() {
 }
 
 export function applyDynamicHead(opts: SEOOptions) {
-  const base = opts.host === "links" ? LINKS_URL : opts.host === "shop" ? SHOP_URL : SITE_URL;
+  const base = opts.host === "links" ? LINKS_URL : opts.host === "shop" ? SHOP_URL : opts.host === "card" ? CARD_URL : SITE_URL;
   const url = `${base}${opts.path === "/" ? "/" : opts.path}`;
   const title = opts.title ? `${SITE_NAME} | ${opts.title}` : `${SITE_NAME} | ${DEFAULT_TITLE}`;
   const image = opts.image ?? DEFAULT_IMAGE;

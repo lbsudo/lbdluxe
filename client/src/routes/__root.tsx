@@ -30,6 +30,14 @@ export const Route = createRootRoute({
       if (host === "links.lbdluxe.com" && path === "/") {
         throw redirect({ to: "/links" });
       }
+      if (host === "card.lbdluxe.com") {
+        if (path === "/") {
+          throw redirect({ to: "/card" });
+        }
+        if (!path.startsWith("/card")) {
+          throw redirect({ href: `https://lbdluxe.com${path}` });
+        }
+      }
       if (host === "shop.lbdluxe.com") {
         if (path === "/") {
           throw redirect({ to: "/fitness" });

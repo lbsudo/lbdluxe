@@ -320,6 +320,19 @@ cmsRoutes.get("/links-profile", (c) =>
   firstDoc(c, TTL_BY_MINUTE.profile, `/api/links-profile?depth=3&limit=1`),
 )
 
+cmsRoutes.get("/business-cards", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/business-cards?depth=3&where[_status][equals]=published&sort=-updatedAt&limit=50`),
+)
+
+cmsRoutes.get("/business-cards/:slug", (c) => {
+  const slug = c.req.param("slug")
+  return firstDoc(c, TTL_BY_MINUTE.single, `/api/business-cards?depth=3&where[_status][equals]=published&where[slug][equals]=${encodeURIComponent(slug)}`)
+})
+
+cmsRoutes.get("/business-card", (c) =>
+  firstDoc(c, TTL_BY_MINUTE.profile, `/api/business-cards?depth=3&limit=1`),
+)
+
 cmsRoutes.get("/api/media/file/:filename", async (c) => {
   const base = cmsFetchBase(c)
   if (!base) return new Response(null, { status: 500 })
