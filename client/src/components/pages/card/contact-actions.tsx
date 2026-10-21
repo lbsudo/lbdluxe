@@ -1,5 +1,5 @@
 import type { CMSBusinessCard } from "shared"
-import { Phone, MessageSquare, Mail, Globe, MapPin, Download, Share2 } from "lucide-react"
+import { Phone, MessageSquare, Mail, Globe, Building2, Calendar, MapPin, Download, Share2 } from "lucide-react"
 import { downloadVCard } from "@/lib/vcard"
 
 interface Props {
@@ -15,6 +15,8 @@ export function ContactActions({ card, accent }: Props) {
   if (card.phone) items.push({ label: "Text", icon: MessageSquare, href: `sms:${card.phone}` })
   if (card.email) items.push({ label: "Email", icon: Mail, href: `mailto:${card.email}` })
   if (card.website) items.push({ label: "Website", icon: Globe, href: card.website })
+  if (card.companyUrl) items.push({ label: "Company", icon: Building2, href: card.companyUrl })
+  if (card.calendarUrl) items.push({ label: "Calendar", icon: Calendar, href: card.calendarUrl })
   if (card.mapUrl || card.address) {
     items.push({
       label: "Directions",

@@ -6,6 +6,8 @@ interface Props {
 }
 
 export function CardHero({ card, accent }: Props) {
+  const accreditations = (card.accreditations || []).filter((a) => a.name)
+
   return (
     <section className="w-full overflow-hidden rounded-3xl bg-white/5 ring-1 ring-white/10">
       {card.coverImage?.url ? (
@@ -46,14 +48,36 @@ export function CardHero({ card, accent }: Props) {
           )}
         </div>
         <h1 className="mt-4 text-3xl font-bold tracking-tight">{card.name}</h1>
-        {card.title && <p className="mt-1 text-base text-white/80">{card.title}</p>}
+        {card.headline && <p className="mt-1 text-base font-medium text-white/90">{card.headline}</p>}
+        {card.title && <p className="mt-1 text-sm text-white/70">{card.title}</p>}
+        {card.department && <p className="text-xs text-white/50">{card.department}</p>}
         {card.company && (
           <p className="mt-1 text-xs uppercase tracking-widest text-white/50">{card.company}</p>
+        )}
+        {card.companyLogo?.url && (
+          <img
+            src={card.companyLogo.url}
+            alt={card.company || "Company logo"}
+            className="mt-4 h-10 max-w-[160px] object-contain"
+          />
         )}
         {card.bio && (
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70 whitespace-pre-line">
             {card.bio}
           </p>
+        )}
+        {accreditations.length > 0 && (
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {accreditations.map((a) => (
+              <span
+                key={a.id || a.name}
+                className="rounded-full px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15"
+                style={{ background: `${accent}33` }}
+              >
+                {a.name}
+              </span>
+            ))}
+          </div>
         )}
       </div>
     </section>

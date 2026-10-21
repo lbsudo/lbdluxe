@@ -14,8 +14,8 @@ export function CardSocialLinks({ card, accent }: Props) {
     <section className="grid w-full grid-cols-2 gap-3">
       {links.map((l) => {
         const custom = l.iconType === "custom" && l.icon?.url ? l.icon.url : null
-        const iconName = custom ? null : resolveSocialIcon(l.url).iconName
-        const Icon = iconName ? siIconMap[iconName] : undefined
+        const resolved = resolveSocialIcon(l.url).iconName
+        const Icon = custom || resolved === "FaGlobe" ? undefined : siIconMap[resolved]
         return (
           <a
             key={l.id || l.url}

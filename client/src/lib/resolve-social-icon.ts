@@ -11,8 +11,7 @@ const platformMap: Record<string, ResolvedSocialIcon> = {
   rumble: { iconName: "SiRumble", hexColor: "#8BC34A" },
   youtube: { iconName: "SiYoutube", hexColor: "#c4302b" },
   github: { iconName: "SiGithub", hexColor: "#333333" },
-  twitter: { iconName: "SiGithub", hexColor: "#1DA1F2" },
-  x: { iconName: "SiGithub", hexColor: "#1DA1F2" },
+  twitter: { iconName: "FaGlobe", hexColor: "#000000" },
   telegram: { iconName: "FaGlobe", hexColor: "#26A5E4" },
   discord: { iconName: "FaGlobe", hexColor: "#5865F2" },
   twitch: { iconName: "FaGlobe", hexColor: "#9146FF" },
@@ -38,6 +37,10 @@ export function resolveSocialIcon(url: string): ResolvedSocialIcon {
 
     const urlObj = new URL(url)
     const hostname = urlObj.hostname.toLowerCase().replace(/^www\./, "")
+
+    if (hostname === "x.com") {
+      return { iconName: "FaGlobe", hexColor: "#000000" }
+    }
 
     for (const [platform, icon] of Object.entries(platformMap)) {
       if (hostname.includes(platform)) {

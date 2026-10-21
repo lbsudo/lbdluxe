@@ -172,13 +172,19 @@ export interface CMSBusinessCard {
   name: string
   slug?: string | null
   title?: string | null
+  department?: string | null
+  headline?: string | null
   company?: string | null
+  companyLogo?: CMSMedia | null
   bio?: string | null
+  accreditations?: { name: string; id?: string | null }[] | null
   profileImage?: CMSMedia | null
   coverImage?: CMSMedia | null
   phone?: string | null
   email?: string | null
   website?: string | null
+  companyUrl?: string | null
+  calendarUrl?: string | null
   address?: string | null
   mapUrl?: string | null
   socialLinks?: CMSBusinessCardSocial[] | null
