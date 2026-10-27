@@ -167,6 +167,26 @@ export interface CMSBusinessCardSocial {
   id?: string | null
 }
 
+export interface CMSBusinessCardLogo {
+  id?: string | null
+  image?: CMSMedia | null
+  alt?: string | null
+  url?: string | null
+  position?: "banner" | "below" | null
+  order?: number | null
+}
+
+export interface CMSBusinessCardContactRow {
+  id?: string | null
+  type?: string | null
+  label?: string | null
+  value: string
+  url?: string | null
+  iconType?: "auto" | "custom" | null
+  icon?: CMSMedia | null
+  order?: number | null
+}
+
 export interface CMSBusinessCard {
   id: number
   name: string
@@ -176,6 +196,7 @@ export interface CMSBusinessCard {
   headline?: string | null
   company?: string | null
   companyLogo?: CMSMedia | null
+  logos?: CMSBusinessCardLogo[] | null
   bio?: string | null
   accreditations?: { name: string; id?: string | null }[] | null
   profileImage?: CMSMedia | null
@@ -188,6 +209,7 @@ export interface CMSBusinessCard {
   address?: string | null
   mapUrl?: string | null
   socialLinks?: CMSBusinessCardSocial[] | null
+  contactRows?: CMSBusinessCardContactRow[] | null
   accentColor?: string | null
   updatedAt: string
   createdAt: string

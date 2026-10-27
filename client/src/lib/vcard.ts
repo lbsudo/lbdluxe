@@ -14,6 +14,8 @@ export function buildVCard(card: CMSBusinessCard): string {
   if (card.phone) lines.push(`TEL;TYPE=CELL,VOICE:${card.phone}`)
   if (card.email) lines.push(`EMAIL;TYPE=INTERNET:${card.email}`)
   if (card.website) lines.push(`URL:${card.website}`)
+  if (card.companyUrl) lines.push(`URL;type=work:${card.companyUrl}`)
+  if (card.calendarUrl) lines.push(`URL;type=calendar:${card.calendarUrl}`)
   if (card.address) lines.push(`ADR;TYPE=WORK:;;${escape(card.address.replace(/\n/g, ", "))};;;;`)
   if (card.bio) lines.push(`NOTE:${escape(card.bio)}`)
   if (card.profileImage?.url) lines.push(`PHOTO;VALUE=URI:${card.profileImage.url}`)
