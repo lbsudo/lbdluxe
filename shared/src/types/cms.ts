@@ -176,6 +176,17 @@ export interface CMSBusinessCardLogo {
   order?: number | null
 }
 
+export interface CMSBusinessCardPaymentLink {
+  id?: string | null
+  type?: "cashapp" | "paypal" | "venmo" | "skype" | null
+  value: string
+  url?: string | null
+  label?: string | null
+  iconType?: "auto" | "custom" | null
+  icon?: CMSMedia | null
+  order?: number | null
+}
+
 export interface CMSBusinessCardContactRow {
   id?: string | null
   type?: string | null
@@ -210,6 +221,7 @@ export interface CMSBusinessCard {
   mapUrl?: string | null
   socialLinks?: CMSBusinessCardSocial[] | null
   contactRows?: CMSBusinessCardContactRow[] | null
+  paymentLinks?: CMSBusinessCardPaymentLink[] | null
   accentColor?: string | null
   updatedAt: string
   createdAt: string

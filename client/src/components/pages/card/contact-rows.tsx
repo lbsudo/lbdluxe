@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { siIconMap } from "@/components/icons"
 import { getFaviconUrl, resolveSocialIcon } from "@/lib/resolve-social-icon"
+import { buildPaymentRows } from "@/lib/payment-links"
 
 const LUCIDE_MAP: Record<string, React.ComponentType<any>> = {
   Mail, Phone, Globe, MapPin, Building2, Calendar, Link: LinkIcon, Share2, CreditCard,
@@ -43,9 +44,6 @@ const TYPE_DEFAULT_ICON: Record<string, string> = {
   address: "MapPin",
   link: "Link",
   custom: "Link",
-  paypal: "DollarSign",
-  venmo: "DollarSign",
-  cashapp: "DollarSign",
 }
 
 const TYPE_DEFAULT_LABEL: Record<string, string> = {
@@ -60,28 +58,21 @@ const TYPE_DEFAULT_LABEL: Record<string, string> = {
 
 interface Row {
   key: string
-  icon: React.ReactNode
+  iconNode: React.ReactNode
+  iconBg?: string
   value: string
   label?: string | null
   href?: string | null
 }
 
-export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
+export function buildContactRows(card: CMSBusinessCard): Row[] {
   const rows: Row[] = []
-  const circle = (node: React.ReactNode) => (
-    <span
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-      style={{ background: accent }}
-    >
-      <span className="text-white">{node}</span>
-    </span>
-  )
 
   // Typed primary fields
   if (card.email) {
     rows.push({
       key: "email",
-      icon: circle(<Mail size={18} />),
+      iconNode: <Mail size={18} />,
       value: card.email,
       label: "Work email",
       href: `mailto:${card.email}`,
@@ -90,7 +81,7 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
   if (card.phone) {
     rows.push({
       key: "phone",
-      icon: circle(<Phone size={18} />),
+      iconNode: <Phone size={18} />,
       value: card.phone,
       label: "Mobile",
       href: `tel:${card.phone}`,
@@ -99,7 +90,7 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
   if (card.website) {
     rows.push({
       key: "website",
-      icon: circle(<Globe size={18} />),
+      iconNode: <Globe size={18} />,
       value: card.website,
       label: "Website",
       href: card.website,
@@ -108,7 +99,7 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
   if (card.companyUrl) {
     rows.push({
       key: "company",
-      icon: circle(<Building2 size={18} />),
+      iconNode: <Building2 size={18} />,
       value: card.companyUrl,
       label: "Company",
       href: card.companyUrl,
@@ -117,7 +108,7 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
   if (card.calendarUrl) {
     rows.push({
       key: "calendar",
-      icon: circle(<Calendar size={18} />),
+      iconNode: <Calendar size={18} />,
       value: card.calendarUrl,
       label: "Schedule a meeting",
       href: card.calendarUrl,
@@ -126,14 +117,14 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
   if (card.address) {
     rows.push({
       key: "address",
-      icon: circle(<MapPin size={18} />),
+      iconNode: <MapPin size={18} />,
       value: card.address,
       label: "Location",
       href: card.mapUrl || `https://maps.google.com/?q=${encodeURIComponent(card.address)}`,
     })
   }
 
-  // Social links (Blinq-style rows, like Lisa McDonald's card)
+  // Social links (Blinq-style rows)
   for (const l of card.socialLinks || []) {
     const resolved = resolveSocialIcon(l.url)
     const Icon = l.iconType === "custom" && l.icon?.url ? null : siIconMap[resolved.iconName]
@@ -146,14 +137,14 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
     )
     rows.push({
       key: `social-${l.id || l.url}`,
-      icon: circle(iconNode),
+      iconNode,
       value: l.title,
       label: l.url,
       href: l.url,
     })
   }
 
-  // Custom contact rows (user-controlled: PayPal, portfolio, etc.)
+  // Custom contact rows
   const custom = (card.contactRows || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
   for (const r of custom) {
     const iconName = r.iconType === "custom" ? null : (r.type && TYPE_DEFAULT_ICON[r.type]) || "Link"
@@ -169,10 +160,24 @@ export function buildContactRows(card: CMSBusinessCard, accent: string): Row[] {
     const href = r.url || (r.type === "email" ? `mailto:${r.value}` : r.type === "phone" || r.type === "text" ? `tel:${r.value}` : r.value)
     rows.push({
       key: `row-${r.id || r.value}`,
-      icon: circle(iconNode),
+      iconNode,
       value: r.value,
       label: r.label || TYPE_DEFAULT_LABEL[r.type || "custom"] || null,
       href,
+    })
+  }
+
+  // Payment links (Blinq-style brand-coloured rows)
+  const paymentRows = buildPaymentRows(card)
+  for (const p of paymentRows) {
+    const Icon = siIconMap[p.iconName] || LUCIDE_MAP["Link"]
+    rows.push({
+      key: `payment-${p.type}-${p.value}`,
+      iconNode: <Icon className="h-5 w-5" />,
+      iconBg: p.color,
+      value: p.value,
+      label: p.label,
+      href: p.href,
     })
   }
 
@@ -185,7 +190,7 @@ interface Props {
 }
 
 export function ContactRows({ card, accent }: Props) {
-  const rows = buildContactRows(card, accent)
+  const rows = buildContactRows(card)
   if (rows.length === 0) return null
   return (
     <section className="flex w-full flex-col gap-3">
@@ -197,7 +202,12 @@ export function ContactRows({ card, accent }: Props) {
           rel="noopener noreferrer"
           className="flex items-center gap-4 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 transition hover:bg-white/10"
         >
-          {r.icon}
+          <span
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+            style={{ background: r.iconBg || accent }}
+          >
+            <span className="text-white">{r.iconNode}</span>
+          </span>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-white">{r.value}</p>
             {r.label && <p className="truncate text-xs text-white/50">{r.label}</p>}
