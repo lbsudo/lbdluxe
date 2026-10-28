@@ -212,19 +212,9 @@
   initial-value: 0deg;
   inherits: false;
 }
-@property --neon-hue {
-  syntax: "<number>";
-  initial-value: 0;
-  inherits: true;
-}
 @keyframes lbd-border-spin {
   to {
     --lbd-angle: 360deg;
-  }
-}
-@keyframes neon-hue-cycle {
-  to {
-    --neon-hue: 360;
   }
 }
 .lbd-border-gradient {

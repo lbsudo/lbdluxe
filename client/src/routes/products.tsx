@@ -9,7 +9,7 @@ import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
 import { useCMSDigitalProducts } from "@/hooks/server/cms/GET/useCMSDigitalProducts";
 import { DigitalProductCard } from "@/components/pages/Products/DigitalProductCard";
-import { NeonShopCard } from "@/components/pages/Products/ShopCard";
+import { ShopCard } from "@/components/pages/Products/ShopCard";
 import { useCMSShopCards } from "@/hooks/server/cms/GET/useCMSShopCards";
 import { usePageHead } from "@/lib/seo";
 
@@ -60,7 +60,7 @@ function RouteComponent() {
         >
           <motion.section variants={fadeUp} className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {(shopCards || []).map((card) => (
-              <NeonShopCard key={card.id} card={card} />
+              <ShopCard key={card.id} card={card} />
             ))}
             {products?.map((product) => (
               <DigitalProductCard key={product.id} product={product} />

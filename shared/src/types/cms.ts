@@ -254,10 +254,10 @@ export interface CMSShopCard {
   title: string
   badge?: string | null
   description?: string | null
+  image?: CMSMedia | null
   url: string
   urlLabel?: string | null
-  shape?: "cube" | "octahedron" | "tetrahedron" | "pyramid" | "prism" | "globe" | null
-  hueOffset?: number | null
+  accentColor?: string | null
   order?: number | null
   publishedAt?: string | null
   updatedAt: string

@@ -1,46 +1,76 @@
 import type { CMSShopCard } from "shared";
-import React from "react";
 import { ArrowUpRight } from "lucide-react";
-import { NeonWireframe } from "./NeonWireframe";
 
-interface NeonShopCardProps {
+interface ShopCardProps {
   card: CMSShopCard;
 }
 
-export function NeonShopCard({ card }: NeonShopCardProps) {
-  const shape = (card.shape || "cube") as "cube" | "octahedron" | "tetrahedron" | "pyramid" | "prism" | "globe"
+/** Pick black/white text for a solid accent background based on luminance. */
+function contrastText(hex: string): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16) || 0;
+  const g = parseInt(h.slice(2, 4), 16) || 0;
+  const b = parseInt(h.slice(4, 6), 16) || 0;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.55 ? "#0a0a0a" : "#ffffff";
+}
+
+export function ShopCard({ card }: ShopCardProps) {
+  const accent = card.accentColor || "#6366f1";
+  const badgeText = contrastText(accent);
 
   return (
     <a
       href={card.url}
       target="_blank"
       rel="noopener noreferrer"
-      style={{ "--hue-offset": card.hueOffset ?? 0 } as React.CSSProperties}
-      className="neon-card group relative flex flex-col"
+      className="group relative flex w-full flex-col rounded-lg border bg-neutral-900/50 p-4 backdrop-blur-sm transition-shadow hover:shadow-lg focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
-      <div className="neon-card__scene">
-        <div className="neon-card__floor" aria-hidden />
-        <div className="neon-wireframe-wrap" aria-hidden>
-          <NeonWireframe shape={shape} hueOffset={card.hueOffset ?? 0} />
-        </div>
-        {card.badge && (
-          <span className="neon-card__badge">{card.badge}</span>
+      <div className="flex items-start justify-between gap-3">
+        {card.image?.url ? (
+          <img
+            src={card.image.url}
+            alt={card.image.alt || card.title}
+            className="h-16 w-16 shrink-0 object-contain"
+          />
+        ) : (
+          card.badge && (
+            <span
+              className="rounded px-2 py-0.5 text-xs font-semibold"
+              style={{ background: accent, color: badgeText }}
+            >
+              {card.badge}
+            </span>
+          )
         )}
+        <ArrowUpRight className="h-5 w-5 shrink-0" style={{ color: accent }} />
       </div>
 
-      <div className="neon-card__body">
-        <h3 className="neon-card__title">{card.title}</h3>
-        {card.description && (
-          <p className="neon-card__description">{card.description}</p>
-        )}
+      {card.image?.url && card.badge && (
+        <span
+          className="mt-2 self-start rounded px-2 py-0.5 text-xs font-semibold"
+          style={{ background: accent, color: badgeText }}
+        >
+          {card.badge}
+        </span>
+      )}
 
-        <div className="neon-card__row">
-          <span className="neon-card__url">{card.urlLabel || card.url}</span>
-          <span className="neon-card__enter">
-            Enter <ArrowUpRight size={12} />
-          </span>
-        </div>
+      <h3 className="mt-3 text-lg font-bold">{card.title}</h3>
+      {card.description && (
+        <p className="mt-1 text-sm text-muted-foreground">{card.description}</p>
+      )}
+
+      <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+        <span
+          className="text-xs uppercase tracking-widest"
+          style={{ color: accent }}
+        >
+          {card.urlLabel || card.url}
+        </span>
+        <span className="text-xs font-medium text-muted-foreground group-hover:underline">
+          Enter →
+        </span>
       </div>
     </a>
-  )
+  );
 }
