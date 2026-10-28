@@ -128,82 +128,43 @@
       }
 
       /*
-       * Rotating wireframe octahedron. Every measurement is expressed in `em`
-       * against the container's font-size, so the whole shape resizes by changing
-       * one value (font-size). 12 edges (uniform length R*sqrt(2), with R the
-       * center-to-vertex radius) are composited on the GPU by a single rotating
-       * parent; transform-style keeps them in 3D.
+       * Decrypting wordmark. Replaces the old wireframe octahedron: a row of
+       * fixed-width monospace cells that start as random hex glyphs and
+       * progressively lock in to the real letters as the page's critical
+       * queries settle. The inline script below drives the scramble; the real
+       * progress is fed in from main.tsx through the --p custom property.
+       * System monospace is used (zero extra request) so glyph widths stay
+       * stable while scrambling and the text never reflows.
        */
-      #boot .poly {
-        position: relative;
-        width: 1em;
-        height: 1em;
+      #boot .boot-scramble {
         margin-top: 20px;
-        font-size: 80px;
-        perspective: 8.928571em; /* 500px at the original 56px design */
+        font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 26px;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.16em;
+        color: rgba(255, 255, 255, 0.92);
+        text-shadow: 0 0 16px rgba(255, 255, 255, 0.35);
+        white-space: pre;
+        user-select: none;
       }
 
-      #boot .poly-inner {
-        position: absolute;
-        inset: 0;
-        transform-style: preserve-3d;
-        animation: poly-spin 2.5s linear infinite;
-        will-change: transform;
+      #boot .boot-scramble span {
+        display: inline-block;
+        width: 0.62em;
+        text-align: center;
+        transition: color 0.22s ease, text-shadow 0.22s ease, opacity 0.22s ease;
       }
 
-      #boot .poly .edge {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 0.7071em;
-        height: 0.0156em;
-        margin-left: -0.35355em;
-        margin-top: -0.0078em;
-        border-radius: 0.0156em;
-        background: #fff;
+      #boot .boot-scramble span.is-locked {
+        color: #fff;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
       }
 
-      #boot .poly .edge:nth-child(1) {
-        transform: translate3d(0.25em, -0.25em, 0) rotateZ(45deg);
-      }
-      #boot .poly .edge:nth-child(2) {
-        transform: translate3d(0, -0.25em, 0.25em) rotateZ(90deg) rotateY(-45deg);
-      }
-      #boot .poly .edge:nth-child(3) {
-        transform: translate3d(-0.25em, -0.25em, 0) rotateZ(135deg);
-      }
-      #boot .poly .edge:nth-child(4) {
-        transform: translate3d(0, -0.25em, -0.25em) rotateZ(90deg) rotateY(45deg);
-      }
-      #boot .poly .edge:nth-child(5) {
-        transform: translate3d(0.25em, 0.25em, 0) rotateZ(-45deg);
-      }
-      #boot .poly .edge:nth-child(6) {
-        transform: translate3d(0, 0.25em, 0.25em) rotateZ(-90deg) rotateY(-45deg);
-      }
-      #boot .poly .edge:nth-child(7) {
-        transform: translate3d(-0.25em, 0.25em, 0) rotateZ(-135deg);
-      }
-      #boot .poly .edge:nth-child(8) {
-        transform: translate3d(0, 0.25em, -0.25em) rotateZ(-90deg) rotateY(45deg);
-      }
-      #boot .poly .edge:nth-child(9) {
-        transform: translate3d(0.25em, 0, 0.25em) rotateZ(180deg) rotateY(-45deg);
-      }
-      #boot .poly .edge:nth-child(10) {
-        transform: translate3d(-0.25em, 0, 0.25em) rotateZ(180deg) rotateY(45deg);
-      }
-      #boot .poly .edge:nth-child(11) {
-        transform: translate3d(-0.25em, 0, -0.25em) rotateY(45deg);
-      }
-      #boot .poly .edge:nth-child(12) {
-        transform: translate3d(0.25em, 0, -0.25em) rotateY(-45deg);
-      }
-
-      @keyframes poly-spin {
-        to {
-          transform: rotate3d(1, 1, 1, 360deg);
-        }
+      #boot .boot-scramble span.is-scrambling {
+        color: rgba(255, 255, 255, 0.42);
+        text-shadow: none;
       }
 
       /* Progress bar — compositor-only (transform), no layout thrash. */
@@ -246,7 +207,9 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
-        #boot .poly-inner,
+        #boot .boot-scramble span {
+          transition: none;
+        }
         #boot:not([data-progress]) .bar-fill {
           animation: none;
         }
@@ -271,26 +234,98 @@
           fill="currentColor"
         />
       </svg>
-      <div class="poly" aria-hidden="true">
-        <div class="poly-inner">
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-          <div class="edge"></div>
-        </div>
-      </div>
+      <div class="boot-scramble" aria-hidden="true" data-text="LB DLUXE">LB DLUXE</div>
       <div class="bar">
         <div class="bar-fill"></div>
       </div>
     </div>
+    <script>
+      (function () {
+        var boot = document.getElementById('boot');
+        if (!boot) return;
+        var box = boot.querySelector('.boot-scramble');
+        if (!box) return;
+        var text = box.getAttribute('data-text') || '';
+        var CHARS = '0123456789ABCDEF';
+        var cells = [];
+        // Build per-character spans so the layout never reflows while scrambling.
+        box.textContent = '';
+        for (var i = 0; i < text.length; i++) {
+          var ch = text.charAt(i);
+          var span = document.createElement('span');
+          span.setAttribute('data-char', ch);
+          span.textContent = ch === ' ' ? '\\u00a0' : ch;
+          cells.push(span);
+          box.appendChild(span);
+        }
+        var total = cells.length;
+        // Random reveal order so the word decrypts in a scattered pattern.
+        var thresholds = cells.map(function () { return Math.random(); });
+        var smooth = 0;
+        var target = 0;
+        var last = performance.now();
+        var lastScramble = 0;
+        var resolved = false;
+        var started = performance.now();
+        var MIN_REVEAL_MS = 550;
+
+        // Reduced motion: show the finished word, no scrambling.
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          cells.forEach(function (c) {
+            var ch = c.getAttribute('data-char');
+            c.textContent = ch === ' ' ? '\\u00a0' : ch;
+            c.classList.add('is-locked');
+          });
+          return;
+        }
+
+        function readProgress() {
+          var raw = boot.style.getPropertyValue('--p');
+          var p = parseFloat(raw);
+          return isNaN(p) ? 0 : Math.min(1, Math.max(0, p));
+        }
+
+        function tick(now) {
+          if (!document.body.contains(boot)) return; // removed -> stop
+          var dt = (now - last) / 1000;
+          if (dt > 0.1) dt = 0.1;
+          last = now;
+          target = readProgress();
+          smooth += (target - smooth) * Math.min(1, dt * 2.6);
+
+          if (boot.classList.contains('is-hidden')) resolved = true;
+          if (resolved || target >= 1) resolved = true;
+
+          var elapsed = now - started;
+          var minReveal = MIN_REVEAL_MS;
+          for (var i = 0; i < cells.length; i++) {
+            var ch = cells[i].getAttribute('data-char');
+            if (ch === ' ') { cells[i].textContent = '\\u00a0'; continue; }
+            var canLock = elapsed >= thresholds[i] * minReveal;
+            var locked = resolved || (smooth >= thresholds[i] && canLock);
+            if (locked) {
+              cells[i].textContent = ch;
+              cells[i].classList.remove('is-scrambling');
+              cells[i].classList.add('is-locked');
+            } else {
+              if (!cells[i].classList.contains('is-scrambling')) {
+                cells[i].classList.add('is-scrambling');
+              }
+              if (now - lastScramble > 72) {
+                cells[i].textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+              }
+            }
+          }
+          if (now - lastScramble > 72) lastScramble = now;
+
+          if (!resolved || !boot.classList.contains('is-hidden')) {
+            requestAnimationFrame(tick);
+          }
+        }
+
+        requestAnimationFrame(tick);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
