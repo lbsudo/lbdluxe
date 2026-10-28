@@ -127,6 +127,47 @@ async function fetchCms(c: CMSEnvContext, ttl: number, path: string): Promise<Re
   })
 }
 
+/**
+ * The resized variants Payload generated for a media file.
+ *
+ * These are the whole point of the CMS's imageSizes config: without them the
+ * client has to download the original, which for the card's cover photo is
+ * 21 MB. Each size carries its own URL, so it is rewritten the same way the
+ * media's own URL is.
+ */
+function convertMediaSizes(
+  sizes: unknown,
+  baseUrl: string,
+): Record<string, Record<string, unknown>> | null {
+  if (!sizes || typeof sizes !== "object" || Array.isArray(sizes)) return null
+
+  const result: Record<string, Record<string, unknown>> = {}
+  for (const [name, value] of Object.entries(sizes as Record<string, unknown>)) {
+    if (!value || typeof value !== "object") {
+      result[name] = {
+        url: null,
+        width: null,
+        height: null,
+        mimeType: null,
+        filesize: null,
+        filename: null,
+      }
+      continue
+    }
+    const size = value as Record<string, unknown>
+    const rawUrl = typeof size.url === "string" ? size.url : null
+    result[name] = {
+      url: rawUrl ? stripOrigin(rawUrl, baseUrl) : null,
+      width: (size.width as number | null) ?? null,
+      height: (size.height as number | null) ?? null,
+      mimeType: (size.mimeType as string | null) ?? null,
+      filesize: (size.filesize as number | null) ?? null,
+      filename: (size.filename as string | null) ?? null,
+    }
+  }
+  return result
+}
+
 function convertRichTextFields(
   obj: Record<string, unknown>,
   baseUrl: string = "",
@@ -179,6 +220,7 @@ function convertRichTextFields(
           width: media.width ?? null,
           height: media.height ?? null,
           focalPoint: media.focalPoint ?? null,
+          sizes: convertMediaSizes(media.sizes, baseUrl),
         }
       } else if (typeof value === "object" && value !== null) {
         result[key] = convertRichTextFields(value as Record<string, unknown>, baseUrl)
