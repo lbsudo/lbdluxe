@@ -45,8 +45,18 @@ export const Bio = () => {
         </h1>
 
         {STATIC_WORDS.length > 0 && (
-          <p className="text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
-            {typewriter}
+          <p className="relative text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
+            <span className="invisible" aria-hidden>{typewriter.longest}</span>
+            <span className="absolute inset-y-0 left-0 whitespace-pre">
+              {typewriter.text}
+              <span
+                className="inline-block w-[0.42em] text-center"
+                style={{ opacity: typewriter.caret ? 1 : 0 }}
+                aria-hidden
+              >
+                |
+              </span>
+            </span>
           </p>
         )}
 

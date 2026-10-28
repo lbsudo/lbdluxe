@@ -99,8 +99,22 @@ function ProfileBlock({ block }: { block: CMSProfileBlock }) {
         </h1>
 
         {words.length > 0 && (
-          <p className="text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
-            {typewriter}
+          <p className="relative text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
+            {/* Invisible sizer reserves the width of the widest word so the
+                container never resizes and the typed text never reflows. */}
+            <span className="invisible" aria-hidden>{typewriter.longest}</span>
+            {/* Typed text is left-anchored inside the reserved box. */}
+            <span className="absolute inset-y-0 left-0 whitespace-pre">
+              {typewriter.text}
+              {/* Caret in a reserved slot so blinking never changes the width. */}
+              <span
+                className="inline-block w-[0.42em] text-center"
+                style={{ opacity: typewriter.caret ? 1 : 0 }}
+                aria-hidden
+              >
+                |
+              </span>
+            </span>
           </p>
         )}
 
