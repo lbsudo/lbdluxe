@@ -103,6 +103,27 @@ function upsertMeta(key: string, content: string, create: (el: HTMLMetaElement) 
   el.setAttribute("content", content);
 }
 
+/**
+ * Sets the browser chrome colour (Android status bar, iOS title bar).
+ *
+ * The document carries more than one theme-color meta: the static one in
+ * index.html and the route-managed one from the card route's head(). The
+ * browser honours the last one it finds, so every one of them is updated
+ * rather than just the first.
+ */
+export function applyThemeColor(color: string) {
+  const metas = document.head.querySelectorAll<HTMLMetaElement>(
+    'meta[name="theme-color"]',
+  );
+  metas.forEach((el) => el.setAttribute("content", color));
+  if (metas.length === 0) {
+    const el = document.createElement("meta");
+    el.setAttribute("name", "theme-color");
+    el.setAttribute("content", color);
+    document.head.appendChild(el);
+  }
+}
+
 function upsertCanonical(href: string) {
   let el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"][data-seo="canonical"]');
   if (!el) {

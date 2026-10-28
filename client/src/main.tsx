@@ -21,7 +21,12 @@ import {
   cmsShelfItemQuery,
   cmsShelfItemsQuery,
 } from "@/hooks/server/cms/GET/useCMSShelfItems";
+import { registerCardServiceWorker } from "@/lib/pwa";
 import "./styles/global.css";
+
+// Only card.lbdluxe.com registers a service worker — a worker is scoped to
+// its origin, so the other three hosts are untouched.
+registerCardServiceWorker();
 
 const queryClient = new QueryClient();
 

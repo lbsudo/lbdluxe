@@ -1,0 +1,52 @@
+{
+  "id": "/card",
+  "name": "LB DLUXE — Digital Business Card",
+  "short_name": "LB DLUXE",
+  "description": "Lawrence Brown — full-stack developer. Contact details, links and payments in one tap.",
+  "start_url": "/card",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "categories": ["business", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Show my QR",
+      "short_name": "QR",
+      "description": "Open the scannable QR code for this card",
+      "url": "/card?view=qr",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Save contact",
+      "short_name": "Save",
+      "description": "Save this card to your address book",
+      "url": "/card?action=save",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

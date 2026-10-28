@@ -246,6 +246,56 @@ Deplying each piece is very versatile and can be done numerous ways, and explora
 - [Bun](https://hono.dev/docs/getting-started/bun)
 - [Node.js](https://hono.dev/docs/getting-started/nodejs)
 
+## The card PWA
+
+`card.lbdluxe.com` is an installable web app: a digital business card that lives on the home screen and opens with no browser bars, works with no signal, and hands over a scannable QR code.
+
+### How the pieces fit together
+
+| Piece | Where | What it does |
+| --- | --- | --- |
+| `client/public/manifest.webmanifest` | static | The installable app's name, icons, colours and shortcuts |
+| `client/public/sw.js` | static | The service worker — caches the shell and the card data |
+| `client/src/lib/pwa.ts` | source | Registers the worker and wraps the install prompt |
+| `client/src/components/pages/card/install-button.tsx` | source | The "Add to Home Screen" button |
+| `client/src/components/pages/card/card-qr.tsx` | source | The full-screen QR code |
+
+The worker is **only registered on the card host**. A service worker is scoped to its origin, so `lbdluxe.com`, `links.lbdluxe.com` and `shop.lbdluxe.com` are untouched — they serve the manifest and the worker file inertly.
+
+### Precaching the build output
+
+Vite's output filenames carry a content hash, so the worker cannot know them ahead of time. The `pwa-precache` plugin in `client/vite.config.ts` works out which files the card actually needs — the ones the built HTML references, plus the card route's code-split chunk and everything either of them imports — and injects that list into `dist/sw.js` at build time.
+
+Without it the card has no JavaScript the first time it is opened offline, and only ever shows the loading screen.
+
+### Regenerating the icons
+
+The icons are generated from the monogram in `client/index.html` so they can never drift from what the site boots with:
+
+```bash
+cd client
+bun run icons
+```
+
+This writes `client/public/icons/{icon-192,icon-512,maskable-512,apple-touch-icon-180}.png`.
+
+### Caching rules
+
+| Request | Strategy | Offline |
+| --- | --- | --- |
+| Navigations | Network first, cached `/card` as the fallback | Yes |
+| `/assets/*`, `/fonts/*`, `/icons/*` | Cache first (the filenames are content hashed) | Yes |
+| `GET /cms/business-card` | Network first, cached response as the fallback | Yes |
+| Images from the CMS | Stale while revalidate, but only when the size is knowable | Usually — the card falls back to its own gradient and initials |
+
+Cross-origin images are served from S3 without CORS headers, so the browser hands the worker an opaque response whose size it cannot read. Caching those would let one oversized photo fill the device's quota, so they are left to the browser's own HTTP cache and the card falls back to its placeholder artwork when they are missing.
+
+### Notes
+
+- `/sw.js` is served with `no-store` in `client/public/_headers`. A cached worker is how updates silently fail to reach apps that are already installed.
+- Bump `VERSION` in `client/public/sw.js` when the caching rules change. It namespaces the caches and the old ones are dropped on activate.
+- The card keeps a copy of its own data in `localStorage` under `card.cache.v1`, so it still renders if the browser has no service worker at all.
+
 ## Type Sharing
 
 Types are automatically shared between the client and server thanks to the shared package and TypeScript path aliases. You can import them in your code using:

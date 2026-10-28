@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import type { Plugin } from "vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
@@ -122,6 +122,89 @@ function buildSitemap(): Plugin {
   };
 }
 
+/**
+ * Injects the card's precache manifest into the service worker.
+ *
+ * Vite's output filenames carry a content hash, so the service worker cannot
+ * know them ahead of time. This works out which files the card actually needs
+ * — the ones the built HTML references, plus the card route's lazily loaded
+ * chunk and everything either of them imports — and writes the list into
+ * dist/sw.js. Without it the card has no JavaScript the first time it is
+ * opened offline and only ever shows the loading screen.
+ */
+function pwaPrecache(): Plugin {
+  return {
+    name: "pwa-precache",
+    apply: "build",
+    async writeBundle(options, bundle) {
+      const outDir = options.dir ?? "dist";
+      const files = new Set<string>();
+
+      const add = (fileName: string) => {
+        if (fileName) files.add(fileName.replace(/^\//, ""));
+      };
+
+      /** Adds a chunk and everything it statically pulls in. */
+      const walk = (key: string) => {
+        const chunk = bundle[key];
+        if (!chunk || chunk.type !== "chunk") return;
+        if (files.has(chunk.fileName)) return;
+        add(chunk.fileName);
+        for (const css of chunk.viteMetadata?.importedCss ?? []) add(css);
+        for (const imported of chunk.imports) walk(imported);
+      };
+
+      // What the built HTML actually asks the browser for. This is the
+      // authoritative list — the Rollup "entry" chunk is not necessarily the
+      // script the HTML ends up referencing.
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const referenced = new Set<string>();
+      for (const match of html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g)) {
+        referenced.add(match[1]);
+        add(match[1]);
+      }
+
+      // Pull in the import graph of each referenced chunk.
+      for (const [key, chunk] of Object.entries(bundle)) {
+        if (chunk.type !== "chunk") continue;
+        if (referenced.has(`/${chunk.fileName}`)) walk(key);
+      }
+
+      // The card route is code-split, so its chunk is fetched at runtime and
+      // has to be precached explicitly for the offline launch.
+      for (const [key, chunk] of Object.entries(bundle)) {
+        if (chunk.type !== "chunk") continue;
+        if (chunk.facadeModuleId?.includes("routes/card/index.tsx")) walk(key);
+      }
+
+      const assets = [...files].sort().map((f) => `/${f}`);
+      const total = assets.reduce((sum, f) => {
+        const chunk = Object.values(bundle).find(
+          (c) => c.type === "chunk" && c.fileName === f.replace(/^\//, ""),
+        );
+        return sum + (chunk && "code" in chunk ? chunk.code.length : 0);
+      }, 0);
+
+      const swPath = path.join(outDir, "sw.js");
+      const source = await readFile(swPath, "utf8");
+      const patched = source.replace(
+        "/* __PRECACHE_ASSETS__ */ []",
+        JSON.stringify(assets, null, 2),
+      );
+
+      if (patched === source) {
+        this.warn("pwa-precache: precache marker not found in sw.js");
+        return;
+      }
+
+      await writeFile(swPath, patched);
+      this.info(
+        `sw.js precache: ${assets.length} assets (~${Math.round(total / 1024)} kB of JS)`,
+      );
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
     // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
@@ -132,6 +215,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     buildSitemap(),
+    pwaPrecache(),
   ],
   resolve: {
     alias: {

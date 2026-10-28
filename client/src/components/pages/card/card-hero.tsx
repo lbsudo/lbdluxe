@@ -1,9 +1,18 @@
-import type { CMSBusinessCard, CMSBusinessCardLogo } from "shared"
+import { useState } from "react";
+import type { CMSBusinessCard, CMSBusinessCardLogo } from "shared";
+import { pickMediaUrl } from "@/lib/media";
 
 interface Props {
-  card: CMSBusinessCard
-  accent: string
+  card: CMSBusinessCard;
+  accent: string;
 }
+
+// The banner renders at roughly 380 CSS pixels wide, so a 1400px variant is
+// enough even on a 3x display — and a fraction of the original.
+const COVER_SIZES = ["large", "medium", "xlarge", "small", "thumbnail"] as const;
+// The avatar is 96 CSS pixels: 500 covers a 3x screen, 300 is the fallback
+// when the source is smaller than that.
+const AVATAR_SIZES = ["square", "medium", "small", "thumbnail"] as const;
 
 const bannerLogos = (card: CMSBusinessCard): CMSBusinessCardLogo[] =>
   (card.logos || []).filter((l) => (l.position || "banner") === "banner" && l.image?.url)
@@ -17,19 +26,34 @@ export function CardHero({ card, accent }: Props) {
   const below = belowLogos(card)
   const legacyLogo = !banner.length ? card.companyLogo?.url : null
 
+  // An image that fails to load falls back to the card's own artwork rather
+  // than leaving a broken-image icon in the middle of the banner. This is
+  // what happens offline, when the media is not in the cache.
+  const [coverBroken, setCoverBroken] = useState(false)
+  const [avatarBroken, setAvatarBroken] = useState(false)
+
+  const coverUrl = pickMediaUrl(card.coverImage, COVER_SIZES)
+  const avatarUrl = pickMediaUrl(card.profileImage, AVATAR_SIZES)
+
   return (
     <section className="w-full overflow-hidden rounded-3xl bg-white/5 ring-1 ring-white/10">
-      {/* Banner band with profile picture + banner logos overlapping the bottom edge */}
-      <div className="relative h-40 w-full overflow-hidden">
-        {card.coverImage?.url ? (
+      {/* Banner band with profile picture + banner logos overlapping the bottom edge.
+          No overflow-hidden here: the avatar deliberately hangs over the
+          bottom edge into the content below. The section clips the whole
+          card to its rounded corners. */}
+      <div className="relative h-40 w-full">
+        {coverUrl && !coverBroken ? (
           <img
-            src={card.coverImage.url}
-            alt={card.coverImage.alt || "Cover"}
-            className="h-full w-full object-cover"
+            src={coverUrl}
+            alt={card.coverImage?.alt || "Cover"}
+            className="h-full w-full rounded-t-3xl object-cover"
+            loading="eager"
+            decoding="async"
+            onError={() => setCoverBroken(true)}
           />
         ) : (
           <div
-            className="h-full w-full"
+            className="h-full w-full rounded-t-3xl"
             style={{ background: `linear-gradient(135deg, ${accent}, #0a0a0a)` }}
           />
         )}
@@ -41,11 +65,14 @@ export function CardHero({ card, accent }: Props) {
             className="h-24 w-24 shrink-0 overflow-hidden rounded-full ring-4 ring-[#0a0a0a]"
             style={{ boxShadow: `0 0 0 3px ${accent}` }}
           >
-            {card.profileImage?.url ? (
+            {avatarUrl && !avatarBroken ? (
               <img
-                src={card.profileImage.url}
-                alt={card.profileImage.alt || card.name}
+                src={avatarUrl}
+                alt={card.profileImage?.alt || card.name}
                 className="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+                onError={() => setAvatarBroken(true)}
               />
             ) : (
               <div
@@ -135,5 +162,5 @@ export function CardHero({ card, accent }: Props) {
         )}
       </div>
     </section>
-  )
+  );
 }
