@@ -295,6 +295,10 @@ cmsRoutes.get("/digital-products", (c) =>
   fetchCms(c, TTL_BY_MINUTE.list, `/api/digital-products?depth=3&where[_status][equals]=published&sort=-featured,order&limit=50`),
 )
 
+cmsRoutes.get("/shop-cards", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/shop-cards?depth=1&where[_status][equals]=published&sort=order&limit=50`),
+)
+
 // Fitness shop. `type` is the category (program | supplement | peptide); omit it
 // to fetch the whole catalog.
 cmsRoutes.get("/fitness-products", (c) => {

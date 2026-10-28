@@ -9,7 +9,8 @@ import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
 import { useCMSSite } from "@/hooks/server/cms/GET/useCMSSite";
 import { useCMSDigitalProducts } from "@/hooks/server/cms/GET/useCMSDigitalProducts";
 import { DigitalProductCard } from "@/components/pages/Products/DigitalProductCard";
-import { PersonalShopCard, CovenantShopCard } from "@/components/pages/Products/ShopCard";
+import { NeonShopCard } from "@/components/pages/Products/ShopCard";
+import { useCMSShopCards } from "@/hooks/server/cms/GET/useCMSShopCards";
 import { usePageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/products")({
@@ -25,6 +26,7 @@ const headerData = {
 function RouteComponent() {
   const { data: cmsPage, isLoading } = useCMSPage("products");
   const { data: products, isLoading: productsLoading, error: productsError } = useCMSDigitalProducts();
+  const { data: shopCards } = useCMSShopCards();
   const { data: site } = useCMSSite();
   usePageHead(cmsPage, site, {
     title: "Product Catalog",
@@ -57,8 +59,9 @@ function RouteComponent() {
           animate="visible"
         >
           <motion.section variants={fadeUp} className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <PersonalShopCard />
-            <CovenantShopCard />
+            {(shopCards || []).map((card) => (
+              <NeonShopCard key={card.id} card={card} />
+            ))}
             {products?.map((product) => (
               <DigitalProductCard key={product.id} product={product} />
             ))}

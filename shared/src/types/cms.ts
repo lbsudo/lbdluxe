@@ -249,6 +249,22 @@ export interface CMSContentNetwork {
   order?: number | null
 }
 
+export interface CMSShopCard {
+  id: number
+  title: string
+  badge?: string | null
+  description?: string | null
+  url: string
+  urlLabel?: string | null
+  shape?: "cube" | "octahedron" | "tetrahedron" | "pyramid" | "prism" | "globe" | null
+  hueOffset?: number | null
+  order?: number | null
+  publishedAt?: string | null
+  updatedAt: string
+  createdAt: string
+  _status?: string | null
+}
+
 export interface CMSDigitalProduct {
   id: number
   title: string
