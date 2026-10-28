@@ -99,20 +99,28 @@ function ProfileBlock({ block }: { block: CMSProfileBlock }) {
         </h1>
 
         {words.length > 0 && (
-          <p className="relative text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
-            {/* Invisible sizer reserves the width of the widest word so the
-                container never resizes and the typed text never reflows. */}
-            <span className="invisible" aria-hidden>{typewriter.longest}</span>
-            {/* Typed text is left-anchored inside the reserved box. */}
-            <span className="absolute inset-y-0 left-0 whitespace-pre">
-              {typewriter.text}
-              {/* Caret in a reserved slot so blinking never changes the width. */}
-              <span
-                className="inline-block w-[0.42em] text-center"
-                style={{ opacity: typewriter.caret ? 1 : 0 }}
-                aria-hidden
-              >
-                |
+          <p className="relative text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none whitespace-pre">
+            {/* Sizer: every word stacked in ONE grid cell, so the box is as
+                wide as the widest word. The box never resizes, so the page
+                never reflows while typing. */}
+            <span className="inline-grid" aria-hidden>
+              {words.map((w, i) => (
+                <span key={i} className="col-start-1 row-start-1 invisible">{w}</span>
+              ))}
+            </span>
+            {/* Live text: centered in the reserved box. The caret is absolutely
+                positioned at the end of the text, so blinking it never shifts
+                the centered text. */}
+            <span className="absolute inset-y-0 left-0 right-0 text-center">
+              <span className="relative inline-block">
+                {typewriter.text}
+                <span
+                  className="absolute left-full top-0 w-[0.42em] text-center"
+                  style={{ opacity: typewriter.caret ? 1 : 0 }}
+                  aria-hidden
+                >
+                  |
+                </span>
               </span>
             </span>
           </p>

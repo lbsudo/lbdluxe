@@ -5,8 +5,6 @@ export interface TypewriterResult {
   text: string
   /** Whether the caret should be visible (blinks on its own timer). */
   caret: boolean
-  /** The widest word, used to reserve a stable width so nothing reflows. */
-  longest: string
 }
 
 export function useTypewriter(
@@ -20,10 +18,6 @@ export function useTypewriter(
   const [deleting, setDeleting] = useState(false)
   const [blink, setBlink] = useState(true)
 
-  const longest = words.reduce((a, b) => (b.length > a.length ? b : a), "")
-
-  // Blink the caret on its own timer. The caret is rendered in a reserved
-  // slot (see consumers) so toggling it never changes the layout width.
   useEffect(() => {
     const interval = setInterval(() => setBlink((v) => !v), 500)
     return () => clearInterval(interval)
@@ -56,6 +50,5 @@ export function useTypewriter(
   return {
     text: words.length > 0 ? (words[index]?.substring(0, subIndex) ?? "") : "",
     caret: blink,
-    longest,
   }
 }

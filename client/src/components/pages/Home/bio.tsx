@@ -45,16 +45,22 @@ export const Bio = () => {
         </h1>
 
         {STATIC_WORDS.length > 0 && (
-          <p className="relative text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none">
-            <span className="invisible" aria-hidden>{typewriter.longest}</span>
-            <span className="absolute inset-y-0 left-0 whitespace-pre">
-              {typewriter.text}
-              <span
-                className="inline-block w-[0.42em] text-center"
-                style={{ opacity: typewriter.caret ? 1 : 0 }}
-                aria-hidden
-              >
-                |
+          <p className="relative text-2xl font-medium text-[#8F4BD2] h-7 tracking-wide select-none whitespace-pre">
+            <span className="inline-grid" aria-hidden>
+              {STATIC_WORDS.map((w, i) => (
+                <span key={i} className="col-start-1 row-start-1 invisible">{w}</span>
+              ))}
+            </span>
+            <span className="absolute inset-y-0 left-0 right-0 text-center">
+              <span className="relative inline-block">
+                {typewriter.text}
+                <span
+                  className="absolute left-full top-0 w-[0.42em] text-center"
+                  style={{ opacity: typewriter.caret ? 1 : 0 }}
+                  aria-hidden
+                >
+                  |
+                </span>
               </span>
             </span>
           </p>
