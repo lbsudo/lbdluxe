@@ -31,8 +31,11 @@ function edgeMatrix(a: number[], b: number[]) {
   const n = norm(cross(d, p))
   const t = sub(sub(m, mul(d, L / 2)), p)
   const c = [...d, ...p, ...n]
+  // matrix3d() takes 16 values in COLUMN-major order: three basis vectors
+  // (each followed by 0) plus the translation column (followed by 1).
+  const mtx = [c[0], c[1], c[2], 0, c[3], c[4], c[5], 0, c[6], c[7], c[8], 0, t[0], t[1], t[2], 1]
   return {
-    mtx: [...c, ...t, 1].map((v) => Number(v).toFixed(5)).join(","),
+    mtx: mtx.map((v) => Number(v).toFixed(5)).join(","),
     length: Number(L.toFixed(3)),
   }
 }
