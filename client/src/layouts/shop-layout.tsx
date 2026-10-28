@@ -4,7 +4,7 @@ import { ShopFooter } from "@/components/pages/Fitness/ShopFooter"
 
 /**
  * The shop's own chrome. It deliberately shares nothing with
- * DefaultLayout — no ControlBar, no mobile nav, no Constellation, no
+ * DefaultLayout — no ControlBar, no mobile nav, no MatrixBackground, no
  * main-site footer. The `dark` class makes `dark:` variants work inside
  * and `shop-theme` retunes every design token (dark neon glass, always
  * dark — the shop ignores the main site's light/dark toggle).
