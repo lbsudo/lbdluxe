@@ -10,11 +10,11 @@ export function ShopFooter() {
     <footer className="relative z-10 mt-16 w-full border-t border-border/60 px-4 py-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 text-center">
         <p className="font-bebas text-lg tracking-[0.25em] text-muted-foreground">
-          LBDLUXE · THE SHOP
+          LB DLUXE · SHOP
         </p>
         <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-          Programs are delivered instantly as digital downloads. Supplements and
-          peptides ship to the regions listed on each product.
+          Programs are delivered instantly as digital downloads. Supplements ship
+          to the regions listed on each product.
         </p>
         <a
           href={SITE_URL}

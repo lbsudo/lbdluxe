@@ -4,6 +4,7 @@ import { FitnessProductCard } from "@/components/pages/Fitness/FitnessProductCar
 import {
   FITNESS_TYPE_META,
   FITNESS_TYPE_ORDER,
+  freeProgram,
 } from "@/components/pages/Fitness/fitness-utils";
 import { useCMSFitnessProducts } from "@/hooks/server/cms/GET/useCMSFitnessProducts";
 import { useCMSPage } from "@/hooks/server/cms/GET/useCMSPage";
@@ -15,8 +16,8 @@ export const Route = createFileRoute("/fitness/")({
 });
 
 const headerData = {
-  title: "THE SHOP",
-  description: "Training programs, supplements, and research peptides.",
+  title: "LB DLUXE SHOP",
+  description: "Training programs and supplements.",
 };
 
 function RouteComponent() {
@@ -25,9 +26,9 @@ function RouteComponent() {
   const { data: site } = useCMSSite();
 
   usePageHead(cmsPage, site, {
-    title: "Fitness Shop",
+    title: "LB Dluxe Shop",
     description:
-      "Training programs, supplements, and research peptides from LBDLUXE.",
+      "Training programs and supplements from LB Dluxe.",
     path: "/fitness",
     host: "shop",
   });
@@ -90,20 +91,24 @@ function RouteComponent() {
             All products
           </h2>
         </div>
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <LoaderCircle className="animate-spin text-muted-foreground" size={40} />
-          </div>
-        ) : error ? (
-          <p className="text-red-400">{error.message}</p>
-        ) : products && products.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((product) => (
-              <FitnessProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-muted-foreground">No products yet — check back soon.</p>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {/* The free program is code-owned, so it renders even when the CMS
+              is unreachable. Paid products still come from the CMS. */}
+          <FitnessProductCard key={freeProgram.id} product={freeProgram} />
+          {isLoading && (
+            <div className="flex items-center justify-center py-12">
+              <LoaderCircle className="animate-spin text-muted-foreground" size={40} />
+            </div>
+          )}
+          {(products ?? []).map((product) => (
+            <FitnessProductCard key={product.id} product={product} />
+          ))}
+        </div>
+        {error && (
+          <p className="mt-6 text-sm text-red-400">
+            Could not load the full catalog right now. The free program above is
+            always available.
+          </p>
         )}
       </section>
     </>

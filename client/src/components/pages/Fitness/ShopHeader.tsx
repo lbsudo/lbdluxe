@@ -18,9 +18,9 @@ export function ShopHeader() {
     <header className="sticky top-0 z-40 w-full px-3 pt-3 sm:px-4">
       <div className="shop-panel mx-auto flex w-full max-w-6xl flex-col gap-2 rounded-2xl px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4">
         <div className="flex items-center justify-between gap-3">
-          <Link to="/fitness" className="flex items-baseline gap-1.5" aria-label="Shop home">
+          <Link to="/merch" className="flex items-baseline gap-1.5" aria-label="Shop home">
             <span className="font-bebas text-xl tracking-wider text-foreground">
-              LBDLUXE
+              LB DLUXE
             </span>
             <span className="font-bebas text-xl tracking-wider text-primary [text-shadow:0_0_18px_var(--primary)]">
               SHOP
@@ -55,6 +55,20 @@ export function ShopHeader() {
               {FITNESS_TYPE_META[t].label}
             </Link>
           ))}
+          <Link
+            to="/merch"
+            className="shop-tab"
+            data-active={pathname === "/merch" || pathname.startsWith("/merch/")}
+          >
+            Merch
+          </Link>
+          <Link
+            to="/lifewave"
+            className="shop-tab"
+            data-active={pathname === "/lifewave" || pathname.startsWith("/lifewave/")}
+          >
+            LifeWave
+          </Link>
         </nav>
 
         <a

@@ -16,6 +16,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "bun run dev.ts",
+    "test:program-contact": "bun scripts/test-add-program-contact.ts",
     "dev:wrangler": "wrangler dev",
     "deploy": "wrangler deploy",
     "cf:dev": "wrangler dev",

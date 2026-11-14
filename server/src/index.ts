@@ -39,4 +39,16 @@ app.route("/supabase", supabaseRoutes);
 app.route("/resend", resendRoutes);
 app.route("/cms", cmsRoutes);
 
-export default app;
+export { app };
+
+export default {
+  fetch: app.fetch,
+  // Every 5 minutes: the CMS decides whether a daily or drop-time sync is due.
+  async scheduled(_event: unknown, env: { CMS_URL: string; PRINTIFY_SYNC_SECRET: string }) {
+    const res = await fetch(`${env.CMS_URL}/api/printify/sync-due`, {
+      method: "POST",
+      headers: { "x-sync-secret": env.PRINTIFY_SYNC_SECRET },
+    });
+    if (!res.ok) console.error(`printify sync-due failed: ${res.status}`);
+  },
+};

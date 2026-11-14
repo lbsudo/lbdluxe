@@ -20,12 +20,16 @@ const STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = 
 
 // The shop is canonical on its own subdomain, so it gets its own sitemap.
 // NOTE: type path segments must match the route param values exactly
-// (program | supplement | peptide — singular), not the plural labels.
+// (program | supplement — singular), not the plural labels.
 const SHOP_STATIC_ROUTES: { path: string; changeFreq: string; priority: string }[] = [
   { path: "/fitness", changeFreq: "weekly", priority: "0.9" },
   { path: "/fitness/program", changeFreq: "weekly", priority: "0.7" },
   { path: "/fitness/supplement", changeFreq: "weekly", priority: "0.6" },
-  { path: "/fitness/peptide", changeFreq: "weekly", priority: "0.6" },
+  { path: "/lifewave", changeFreq: "weekly", priority: "0.6" },
+  { path: "/merch", changeFreq: "weekly", priority: "0.7" },
+  // The gated free-program landing page is the entry point for the lead magnet,
+  // so it should be crawlable.
+  { path: "/fitness/free/foundation-30", changeFreq: "monthly", priority: "0.8" },
 ];
 
 function sitemapXml(entries: { loc: string; lastmod?: string; changeFreq: string; priority: string }[]) {
@@ -206,6 +210,11 @@ function pwaPrecache(): Plugin {
 }
 
 export default defineConfig({
+  // The preview server is reached through the shop hostname so the
+  // shop-host guard in the router behaves the same as it does in production.
+  preview: {
+    allowedHosts: ["shop.lbdluxe.com", "lbdluxe.com", "links.lbdluxe.com"],
+  },
   plugins: [
     // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
     tanstackRouter({

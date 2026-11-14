@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Scratch output from the program PDF/cover build scripts
+.program-build/
+
+# Router plugin build cache
+.tanstack/

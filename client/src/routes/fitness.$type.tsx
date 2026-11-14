@@ -1,10 +1,14 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
 import {
   FITNESS_TYPE_META,
   FITNESS_TYPE_ORDER,
 } from "@/components/pages/Fitness/fitness-utils";
 
 export const Route = createFileRoute("/fitness/$type")({
+  beforeLoad: ({ params }) => {
+    // Peptides were removed from the shop; old links fall back to the catalog.
+    if (params.type === "peptide") throw redirect({ to: "/fitness", replace: true });
+  },
   component: TypeLayout,
 });
 

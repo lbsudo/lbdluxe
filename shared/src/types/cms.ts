@@ -304,7 +304,7 @@ export interface CMSFitnessProduct {
   id: number
   title: string
   slug?: string | null
-  type: "program" | "supplement" | "peptide"
+  type: "program" | "supplement"
   shortDescription?: string | null
   description?: string | null
   coverImage?: CMSMedia | null
@@ -325,6 +325,21 @@ export interface CMSFitnessProduct {
   updatedAt: string
   createdAt: string
   _status?: string | null
+}
+
+export interface CMSLifewaveProduct {
+  id: number
+  title: string
+  sku: string
+  productLine?: string | null
+  coverImage?: CMSMedia | null
+  order?: number | null
+  updatedAt: string
+  createdAt: string
+}
+
+export interface CMSLifewave {
+  promoCode?: string | null
 }
 
 export interface CMSSite {

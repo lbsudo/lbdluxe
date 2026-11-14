@@ -1,6 +1,7 @@
 // resend/index.ts
 import { Hono } from "hono";
 import { Resend } from "resend";
+import { addProgramContact } from "./add-program-contact";
 import { addResendContact } from "./add-resend-contact";
 import { addWaitlistContact } from "./add-waitlist-contact";
 import { getResendContacts } from "./get-all-resend-contacts";
@@ -26,5 +27,6 @@ resendRoutes.use("*", resendMiddleware);
 // Mount routes
 resendRoutes.post("/add-resend-contact", addResendContact);
 resendRoutes.post("/add-waitlist-contact", addWaitlistContact);
+resendRoutes.post("/add-program-contact", addProgramContact);
 resendRoutes.get("/get-resend-contacts", getResendContacts);
 resendRoutes.get("/segments", getSegments);

@@ -13,19 +13,26 @@ import { Route as WorksRouteImport } from './routes/works'
 import { Route as ShelfItemsRouteImport } from './routes/shelf-items'
 import { Route as ShelfRouteImport } from './routes/shelf'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as MerchRouteImport } from './routes/merch'
+import { Route as LifewaveRouteImport } from './routes/lifewave'
 import { Route as FitnessRouteImport } from './routes/fitness'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MerchIndexRouteImport } from './routes/merch.index'
 import { Route as LinksIndexRouteImport } from './routes/links/index'
+import { Route as LifewaveIndexRouteImport } from './routes/lifewave.index'
 import { Route as FitnessIndexRouteImport } from './routes/fitness.index'
 import { Route as CardIndexRouteImport } from './routes/card/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShelfItemsSlugRouteImport } from './routes/shelf-items.$slug'
+import { Route as MerchCheckoutRouteImport } from './routes/merch.checkout'
+import { Route as MerchSlugRouteImport } from './routes/merch.$slug'
 import { Route as FitnessTypeRouteImport } from './routes/fitness.$type'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as LinksYtLinksIndexRouteImport } from './routes/links/yt-links/index'
 import { Route as LinksRumbleLinksIndexRouteImport } from './routes/links/rumble-links/index'
 import { Route as FitnessTypeIndexRouteImport } from './routes/fitness.$type.index'
+import { Route as FitnessFreeSlugRouteImport } from './routes/fitness.free.$slug'
 import { Route as FitnessTypeSlugRouteImport } from './routes/fitness.$type.$slug'
 import { Route as AdminBaseNewsletterSubsRouteImport } from './routes/admin/base/newsletter-subs'
 
@@ -49,6 +56,16 @@ const ProductsRoute = ProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MerchRoute = MerchRouteImport.update({
+  id: '/merch',
+  path: '/merch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LifewaveRoute = LifewaveRouteImport.update({
+  id: '/lifewave',
+  path: '/lifewave',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FitnessRoute = FitnessRouteImport.update({
   id: '/fitness',
   path: '/fitness',
@@ -59,10 +76,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MerchIndexRoute = MerchIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MerchRoute,
+} as any)
 const LinksIndexRoute = LinksIndexRouteImport.update({
   id: '/links/',
   path: '/links/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LifewaveIndexRoute = LifewaveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LifewaveRoute,
 } as any)
 const FitnessIndexRoute = FitnessIndexRouteImport.update({
   id: '/',
@@ -89,6 +116,16 @@ const ShelfItemsSlugRoute = ShelfItemsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ShelfItemsRoute,
 } as any)
+const MerchCheckoutRoute = MerchCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => MerchRoute,
+} as any)
+const MerchSlugRoute = MerchSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MerchRoute,
+} as any)
 const FitnessTypeRoute = FitnessTypeRouteImport.update({
   id: '/$type',
   path: '/$type',
@@ -114,6 +151,11 @@ const FitnessTypeIndexRoute = FitnessTypeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => FitnessTypeRoute,
 } as any)
+const FitnessFreeSlugRoute = FitnessFreeSlugRouteImport.update({
+  id: '/free/$slug',
+  path: '/free/$slug',
+  getParentRoute: () => FitnessRoute,
+} as any)
 const FitnessTypeSlugRoute = FitnessTypeSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -128,20 +170,27 @@ const AdminBaseNewsletterSubsRoute = AdminBaseNewsletterSubsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/fitness': typeof FitnessRouteWithChildren
+  '/lifewave': typeof LifewaveRouteWithChildren
+  '/merch': typeof MerchRouteWithChildren
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
   '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/fitness/$type': typeof FitnessTypeRouteWithChildren
+  '/merch/$slug': typeof MerchSlugRoute
+  '/merch/checkout': typeof MerchCheckoutRoute
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/card/': typeof CardIndexRoute
   '/fitness/': typeof FitnessIndexRoute
+  '/lifewave/': typeof LifewaveIndexRoute
   '/links/': typeof LinksIndexRoute
+  '/merch/': typeof MerchIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/fitness/$type/$slug': typeof FitnessTypeSlugRoute
+  '/fitness/free/$slug': typeof FitnessFreeSlugRoute
   '/fitness/$type/': typeof FitnessTypeIndexRoute
   '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links/': typeof LinksYtLinksIndexRoute
@@ -153,14 +202,19 @@ export interface FileRoutesByTo {
   '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/merch/$slug': typeof MerchSlugRoute
+  '/merch/checkout': typeof MerchCheckoutRoute
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/card': typeof CardIndexRoute
   '/fitness': typeof FitnessIndexRoute
+  '/lifewave': typeof LifewaveIndexRoute
   '/links': typeof LinksIndexRoute
+  '/merch': typeof MerchIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/fitness/$type/$slug': typeof FitnessTypeSlugRoute
+  '/fitness/free/$slug': typeof FitnessFreeSlugRoute
   '/fitness/$type': typeof FitnessTypeIndexRoute
   '/links/rumble-links': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links': typeof LinksYtLinksIndexRoute
@@ -169,20 +223,27 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/fitness': typeof FitnessRouteWithChildren
+  '/lifewave': typeof LifewaveRouteWithChildren
+  '/merch': typeof MerchRouteWithChildren
   '/products': typeof ProductsRoute
   '/shelf': typeof ShelfRoute
   '/shelf-items': typeof ShelfItemsRouteWithChildren
   '/works': typeof WorksRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/fitness/$type': typeof FitnessTypeRouteWithChildren
+  '/merch/$slug': typeof MerchSlugRoute
+  '/merch/checkout': typeof MerchCheckoutRoute
   '/shelf-items/$slug': typeof ShelfItemsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/card/': typeof CardIndexRoute
   '/fitness/': typeof FitnessIndexRoute
+  '/lifewave/': typeof LifewaveIndexRoute
   '/links/': typeof LinksIndexRoute
+  '/merch/': typeof MerchIndexRoute
   '/admin/base/newsletter-subs': typeof AdminBaseNewsletterSubsRoute
   '/fitness/$type/$slug': typeof FitnessTypeSlugRoute
+  '/fitness/free/$slug': typeof FitnessFreeSlugRoute
   '/fitness/$type/': typeof FitnessTypeIndexRoute
   '/links/rumble-links/': typeof LinksRumbleLinksIndexRoute
   '/links/yt-links/': typeof LinksYtLinksIndexRoute
@@ -192,20 +253,27 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/fitness'
+    | '/lifewave'
+    | '/merch'
     | '/products'
     | '/shelf'
     | '/shelf-items'
     | '/works'
     | '/blog/$slug'
     | '/fitness/$type'
+    | '/merch/$slug'
+    | '/merch/checkout'
     | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
     | '/card/'
     | '/fitness/'
+    | '/lifewave/'
     | '/links/'
+    | '/merch/'
     | '/admin/base/newsletter-subs'
     | '/fitness/$type/$slug'
+    | '/fitness/free/$slug'
     | '/fitness/$type/'
     | '/links/rumble-links/'
     | '/links/yt-links/'
@@ -217,14 +285,19 @@ export interface FileRouteTypes {
     | '/shelf-items'
     | '/works'
     | '/blog/$slug'
+    | '/merch/$slug'
+    | '/merch/checkout'
     | '/shelf-items/$slug'
     | '/admin'
     | '/blog'
     | '/card'
     | '/fitness'
+    | '/lifewave'
     | '/links'
+    | '/merch'
     | '/admin/base/newsletter-subs'
     | '/fitness/$type/$slug'
+    | '/fitness/free/$slug'
     | '/fitness/$type'
     | '/links/rumble-links'
     | '/links/yt-links'
@@ -232,20 +305,27 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/fitness'
+    | '/lifewave'
+    | '/merch'
     | '/products'
     | '/shelf'
     | '/shelf-items'
     | '/works'
     | '/blog/$slug'
     | '/fitness/$type'
+    | '/merch/$slug'
+    | '/merch/checkout'
     | '/shelf-items/$slug'
     | '/admin/'
     | '/blog/'
     | '/card/'
     | '/fitness/'
+    | '/lifewave/'
     | '/links/'
+    | '/merch/'
     | '/admin/base/newsletter-subs'
     | '/fitness/$type/$slug'
+    | '/fitness/free/$slug'
     | '/fitness/$type/'
     | '/links/rumble-links/'
     | '/links/yt-links/'
@@ -254,6 +334,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FitnessRoute: typeof FitnessRouteWithChildren
+  LifewaveRoute: typeof LifewaveRouteWithChildren
+  MerchRoute: typeof MerchRouteWithChildren
   ProductsRoute: typeof ProductsRoute
   ShelfRoute: typeof ShelfRoute
   ShelfItemsRoute: typeof ShelfItemsRouteWithChildren
@@ -298,6 +380,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/merch': {
+      id: '/merch'
+      path: '/merch'
+      fullPath: '/merch'
+      preLoaderRoute: typeof MerchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lifewave': {
+      id: '/lifewave'
+      path: '/lifewave'
+      fullPath: '/lifewave'
+      preLoaderRoute: typeof LifewaveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/fitness': {
       id: '/fitness'
       path: '/fitness'
@@ -312,12 +408,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/merch/': {
+      id: '/merch/'
+      path: '/'
+      fullPath: '/merch/'
+      preLoaderRoute: typeof MerchIndexRouteImport
+      parentRoute: typeof MerchRoute
+    }
     '/links/': {
       id: '/links/'
       path: '/links'
       fullPath: '/links/'
       preLoaderRoute: typeof LinksIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/lifewave/': {
+      id: '/lifewave/'
+      path: '/'
+      fullPath: '/lifewave/'
+      preLoaderRoute: typeof LifewaveIndexRouteImport
+      parentRoute: typeof LifewaveRoute
     }
     '/fitness/': {
       id: '/fitness/'
@@ -354,6 +464,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShelfItemsSlugRouteImport
       parentRoute: typeof ShelfItemsRoute
     }
+    '/merch/checkout': {
+      id: '/merch/checkout'
+      path: '/checkout'
+      fullPath: '/merch/checkout'
+      preLoaderRoute: typeof MerchCheckoutRouteImport
+      parentRoute: typeof MerchRoute
+    }
+    '/merch/$slug': {
+      id: '/merch/$slug'
+      path: '/$slug'
+      fullPath: '/merch/$slug'
+      preLoaderRoute: typeof MerchSlugRouteImport
+      parentRoute: typeof MerchRoute
+    }
     '/fitness/$type': {
       id: '/fitness/$type'
       path: '/$type'
@@ -389,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FitnessTypeIndexRouteImport
       parentRoute: typeof FitnessTypeRoute
     }
+    '/fitness/free/$slug': {
+      id: '/fitness/free/$slug'
+      path: '/free/$slug'
+      fullPath: '/fitness/free/$slug'
+      preLoaderRoute: typeof FitnessFreeSlugRouteImport
+      parentRoute: typeof FitnessRoute
+    }
     '/fitness/$type/$slug': {
       id: '/fitness/$type/$slug'
       path: '/$slug'
@@ -423,15 +554,43 @@ const FitnessTypeRouteWithChildren = FitnessTypeRoute._addFileChildren(
 interface FitnessRouteChildren {
   FitnessTypeRoute: typeof FitnessTypeRouteWithChildren
   FitnessIndexRoute: typeof FitnessIndexRoute
+  FitnessFreeSlugRoute: typeof FitnessFreeSlugRoute
 }
 
 const FitnessRouteChildren: FitnessRouteChildren = {
   FitnessTypeRoute: FitnessTypeRouteWithChildren,
   FitnessIndexRoute: FitnessIndexRoute,
+  FitnessFreeSlugRoute: FitnessFreeSlugRoute,
 }
 
 const FitnessRouteWithChildren =
   FitnessRoute._addFileChildren(FitnessRouteChildren)
+
+interface LifewaveRouteChildren {
+  LifewaveIndexRoute: typeof LifewaveIndexRoute
+}
+
+const LifewaveRouteChildren: LifewaveRouteChildren = {
+  LifewaveIndexRoute: LifewaveIndexRoute,
+}
+
+const LifewaveRouteWithChildren = LifewaveRoute._addFileChildren(
+  LifewaveRouteChildren,
+)
+
+interface MerchRouteChildren {
+  MerchSlugRoute: typeof MerchSlugRoute
+  MerchCheckoutRoute: typeof MerchCheckoutRoute
+  MerchIndexRoute: typeof MerchIndexRoute
+}
+
+const MerchRouteChildren: MerchRouteChildren = {
+  MerchSlugRoute: MerchSlugRoute,
+  MerchCheckoutRoute: MerchCheckoutRoute,
+  MerchIndexRoute: MerchIndexRoute,
+}
+
+const MerchRouteWithChildren = MerchRoute._addFileChildren(MerchRouteChildren)
 
 interface ShelfItemsRouteChildren {
   ShelfItemsSlugRoute: typeof ShelfItemsSlugRoute
@@ -448,6 +607,8 @@ const ShelfItemsRouteWithChildren = ShelfItemsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FitnessRoute: FitnessRouteWithChildren,
+  LifewaveRoute: LifewaveRouteWithChildren,
+  MerchRoute: MerchRouteWithChildren,
   ProductsRoute: ProductsRoute,
   ShelfRoute: ShelfRoute,
   ShelfItemsRoute: ShelfItemsRouteWithChildren,

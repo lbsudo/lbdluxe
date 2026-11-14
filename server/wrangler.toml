@@ -12,3 +12,8 @@ zone_name = "lbdluxe.com"
 [vars]
 CMS_URL = "https://cms.lbdluxe.com"
 ENVIRONMENT = "production"
+
+# Checks for due Printify syncs (daily and drop times). Needs the
+# PRINTIFY_SYNC_SECRET secret: `wrangler secret put PRINTIFY_SYNC_SECRET`.
+[triggers]
+crons = ["*/5 * * * *"]

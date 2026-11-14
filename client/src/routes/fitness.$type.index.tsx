@@ -3,6 +3,7 @@ import { LoaderCircle } from "lucide-react";
 import { FitnessProductCard } from "@/components/pages/Fitness/FitnessProductCard";
 import {
   FITNESS_TYPE_META,
+  freeProgram,
   isFitnessType,
 } from "@/components/pages/Fitness/fitness-utils";
 import { useCMSFitnessProducts } from "@/hooks/server/cms/GET/useCMSFitnessProducts";
@@ -26,7 +27,7 @@ function RouteComponent() {
   useDynamicHead(
     meta
       ? {
-          title: `${meta.label} — Fitness Shop`,
+          title: `${meta.label} — LB Dluxe Shop`,
           description: meta.description,
           path: `/fitness/${type}`,
           host: "shop",
@@ -43,6 +44,11 @@ function RouteComponent() {
     );
   }
 
+  // The free program is code-owned, so it is listed alongside whatever the
+  // CMS returns rather than being folded into it.
+  const freeProducts = type === "program" ? [freeProgram] : []
+  const paidProducts = products ?? []
+
   return (
     <section className="shop-3d mx-auto w-full max-w-6xl px-4 py-10">
       <div className="mb-6 flex items-center gap-4">
@@ -57,21 +63,30 @@ function RouteComponent() {
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <LoaderCircle className="animate-spin text-muted-foreground" size={40} />
-        </div>
-      ) : error ? (
-        <p className="text-red-400">{error.message}</p>
-      ) : products && products.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((product) => (
-            <FitnessProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-muted-foreground">
-          Nothing here yet — check back soon.
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {/* The free program is code-owned, so it renders even when the CMS is
+            unreachable. Paid products still come from the CMS. */}
+        {freeProducts.map((product) => (
+          <FitnessProductCard key={product.id} product={product} />
+        ))}
+        {isLoading && (
+          <div className="flex items-center justify-center py-12">
+            <LoaderCircle className="animate-spin text-muted-foreground" size={40} />
+          </div>
+        )}
+        {paidProducts.map((product) => (
+          <FitnessProductCard key={product.id} product={product} />
+        ))}
+      </div>
+      {!isLoading && !error && paidProducts.length === 0 && (
+        <p className="mt-6 text-muted-foreground">
+          More programs are on the way — check back soon.
+        </p>
+      )}
+      {error && (
+        <p className="mt-6 text-sm text-red-400">
+          Could not load the full catalog right now. The free program above is
+          always available.
         </p>
       )}
     </section>

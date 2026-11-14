@@ -16,4 +16,12 @@ for (const line of varsContent.split("\n")) {
 const port = parseInt(process.env.PORT || "8787")
 console.log(`🚀 CMS BFF server running on http://localhost:${port}`)
 
-Bun.serve({ fetch: app.fetch, port })
+// Hono reads runtime secrets from c.env, not process.env. Bun.serve does not
+// forward process.env into the fetch handler, so the env has to be passed
+// explicitly -- otherwise every middleware that reads c.env sees undefined.
+const env = { ...process.env } as Record<string, string>
+
+Bun.serve({
+  port,
+  fetch: (request) => app.fetch(request, env),
+})

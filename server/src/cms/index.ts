@@ -341,7 +341,7 @@ cmsRoutes.get("/shop-cards", (c) =>
   fetchCms(c, TTL_BY_MINUTE.list, `/api/shop-cards?depth=1&where[_status][equals]=published&sort=order&limit=50`),
 )
 
-// Fitness shop. `type` is the category (program | supplement | peptide); omit it
+// Fitness shop. `type` is the category (program | supplement); omit it
 // to fetch the whole catalog.
 cmsRoutes.get("/fitness-products", (c) => {
   const type = c.req.query("type")
@@ -361,6 +361,47 @@ cmsRoutes.get("/fitness-products/:slug", (c) => {
     `/api/fitness-products?depth=3&where[_status][equals]=published&where[slug][equals]=${encodeURIComponent(slug)}`,
   )
 })
+
+// Merch (Printify-synced). Products are the listing; variants carry the price
+// and options that the product page and cart use.
+cmsRoutes.get("/merch-products", (c) =>
+  fetchCms(
+    c,
+    TTL_BY_MINUTE.list,
+    `/api/products?depth=1&where[_status][equals]=published&where[enableVariants][equals]=true&sort=title&limit=100`,
+  ),
+)
+
+cmsRoutes.get("/merch-variants", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/variants?depth=2&where[_status][equals]=published&limit=1000`),
+)
+
+cmsRoutes.get("/lifewave-products", (c) =>
+  fetchCms(c, TTL_BY_MINUTE.list, `/api/lifewave-products?depth=1&sort=order,title&limit=100`),
+)
+
+cmsRoutes.get("/lifewave", (c) =>
+  cachedJson(c, TTL_BY_MINUTE.profile, async () => {
+    const base = cmsFetchBase(c)
+    if (!base) return c.json({ error: "CMS_URL not configured" }, 500)
+    let res: Response
+    try {
+      res = await fetch(`${base}/api/globals/lifewave?depth=0`, {
+        headers: { "Content-Type": "application/json" },
+      })
+    } catch {
+      return c.json({ error: "CMS unreachable" }, 502)
+    }
+    if (!res.ok) {
+      const detail = await readErrorDetail(res)
+      console.error(`CMS fetch failed (${res.status}) for /api/globals/lifewave:`, detail)
+      return c.json({ error: "CMS fetch failed", cmsStatus: res.status, detail }, res.status as any, {
+        "X-CMS-Status": String(res.status),
+      })
+    }
+    return c.json(await res.json())
+  }),
+)
 
 cmsRoutes.get("/links-profile", (c) =>
   firstDoc(c, TTL_BY_MINUTE.profile, `/api/links-profile?depth=3&limit=1`),

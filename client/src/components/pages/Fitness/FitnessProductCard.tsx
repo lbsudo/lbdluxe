@@ -2,7 +2,12 @@ import { Link } from "@tanstack/react-router"
 import type { CMSFitnessProduct } from "shared"
 import { useTilt } from "./use-tilt"
 import { usePolarCheckout } from "./use-polar-checkout"
-import { FITNESS_TYPE_META, formatPrice, isPurchasable } from "./fitness-utils"
+import {
+  FITNESS_TYPE_META,
+  formatPrice,
+  isFreeProgram,
+  isPurchasable,
+} from "./fitness-utils"
 
 interface FitnessProductCardProps {
   product: CMSFitnessProduct
@@ -20,9 +25,13 @@ interface FitnessProductCardProps {
 export function FitnessProductCard({ product }: FitnessProductCardProps) {
   const tiltRef = useTilt<HTMLDivElement>()
   const { buying, open } = usePolarCheckout(product.polarCheckoutLink)
-  const purchasable = isPurchasable(product)
+  const free = isFreeProgram(product)
+  const purchasable = !free && isPurchasable(product)
   const typeMeta = FITNESS_TYPE_META[product.type]
-  const detailParams = { type: product.type, slug: product.slug ?? "" }
+  const detailParams = free
+    ? { slug: product.programSlug }
+    : { type: product.type, slug: product.slug ?? "" }
+  const href = free ? "/fitness/free/$slug" : "/fitness/$type/$slug"
 
   return (
     <div
@@ -32,7 +41,7 @@ export function FitnessProductCard({ product }: FitnessProductCardProps) {
       <div aria-hidden className="shop-panel absolute inset-0" />
 
       <Link
-        to="/fitness/$type/$slug"
+        to={href}
         params={detailParams}
         className="shop-pop relative z-10 block aspect-[4/3] overflow-hidden rounded-t-[calc(var(--shop-radius)_-_1px)] bg-muted"
       >
@@ -54,7 +63,7 @@ export function FitnessProductCard({ product }: FitnessProductCardProps) {
           {product.badge}
         </span>
       )}
-      {!purchasable && (
+      {!purchasable && !free && (
         <span className="shop-pop-lg absolute right-3 top-3 z-20 rounded bg-black/70 px-2 py-0.5 text-xs font-semibold text-white">
           Coming soon
         </span>
@@ -66,7 +75,7 @@ export function FitnessProductCard({ product }: FitnessProductCardProps) {
           <span>{typeMeta.singular}</span>
         </div>
         <Link
-          to="/fitness/$type/$slug"
+          to={href}
           params={detailParams}
           className="line-clamp-1 text-sm font-semibold leading-tight hover:text-primary"
         >
@@ -79,9 +88,15 @@ export function FitnessProductCard({ product }: FitnessProductCardProps) {
         )}
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-3">
-          <span className="font-bebas text-lg tracking-wide">
-            {formatPrice(product.price, product.currency)}
-          </span>
+          {free ? (
+            <span className="font-bebas text-lg tracking-wide text-primary [text-shadow:0_0_18px_var(--primary)]">
+              Free
+            </span>
+          ) : (
+            <span className="font-bebas text-lg tracking-wide">
+              {formatPrice(product.price, product.currency)}
+            </span>
+          )}
           {purchasable ? (
             <button
               type="button"
@@ -91,9 +106,17 @@ export function FitnessProductCard({ product }: FitnessProductCardProps) {
             >
               {buying ? "Opening…" : "Buy now"}
             </button>
+          ) : free ? (
+            <Link
+              to={href}
+              params={detailParams}
+              className="shop-btn px-3 py-1.5 text-xs"
+            >
+              Get it free
+            </Link>
           ) : (
             <Link
-              to="/fitness/$type/$slug"
+              to={href}
               params={detailParams}
               className="shop-tab px-3 py-1.5 text-xs"
             >

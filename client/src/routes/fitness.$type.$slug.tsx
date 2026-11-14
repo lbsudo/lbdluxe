@@ -14,18 +14,18 @@ function RouteComponent() {
   const { data: product, isLoading, error } = useCMSFitnessProduct(slug);
 
   const typeLabel = isFitnessType(type) ? FITNESS_TYPE_META[type].label : "Shop";
-  // Guard against mismatched URLs (e.g. /fitness/peptide/<a-program>) so the
+  // Guard against mismatched URLs (e.g. /fitness/supplement/<a-program>) so the
   // canonical URL and breadcrumb always match the product.
   const matchesType = product?.type === type;
 
   useDynamicHead(
     product && matchesType
       ? {
-          title: `${product.title} — Fitness Shop`,
+          title: `${product.title} — LB Dluxe Shop`,
           description:
             product.shortDescription ||
             excerptFromHtml(product.description) ||
-            `Buy ${product.title} from LBDLUXE.`,
+            `Buy ${product.title} from LB Dluxe.`,
           path: `/fitness/${type}/${slug}`,
           host: "shop",
           image: product.coverImage?.url ?? undefined,

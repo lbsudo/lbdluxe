@@ -48,7 +48,7 @@ declare module "@tanstack/react-router" {
 // homogeneous without an `any` and the exact shape is restored at the call site.
 type CriticalQuery = object;
 
-const FITNESS_TYPES = ["program", "supplement", "peptide"];
+const FITNESS_TYPES = ["program", "supplement"];
 
 // The site global and links profile/link cards are shared by every
 // links.lbdluxe.com page, so they always belong in the critical set.
